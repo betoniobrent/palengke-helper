@@ -706,6 +706,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Editable stat cards on the AI Suggestions tab — kept in sync with the Meal Planner inputs
+    const suggestionBudgetInput = document.getElementById('suggestionBudgetValue');
+    if (suggestionBudgetInput) {
+        suggestionBudgetInput.addEventListener('input', function() {
+            const plannerBudgetInput = document.getElementById('plannerBudget');
+            if (plannerBudgetInput) plannerBudgetInput.value = this.value;
+            evaluateDynamicContextualAISuggestions();
+        });
+    }
+
+    const suggestionPaxInput = document.getElementById('suggestionPaxValue');
+    if (suggestionPaxInput) {
+        suggestionPaxInput.addEventListener('input', function() {
+            const plannerPaxInput = document.getElementById('plannerPax');
+            if (plannerPaxInput) plannerPaxInput.value = this.value;
+            evaluateDynamicContextualAISuggestions();
+        });
+    }
+
     initializeMealPlanner();
 });
 
@@ -1412,8 +1431,8 @@ function evaluateDynamicContextualAISuggestions() {
     const budget = parseFloat(document.getElementById('plannerBudget')?.value) || 0;
     const pax = parseInt(document.getElementById('plannerPax')?.value) || 0;
 
-    budgetValueNode.innerText = `₱${budget.toFixed(0)}`;
-    paxValueNode.innerText = `${pax} Pax`;
+    if (document.activeElement !== budgetValueNode) budgetValueNode.value = budget > 0 ? budget : '';
+    if (document.activeElement !== paxValueNode) paxValueNode.value = pax > 0 ? pax : '';
 
     const hasPlan = DAYS_OF_WEEK.some(day => {
         const plan = currentMealPlan[day];
@@ -1427,7 +1446,7 @@ function evaluateDynamicContextualAISuggestions() {
     let suggestions = [];
 
     if (budget <= 0 || pax <= 0) {
-        suggestions.push('Set your weekly budget and family size in the Meal Planner to get tailored suggestions.');
+        suggestions.push('Set your weekly budget and family size in the cards above to get tailored suggestions.');
     } else {
         const perMealBudget = budget / 21;
         suggestions.push(`Your target average is around ₱${perMealBudget.toFixed(0)} per meal.`);

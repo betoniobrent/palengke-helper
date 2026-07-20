@@ -683,11 +683,19 @@
                     <div class="grid md:grid-cols-3 gap-4">
                         <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
                             <span class="text-xs uppercase tracking-wide text-gray-500 font-bold">Weekly Budget</span>
-                            <p id="suggestionBudgetValue" class="mt-3 text-2xl font-bold text-emerald-700">₱0</p>
+                            <div class="mt-2 flex items-center gap-1">
+                                <span class="text-2xl font-bold text-emerald-700">₱</span>
+                                <input id="suggestionBudgetValue" type="number" min="0" placeholder="0" class="w-full text-2xl font-bold text-emerald-700 bg-transparent border border-gray-200 hover:border-gray-300 focus:border-emerald-500 rounded-lg px-2 py-0.5 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                            </div>
+                            <p class="text-[11px] text-gray-400 mt-1.5">Editable — syncs with the Meal Planner</p>
                         </div>
                         <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
                             <span class="text-xs uppercase tracking-wide text-gray-500 font-bold">Family Size</span>
-                            <p id="suggestionPaxValue" class="mt-3 text-2xl font-bold text-gray-900">0 Pax</p>
+                            <div class="mt-2 flex items-center gap-2">
+                                <input id="suggestionPaxValue" type="number" min="0" placeholder="0" class="w-full text-2xl font-bold text-gray-900 bg-transparent border border-gray-200 hover:border-gray-300 focus:border-emerald-500 rounded-lg px-2 py-0.5 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                                <span class="text-2xl font-bold text-gray-900">Pax</span>
+                            </div>
+                            <p class="text-[11px] text-gray-400 mt-1.5">Editable — syncs with the Meal Planner</p>
                         </div>
                         <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
                             <span class="text-xs uppercase tracking-wide text-gray-500 font-bold">Meal Plan Status</span>
