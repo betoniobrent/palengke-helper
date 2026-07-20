@@ -1229,7 +1229,9 @@ function generateFilipinoMealPlan() {
         return subFiltered[Math.floor(Math.random() * subFiltered.length)] || fallbackPool[0];
     };
 
-    const chooseBudgetFriendlyRecipe = (options, type) => {
+    const usedRecipeIdsByType = { Breakfast: new Set(), Lunch: new Set(), Dinner: new Set() };
+
+    const chooseBudgetFriendlyRecipe = (options, type, excludeIds = new Set()) => {
         if (options.length === 0) return getSafeRecipe([], RECIPE_DATABASE, type);
 
         const withMatchScore = options.map(recipe => {
@@ -1244,7 +1246,18 @@ function generateFilipinoMealPlan() {
         });
 
         const sortedByScore = withMatchScore.sort((a, b) => a.score - b.score);
-        return sortedByScore[0].recipe;
+
+        // Pick among the best-fitting candidates, avoiding repeats within the week
+        const used = usedRecipeIdsByType[type] || new Set();
+        const topPool = sortedByScore.slice(0, Math.min(7, sortedByScore.length));
+        const notToday = topPool.filter(entry => !excludeIds.has(entry.recipe.id));
+        const dayPool = notToday.length > 0 ? notToday : topPool;
+        const freshPool = dayPool.filter(entry => !used.has(entry.recipe.id));
+        const pickPool = freshPool.length > 0 ? freshPool : dayPool;
+        const chosen = pickPool[Math.floor(Math.random() * pickPool.length)].recipe;
+        used.add(chosen.id);
+        if (used.size >= topPool.length) used.clear();
+        return chosen;
     };
 
     const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -1254,9 +1267,12 @@ function generateFilipinoMealPlan() {
     let totalPlanCostAccumulator = 0;
 
     daysOfWeek.forEach(day => {
-        const bMeal = chooseBudgetFriendlyRecipe(breakfastOptions, "Breakfast");
-        const lMeal = chooseBudgetFriendlyRecipe(lunchOptions, "Lunch");
-        const dMeal = chooseBudgetFriendlyRecipe(dinnerOptions, "Dinner");
+        const todayIds = new Set();
+        const bMeal = chooseBudgetFriendlyRecipe(breakfastOptions, "Breakfast", todayIds);
+        todayIds.add(bMeal.id);
+        const lMeal = chooseBudgetFriendlyRecipe(lunchOptions, "Lunch", todayIds);
+        todayIds.add(lMeal.id);
+        const dMeal = chooseBudgetFriendlyRecipe(dinnerOptions, "Dinner", todayIds);
 
         currentMealPlan[day] = {
             Breakfast: bMeal,
@@ -1512,6 +1528,14 @@ function handleQuickPrompt(prompt) {
     processAISuggestionQuery();
 }
 
+function escapeChatHtml(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function formatChatText(text) {
+    return escapeChatHtml(text).replace(/\n/g, '<br>');
+}
+
 function appendChatMessage(sender, text) {
     const chatHistory = document.getElementById('aiChatHistory');
     if (!chatHistory) return;
@@ -1524,10 +1548,10 @@ function appendChatMessage(sender, text) {
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     if (sender === 'user') {
         message.className = 'self-end bg-slate-100 border border-slate-200 p-4 rounded-3xl text-sm text-gray-800 max-w-[90%]';
-        message.innerHTML = `<div class="flex items-center justify-between gap-3"><strong class="text-xs text-gray-500">You</strong><span class="text-[10px] text-gray-400">${time}</span></div><p class="mt-2">${text}</p>`;
+        message.innerHTML = `<div class="flex items-center justify-between gap-3"><strong class="text-xs text-gray-500">You</strong><span class="text-[10px] text-gray-400">${time}</span></div><p class="mt-2">${formatChatText(text)}</p>`;
     } else {
         message.className = 'self-start bg-emerald-50 border border-emerald-100 p-4 rounded-3xl text-sm text-gray-800 max-w-[90%]';
-        message.innerHTML = `<div class="flex items-center justify-between gap-3"><strong class="text-xs text-emerald-700">Palengke AI</strong><span class="text-[10px] text-gray-400">${time}</span></div><p class="mt-2">${text}</p>`;
+        message.innerHTML = `<div class="flex items-center justify-between gap-3"><strong class="text-xs text-emerald-700">Palengke AI</strong><span class="text-[10px] text-gray-400">${time}</span></div><p class="mt-2">${formatChatText(text)}</p>`;
     }
     chatHistory.appendChild(message);
 }
@@ -1551,19 +1575,183 @@ function generateAIResponse(question) {
     const selectedDiet = document.getElementById('plannerDiet')?.value || 'anything';
     const groceryItems = getGroceryData();
 
-    if (/\b(?:grocery|list|buy|substitute|swap|ingredient|price|store|shop|shopping)\b/.test(normalized)) {
+    // Greetings and small talk
+    if (/^(hi|hello|hey|yo|kumusta|musta|good\s*(morning|afternoon|evening|day))\b/.test(normalized.trim())) {
+        return 'Kumusta! I can help you plan meals, stretch your budget, and manage your grocery list.\nTry asking:\n• "How do I cook Chicken Adobo?"\n• "Magkano ang tilapia?"\n• "How should I split my kinsena budget?"\n• "What\'s in season this month?"';
+    }
+    if (/salamat|thank/.test(normalized)) {
+        return 'Walang anuman! Happy to help. Ask me anytime about meals, palengke prices, or budgeting tips.';
+    }
+    if (/what can you (do|help)|help me|how do you work|anong kaya mo/.test(normalized)) {
+        return 'Here\'s what I can help with:\n• Recipes — "How do I cook Sinigang?" (I know all ' + RECIPE_DATABASE.length + ' dishes in the app)\n• Meal ideas — "What\'s a cheap dinner for 4?"\n• Your meal plan — "What\'s my plan for Monday?"\n• Palengke prices — "Magkano ang manok?"\n• Budgeting — "How do I budget my kinsena?", "What is the 50/30/20 rule?"\n• Grocery list — "What should I buy?", "What can I swap to save money?"\n• Market tips — "When is the best time to go to the palengke?"\n• Food storage — "How do I keep vegetables fresh?"';
+    }
+
+    // How to cook a specific dish
+    if (/how (do|to|can|should).*(cook|make|prepare)|paano.*(lut|gaw)|recipe (for|of|ng)|ingredients (of|for|ng)|steps (for|to)/.test(normalized)) {
+        const recipeAnswer = respondToRecipeHowTo(normalized);
+        if (recipeAnswer) return recipeAnswer;
+    }
+
+    // Palengke price lookups
+    if (/magkano|presyo|how much (is|are|does)|price of|cost of/.test(normalized)) {
+        const priceAnswer = respondToPriceQuery(normalized);
+        if (priceAnswer) return priceAnswer;
+    }
+
+    // Current meal plan questions
+    if (/\b(my|current|active|this week'?s?) (meal )?plan\b|plan (for|this) (today|tonight|monday|tuesday|wednesday|thursday|friday|saturday|sunday)|what('s| is) for (today|tonight|monday|tuesday|wednesday|thursday|friday|saturday|sunday)|\b(breakfast|lunch|dinner|meal|ulam)\b.*\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b|\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b.*\b(breakfast|lunch|dinner|ulam)\b/.test(normalized)) {
+        return respondToPlanQuery(normalized, budget);
+    }
+
+    // Food storage and leftovers
+    if (/leftover|left-over|storage|how (do|to|can) .*(store|keep|preserve)|spoil|panis|freeze|freezer|refrigerat|keep.*fresh|stay.*fresh/.test(normalized)) {
+        return respondToStorageQuery(normalized);
+    }
+
+    // Palengke shopping tips and seasonal produce
+    if (/palengke|wet market|tawad|haggl|in season|seasonal|best time.*(shop|market|buy)|supermarket vs|talipapa/.test(normalized)) {
+        return respondToPalengkeQuery(normalized);
+    }
+
+    // Nutrition and healthy eating
+    if (/nutriti|nutrient|vitamin|masustansya|pinggang pinoy|balanced (diet|meal)|healthy eating|protein (source|intake)|malnutri|baon/.test(normalized)) {
+        return respondToNutritionQuery(normalized, budget, pax, selectedDiet);
+    }
+
+    if (/\b(?:grocery|list|buy|substitute|swap|ingredient|store|shop|shopping)\b/.test(normalized)) {
         return respondToGroceryQuery(normalized, budget, pax, selectedDiet, groceryItems);
     }
 
-    if (/\b(?:budget|save|cheap|tipid|expensive|cost|afford|spend|expense|tight)\b/.test(normalized)) {
+    if (/\b(?:budget|save|saving|ipon|cheap|tipid|expensive|cost|afford|spend|expense|tight|kinsena|payday|sweldo|allowance|utang|debt|emergency fund|envelope|50\/30\/20|price)\b/.test(normalized)) {
         return respondToBudgetQuery(normalized, budget, pax, selectedDiet, groceryItems);
     }
 
-    if (/\b(?:breakfast|lunch|dinner|ulam|silog|recipe|meal|cook|menu)\b/.test(normalized)) {
+    if (/\b(?:breakfast|lunch|dinner|merienda|ulam|silog|recipe|meal|cook|menu|almusal|hapunan|tanghalian)\b/.test(normalized)) {
         return respondToMealQuery(normalized, budget, pax, selectedDiet);
     }
 
-    return 'I can help with Filipino meals, budgeting, and grocery planning. Ask me something like "What should I cook for dinner?", "How can I save on groceries?", or "Recommend a budget-friendly meal plan."';
+    return 'I can help with Filipino meals, budgeting, palengke prices, and grocery planning. Try:\n• "How do I cook Chicken Adobo?"\n• "Magkano ang bangus?"\n• "How should I budget my kinsena?"\n• "What should I buy this week?"\n• "How do I keep gulay fresh longer?"';
+}
+
+// ==========================================
+// 7b. PALENGKE AI KNOWLEDGE BASE
+// ==========================================
+
+const MARKET_PRICE_REFERENCE = [
+    { keys: ['rice', 'bigas', 'kanin'], label: 'Well-milled rice', price: '₱48–55/kg' },
+    { keys: ['chicken', 'manok'], label: 'Whole chicken', price: '₱170–190/kg' },
+    { keys: ['egg', 'itlog'], label: 'Chicken eggs', price: '₱8–9/pc' },
+    { keys: ['pork', 'baboy', 'kasim'], label: 'Pork kasim', price: '₱300–330/kg' },
+    { keys: ['liempo'], label: 'Pork liempo', price: '₱340–380/kg' },
+    { keys: ['beef', 'baka'], label: 'Beef (stewing cuts)', price: '₱400–450/kg' },
+    { keys: ['tilapia'], label: 'Tilapia', price: '₱130–150/kg' },
+    { keys: ['bangus', 'milkfish'], label: 'Bangus', price: '₱180–200/kg' },
+    { keys: ['galunggong', 'gg'], label: 'Galunggong', price: '₱150–180/kg' },
+    { keys: ['tokwa', 'tofu'], label: 'Tokwa', price: '₱12–18/pc' },
+    { keys: ['monggo', 'munggo', 'mung bean'], label: 'Monggo beans', price: '₱80–100/kg' },
+    { keys: ['talong', 'eggplant'], label: 'Talong', price: '₱80–100/kg' },
+    { keys: ['pechay'], label: 'Pechay', price: '₱15–25/bundle' },
+    { keys: ['kangkong'], label: 'Kangkong', price: '₱10–20/bundle' },
+    { keys: ['sayote'], label: 'Sayote', price: '₱35–50/kg' },
+    { keys: ['kalabasa', 'squash'], label: 'Kalabasa', price: '₱40–60/kg' },
+    { keys: ['kamote', 'sweet potato'], label: 'Kamote', price: '₱40–60/kg' },
+    { keys: ['tomato', 'kamatis'], label: 'Kamatis', price: '₱60–100/kg' },
+    { keys: ['onion', 'sibuyas'], label: 'Red onions', price: '₱140–170/kg' },
+    { keys: ['garlic', 'bawang'], label: 'Garlic', price: '₱120–160/kg' },
+    { keys: ['sardines', 'sardinas'], label: 'Canned sardines', price: '₱22–28/can' },
+    { keys: ['noodles', 'pancit canton', 'instant'], label: 'Instant noodles', price: '₱12–18/pack' },
+    { keys: ['oil', 'mantika'], label: 'Cooking oil', price: '₱80–100/L' },
+    { keys: ['sugar', 'asukal'], label: 'Sugar', price: '₱80–90/kg' }
+];
+
+function respondToPriceQuery(question) {
+    const matches = MARKET_PRICE_REFERENCE.filter(entry => entry.keys.some(k => question.includes(k)));
+    if (matches.length === 0) {
+        return 'Here are common palengke reference prices:\n• Well-milled rice — ₱48–55/kg\n• Whole chicken — ₱170–190/kg\n• Pork kasim — ₱300–330/kg\n• Tilapia — ₱130–150/kg\n• Eggs — ₱8–9/pc\n• Red onions — ₱140–170/kg\nPrices vary per market and season — check the Market Prices tab for the watchlist.';
+    }
+    const lines = matches.map(m => `• ${m.label} — ${m.price}`);
+    return `Estimated palengke prices:\n${lines.join('\n')}\nPrices vary per market and season — tawad politely and compare 2–3 stalls before buying.`;
+}
+
+function respondToRecipeHowTo(question) {
+    let best = null;
+    let bestScore = 0;
+    RECIPE_DATABASE.forEach(recipe => {
+        const name = recipe.name.toLowerCase();
+        let score = 0;
+        if (question.includes(name)) {
+            score = 100;
+        } else {
+            const words = name.split(/[^a-zñ]+/).filter(w => w.length >= 4 && !['with', 'and'].includes(w));
+            score = words.filter(w => question.includes(w)).length * 10;
+        }
+        if (score > bestScore) { bestScore = score; best = recipe; }
+    });
+    if (!best || bestScore < 10) return null;
+
+    const perPax = (best.estimatedCost / Math.max(best.servings, 1)).toFixed(0);
+    const ingredients = best.ingredients.map(i => `• ${i}`).join('\n');
+    const steps = best.instructions.map((s, i) => `${i + 1}. ${s}`).join('\n');
+    return `${best.name} — ${best.difficulty} · Prep ${best.prepTime} · Cook ${best.cookTime} · Serves ${best.servings} pax · ~₱${best.estimatedCost} (₱${perPax}/pax)\n\nIngredients:\n${ingredients}\n\nSteps:\n${steps}\n\nTip: You can add this dish to your weekly plan from the Meal Planner tab.`;
+}
+
+function respondToPlanQuery(question, budget) {
+    if (!hasActiveMealPlan()) {
+        return 'You don\'t have an active meal plan yet. Go to the Meal Planner tab and press "Generate Meal Plan", or build your own with "Customize Meal Plan". Once a plan is active, I can summarize it and answer questions like "What\'s for dinner on Monday?"';
+    }
+
+    const dayAsked = DAYS_OF_WEEK.find(d => question.includes(d.toLowerCase()));
+    const mealName = m => (m && (m.name || m)) || '—';
+    const dayLine = day => {
+        const p = currentMealPlan[day] || {};
+        return `${day}: Breakfast — ${mealName(p.Breakfast)} · Lunch — ${mealName(p.Lunch)} · Dinner — ${mealName(p.Dinner)}`;
+    };
+
+    if (dayAsked) {
+        return `Here\'s your plan for ${dayAsked}:\n${dayLine(dayAsked)}\nClick any meal in the Meal Planner to see its full recipe.`;
+    }
+
+    let total = 0;
+    DAYS_OF_WEEK.forEach(day => {
+        const p = currentMealPlan[day] || {};
+        ['Breakfast', 'Lunch', 'Dinner'].forEach(t => {
+            const m = p[t];
+            if (m) total += (m.baseCost || m.estimatedCost || 0);
+        });
+    });
+    const lines = DAYS_OF_WEEK.map(dayLine).join('\n');
+    const budgetLine = budget > 0
+        ? (total > budget ? `Estimated week cost is ~₱${total.toFixed(0)}, which is OVER your ₱${budget} budget — consider swapping 2–3 dishes for cheaper ones.` : `Estimated week cost is ~₱${total.toFixed(0)}, within your ₱${budget} budget.`)
+        : `Estimated week cost is ~₱${total.toFixed(0)}. Set your weekly budget so I can check if it fits.`;
+    return `Here\'s your current weekly plan:\n${lines}\n\n${budgetLine}`;
+}
+
+function respondToStorageQuery(question) {
+    if (/rice|bigas|kanin/.test(question)) {
+        return 'Rice storage tips:\n• Store uncooked bigas in a sealed container away from moisture — add a few dried bay leaves to deter weevils (bukbok).\n• Cooked rice: refrigerate within 2 hours, keep max 3–4 days, and reheat until steaming.\n• Leftover rice is perfect for sinangag — day-old rice fries better than fresh.';
+    }
+    if (/fish|isda|bangus|tilapia|meat|karne|baboy|manok|chicken|pork/.test(question)) {
+        return 'Meat & fish storage tips:\n• Buy meat and fish last at the palengke and get them home quickly.\n• Portion into meal-size packs before freezing so you only thaw what you need.\n• Freezer: fish 2–3 months, chicken/pork 3–6 months. Fridge: cook within 1–2 days.\n• Thaw overnight in the fridge, not on the counter.';
+    }
+    if (/gulay|vegetable|veggie|pechay|kangkong|talong/.test(question)) {
+        return 'Vegetable storage tips:\n• Leafy greens (pechay, kangkong): wrap in slightly damp paper towel or newspaper, then keep in a container in the fridge — lasts 3–5 days.\n• Talong, sayote, kalabasa: keep at room temp away from sun for 3–4 days, or refrigerate for up to a week.\n• Onions and garlic: dry, dark, airy spot — never in the fridge.\n• Kamatis: room temp until ripe, then refrigerate.';
+    }
+    return 'Food storage basics:\n• Cool leftovers quickly and refrigerate within 2 hours; consume within 3–4 days.\n• Reheat food until steaming hot — sabaw dishes like sinigang keep well for 2–3 days refrigerated.\n• Freeze proteins in meal-size portions to avoid waste.\n• Store rice, monggo, and dry goods in sealed containers to avoid bukbok.\n• Label containers with dates — first in, first out.';
+}
+
+function respondToPalengkeQuery(question) {
+    if (/season/.test(question)) {
+        return 'Buying in-season produce saves 20–40%:\n• Rainy season (Jun–Nov): kangkong, kamote tops, sitaw, kalabasa, saging na saba\n• Dry season (Dec–May): kamatis, talong, ampalaya, upo, mangga\n• Year-round cheap picks: sayote, repolyo, monggo, pechay\nIf a vegetable is suddenly expensive, it\'s usually off-season — swap it for whatever is abundant that week.';
+    }
+    if (/tawad|haggl/.test(question)) {
+        return 'Tawad (haggling) tips:\n• Be friendly and buy in bundles — "suki" treatment earns discounts over time.\n• Ask "May tawad pa po ba?" politely; works best near closing time.\n• Compare 2–3 stalls before committing — prices can differ ₱10–30/kg in the same market.\n• Buying slightly "ugly" but fresh produce is often 20–30% cheaper and cooks the same.';
+    }
+    return 'Palengke shopping tips:\n• Go early morning (5–7 AM) for the freshest fish and meat, or near closing (5–6 PM) for discounted vegetables.\n• Build "suki" relationships with 2–3 stalls — regulars get better prices and freebies like sili or kalamansi.\n• Buy staples (rice, oil, monggo) in bulk; buy perishables in smaller, frequent trips.\n• Wet market beats supermarket by 15–25% for meat, fish, and vegetables; supermarkets win for canned goods on promo.\n• Bring your own bayong and small bills — easier tawad.';
+}
+
+function respondToNutritionQuery(question, budget, pax, diet) {
+    const healthy = getRecipeSuggestions('Lunch', 'healthy', 3).map(r => `• ${r.name} (${r.servings} pax, ₱${r.estimatedCost})`).join('\n');
+    return 'Follow the Pinggang Pinoy guide for balanced meals:\n• 1/2 of your plate: gulay at prutas (vegetables and fruits)\n• 1/4: kanin or other go foods (rice, kamote, corn)\n• 1/4: protein (isda, itlog, manok, monggo, tokwa)\n\nBudget-friendly protein sources: eggs (₱8–9/pc), monggo, tokwa, galunggong, and sardines.\n\nHealthy dishes from our recipe list:\n' + healthy + '\n\nTip: set your diet to "Healthy" in the Meal Planner and I\'ll prioritize these when generating plans.';
 }
 
 function getRecipeSuggestions(mealType, diet, maxResults = 3) {
@@ -1614,14 +1802,15 @@ function respondToMealQuery(question, budget, pax, diet) {
         if (lower.includes('fish') || lower.includes('bangus') || lower.includes('tilapia')) recipes = findRecipesByKeyword('fish', diet, 4).filter(r => r.mealType.includes(type));
         if (lower.includes('vegetable') || lower.includes('veggie') || lower.includes('healthy')) recipes = findRecipesByKeyword('healthy', diet, 4).filter(r => r.mealType.includes(type));
         if (recipes.length > 0) {
-            suggestions.push(`${type}: ${recipes.map(r => `${r.name} (${r.servings} pax, ₱${r.estimatedCost})`).join(', ')}`);
+            const lines = recipes.map(r => `• ${r.name} — ${r.servings} pax, ₱${r.estimatedCost} (₱${Math.round(r.estimatedCost / Math.max(r.servings, 1))}/pax)`).join('\n');
+            suggestions.push(`${type} ideas:\n${lines}`);
         }
     });
 
-    const budgetTip = budget > 0 ? `With ₱${budget} weekly for ${count} pax, try to keep meals near ₱${Math.round(budget / Math.max(count * 3, 1))} each.` : 'Set your weekly budget and family size, and I can give more accurate meal estimates.';
-    const planAdvice = hasActiveMealPlan() ? 'Your current meal plan is active; use this to swap expensive items to more tipid-friendly dishes if needed.' : 'No active meal plan is loaded yet; I suggest starting by generating a plan, then refining it with swaps.';
+    const budgetTip = budget > 0 ? `With ₱${budget} weekly for ${count} pax, aim for about ₱${Math.round(budget / Math.max(count * 3, 1))} per meal.` : 'Set your weekly budget and family size, and I can give more accurate meal estimates.';
+    const planAdvice = hasActiveMealPlan() ? 'Tip: your meal plan is active — you can swap any slot for one of these dishes.' : 'Tip: ask me "How do I cook …?" for full ingredients and steps of any dish.';
 
-    return [budgetTip, planAdvice, ...suggestions].filter(Boolean).join(' ');
+    return [budgetTip, '', ...suggestions, '', planAdvice].join('\n').replace(/\n{3,}/g, '\n\n');
 }
 
 function determineRequestedMeals(question) {
@@ -1634,6 +1823,24 @@ function determineRequestedMeals(question) {
 }
 
 function respondToBudgetQuery(question, budget, pax, diet, groceryItems) {
+    // Specific budgeting methods and concepts
+    if (/50\/?30\/?20/.test(question)) {
+        return 'The 50/30/20 rule splits your monthly income:\n• 50% — needs: food, rent, bills, transport, school\n• 30% — wants: eating out, load, entertainment\n• 20% — savings and debt payments\nFor a ₱15,000 monthly income, that\'s ₱7,500 needs / ₱4,500 wants / ₱3,000 savings.\nYour food budget usually sits inside the 50% — use the Budget Tracker tab to see if yours fits.';
+    }
+    if (/kinsena|payday|sweldo/.test(question)) {
+        const half = budget > 0 ? ` With your ₱${budget}/week food budget, set aside about ₱${(budget * 2).toFixed(0)} per kinsena for food.` : '';
+        return 'Kinsena budgeting tips:\n• On payday, immediately set aside fixed costs (bills, rent, baon) before anything else.\n• Split your food money into 2 weekly envelopes so week 2 doesn\'t go hungry.\n• Do one big palengke trip per week instead of daily small trips — fewer trips, fewer impulse buys.\n• Keep a small ₱200–300 buffer for price spikes.' + half + '\nUse the Budget Tracker tab with the "kinsena" timeline to monitor this.';
+    }
+    if (/envelope/.test(question)) {
+        return 'The envelope method:\n• Divide cash into labeled envelopes — e.g. Palengke, Bills, Baon, Ipon.\n• Only spend what\'s inside each envelope; when it\'s empty, stop.\n• Digital version: use separate e-wallet pockets or bank sub-accounts.\nIt works because it makes overspending physically visible. Start with a Palengke envelope equal to your weekly food budget.';
+    }
+    if (/ipon|emergency fund/.test(question)) {
+        return 'Ipon (savings) tips:\n• Pay yourself first — move savings on payday, don\'t wait for "sobra".\n• Try the 52-week ipon challenge: start at ₱10/week, increase weekly — you\'ll save ₱13,780 in a year.\n• Target an emergency fund of 3–6 months of expenses; keep it separate from daily money.\n• Cut food costs without cutting nutrition: cook in batches, use in-season gulay, and plan meals with the Meal Planner so nothing goes to waste.';
+    }
+    if (/utang|debt/.test(question)) {
+        return 'Managing utang wisely:\n• List all debts with amounts and due dates — visibility first.\n• Pay high-interest debts first (5-6 loans are the most expensive).\n• Avoid borrowing for daily food — shrink the food budget instead using tipid meals like monggo, tortang talong, and sardines-based dishes.\n• Once a debt is cleared, redirect that payment amount into ipon.';
+    }
+
     const perMeal = budget > 0 ? budget / 21 : 0;
     const budgetCategory = perMeal > 0 ? (perMeal < 80 ? 'tight' : perMeal < 140 ? 'moderate' : 'comfortable') : 'unset';
     const groceryTotal = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);

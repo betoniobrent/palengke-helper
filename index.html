@@ -943,9 +943,14 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
             });
             if (tabId === 'meal') {
                 const mealWrapper = document.getElementById('mealScheduleWrapper');
-                if (mealWrapper) mealWrapper.classList.add('hidden');
+                const intro = document.getElementById('mealPlannerIntro');
                 const plannerResult = document.getElementById('plannerResultsSection');
+                const savedWrapper = document.getElementById('savedMealPlansWrapper');
+                const planActive = typeof hasActiveMealPlan === 'function' && hasActiveMealPlan();
+                if (mealWrapper) mealWrapper.classList.toggle('hidden', !planActive);
+                if (intro) intro.classList.toggle('hidden', planActive);
                 if (plannerResult) plannerResult.classList.add('hidden');
+                if (savedWrapper) savedWrapper.classList.add('hidden');
             }
         }
     </script>
