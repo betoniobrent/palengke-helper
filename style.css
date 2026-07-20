@@ -1,0 +1,47 @@
+/* --- Root Interface Properties and Core System Resets --- */
+html {
+    scroll-behavior: smooth;
+}
+
+/* --- Optimized Form & Input Touch Element Ergonomics (Prevents iOS Safari auto-zoom distortions) --- */
+input, 
+select, 
+button {
+    font-size: 16px !important;
+    min-height: 44px;
+}
+
+/* --- Responsive Table Content Overflow Adaptations --- */
+.overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* --- Interactive Visual Response Affordance Transform Animations --- */
+.card {
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Scrollbar Performance Modifications for Webkit Layout Subsystems --- */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

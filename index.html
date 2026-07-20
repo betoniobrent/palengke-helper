@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palengke Helper+</title>
+    <!-- Tailwind CSS Engine CDN Deployment -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Decoupled Visual Presentation Design Component Layer -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 min-h-screen text-gray-800">
+
+    <!-- LOGIN / REGISTER AUTHORIZATION CONTEXT PANEL -->
+    <div id="authPage" class="min-h-screen flex items-center justify-center bg-emerald-50 p-4">
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 w-full max-w-md">
+            <h1 class="text-3xl font-bold text-center text-emerald-700 mb-4">🥬 Palengke Helper+</h1>
+
+            <!-- LOGIN SUBSYSTEM VIEW -->
+            <div id="loginBox">
+                <h2 class="text-xl font-bold mb-3 text-gray-800">Login</h2>
+                <input id="loginEmail" type="email" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Email">
+                <input id="loginPassword" type="password" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Password">
+                
+                <div class="space-y-2 mt-1">
+                    <button onclick="login()" class="w-full bg-emerald-700 text-white p-2 rounded hover:bg-emerald-800 transition font-medium shadow-sm">Login</button>
+                    <button onclick="loginAsGuest()" class="w-full bg-gray-100 text-gray-700 p-2 rounded hover:bg-gray-200 transition font-medium shadow-sm flex items-center justify-center gap-1">
+                        👤 Continue as Guest
+                    </button>
+                </div>
+                
+                <p class="mt-4 text-center text-sm text-gray-600">
+                    No account? <a href="#" onclick="showRegister()" class="text-emerald-700 font-bold hover:underline">Register</a>
+                </p>
+            </div>
+
+            <!-- REGISTER SUBSYSTEM VIEW -->
+            <div id="registerBox" class="hidden">
+                <h2 class="text-xl font-bold mb-3 text-gray-800">Register</h2>
+                <input id="fullname" type="text" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Full Name">
+                <input id="email" type="email" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Email">
+                <input id="age" type="number" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Age">
+                <input id="address" type="text" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Address">
+                <input id="password" type="password" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Password">
+                <button onclick="register()" class="w-full bg-emerald-700 text-white p-2 rounded hover:bg-emerald-800 transition">Register</button>
+                <p class="mt-3 text-center">
+                    <a href="#" onclick="showLogin()" class="text-emerald-700 font-bold hover:underline">Back to Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD CONTENT INTERFACE CONTAINER -->
+    <div id="appPage" class="hidden">
+        <!-- GLOBAL APPLICATION NAVIGATION BAR SYSTEM -->
+        <nav class="bg-emerald-700 text-white p-4 shadow-md sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-center">
+                    <h1 class="font-bold text-xl cursor-pointer" onclick="switchTab('home')">🥬 Palengke Helper+</h1>
+                    <button class="md:hidden text-2xl focus:outline-none" onclick="toggleMenu()">☰</button>
+                    <ul id="menu" class="hidden md:flex gap-6 font-medium text-sm">
+                        <li><button data-tab="home" onclick="switchTab('home')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Home</button></li>
+                        <li><button data-tab="budget" onclick="switchTab('budget')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Budget Tracker</button></li>
+                        <li><button data-tab="meal" onclick="switchTab('meal')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Meal Planner</button></li>
+                        <li><button data-tab="prices" onclick="switchTab('prices')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Market Prices</button></li>
+                        <li><button data-tab="suggestions" onclick="switchTab('suggestions')" class="tab-link hover:text-emerald-200 transition focus:outline-none">AI Suggestions</button></li>
+                        <li><button data-tab="grocery" onclick="switchTab('grocery')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Grocery List Tracker</button></li>
+                        <li><button onclick="logout()" class="hover:text-rose-200 transition font-bold focus:outline-none">Logout</button></li>
+                    </ul>
+                </div>
+                <!-- MOBILE MENU COLLAPSIBLE BLOCK CONTAINER -->
+                <div id="mobileMenu" class="hidden md:hidden mt-4 space-y-2 pb-2">
+                    <button data-tab="home" onclick="switchTab('home'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Home</button>
+                    <button data-tab="budget" onclick="switchTab('budget'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Budget Tracker</button>
+                    <button data-tab="meal" onclick="switchTab('meal'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Meal Planner</button>
+                    <button data-tab="prices" onclick="switchTab('prices'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Market Prices</button>
+                    <button data-tab="suggestions" onclick="switchTab('suggestions'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">AI Suggestions</button>
+                    <button data-tab="grocery" onclick="switchTab('grocery'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Grocery List Tracker</button>
+                    <button onclick="logout(); toggleMenu()" class="block w-full text-left py-2 text-rose-300 font-bold">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- LOCALSTORAGE PERSISTENT INTEGRITY WARNING BANNER PANEL -->
+        <div class="max-w-7xl mx-auto px-6 mt-4">
+            <div class="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-sm font-medium shadow-sm">
+                <div class="flex items-center gap-2">
+                    <span>⚠️</span>
+                    <span><strong>Data saved in your browser (localStorage).</strong> Clearing cache will erase your data. Backup regularly.</span>
+                </div>
+                <button id="exportCsvBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap shadow-sm">
+                    ⬇️ Export CSV Backup
+                </button>
+            </div>
+        </div>
+
+        <!-- APP HERO ATTRIBUTION DISPLAY PANEL -->
+        <section id="homeHero" class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white py-12 text-center mt-4 mx-6 rounded-xl shadow-sm">
+            <h2 class="text-4xl md:text-5xl font-bold px-4">Plan Your Budget. Feed Your Family Better.</h2>
+            <p class="mt-4 text-base md:text-lg px-4 opacity-90">A smart budgeting and meal planning web app for Filipino families.</p>
+        </section>
+
+        <!-- MAIN DECOUPLED CONTENT TABBING SECTION LAYER -->
+        <section class="max-w-7xl mx-auto py-8 px-6 min-h-[50vh]">
+
+            <!-- TAB 0: HOME VIEW PANEL -->
+            <div id="view-home" class="tab-content">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">Welcome back, Ka-Palengke!</h2>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2 space-y-6">
+                        <!-- MARKET TRENDS -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <h3 class="text-xl font-bold mb-3 text-gray-800 flex items-center gap-2">
+                                📊 Price Movements This Week
+                            </h3>
+                            <div class="grid sm:grid-cols-2 gap-4">
+                                <div class="bg-rose-50 p-4 rounded-xl border border-rose-100">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-rose-700">▲ Price Increase Alert</span>
+                                    <ul class="mt-2 space-y-1 text-sm text-gray-700 font-medium">
+                                        <li>🍅 Native Tomatoes (+₱15/kg)</li>
+                                        <li>🧅 Red Onions (+₱10/kg)</li>
+                                        <li>🧄 Imported Garlic (+₱5/kg)</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">▼ Price Drop Savings</span>
+                                    <ul class="mt-2 space-y-1 text-sm text-gray-700 font-medium">
+                                        <li>🍗 Whole Chicken (-₱10/kg)</li>
+                                        <li>🥬 Baguio Cabbage (-₱20/kg)</li>
+                                        <li>🥚 Medium Eggs (-₱0.50/pc)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- LOCALIZED SAVING STRATEGIES -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <h3 class="text-xl font-bold mb-3 text-gray-800 flex items-center gap-2">
+                                💡 Tipid Tips (How to Save This Week)
+                            </h3>
+                            <div class="grid sm:grid-cols-2 gap-4 text-sm text-gray-600">
+                                <div class="space-y-2">
+                                    <p><strong>• Palengke Over Supermarkets:</strong> Buy fresh meats, garlic, and onions at your local wet market instead of grocery stores to instantly shave 15-20% off shelf pricing.</p>
+                                    <p><strong>• Sunset Shopping:</strong> Hit the wet market around 5 PM to 6 PM. Fish and vegetable vendors often drop their prices just to clear their remaining inventory before closing.</p>
+                                </div>
+                                <div class="space-y-2">
+                                    <p><strong>• The "Tingi" Trap:</strong> While sachet or single-use packing feels cheaper upfront, buying essentials like cooking oil, soy sauce, and dish soap in larger pouches saves significant money long-term.</p>
+                                    <p><strong>• Repurpose Leftovers:</strong> Leftover fried fish from dinner can easily turn into delicious *Cardillo* or *Sarciado* for tomorrow's lunch with just a couple of eggs and tomatoes.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GAS MONITORING -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <h3 class="text-xl font-bold mb-3 text-gray-800 flex items-center gap-2">
+                                ⛽ Fuel Price Watch (Logistics & Transport)
+                            </h3>
+                            <div class="grid grid-cols-3 gap-3 text-center">
+                                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                                    <span class="text-xs font-bold text-gray-500 uppercase block">Diesel</span>
+                                    <span class="text-xl font-bold font-mono text-gray-800 block mt-1">₱54.20</span>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                                    <span class="text-xs font-bold text-gray-500 uppercase block">Gasoline 95</span>
+                                    <span class="text-xl font-bold font-mono text-gray-800 block mt-1">₱61.45</span>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                                    <span class="text-xs font-bold text-gray-500 uppercase block">Kerosene</span>
+                                    <span class="text-xl font-bold font-mono text-gray-800 block mt-1">₱72.10</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- ULAM OF THE DAY -->
+                        <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 text-white p-6 rounded-xl shadow-sm">
+                            <span class="bg-white/20 text-xs uppercase tracking-widest font-bold px-2.5 py-1 rounded-full text-white inline-block mb-3">
+                                🍽️ Ulam of the Day
+                            </span>
+                            <h3 class="text-2xl font-bold">Ginisang Ampalaya with Egg</h3>
+                            <p class="text-sm opacity-90 mt-2">Healthy, affordable, and bitter-free if prepared correctly! Perfect paired with fried fish.</p>
+                            <hr class="my-3 opacity-30">
+                            <div class="flex justify-between text-xs font-bold opacity-95">
+                                <span>Est. Cost: ~₱120</span>
+                                <span>Serves: 3-4 Pax</span>
+                            </div>
+                        </div>
+
+                        <!-- BIBLE VERSE -->
+                        <div class="bg-amber-50 border border-amber-200 p-6 rounded-xl shadow-sm text-center">
+                            <span class="text-2xl block mb-2">🍞</span>
+                            <p class="italic text-gray-700 text-sm font-medium">
+                                "Go, eat your food with gladness, and drink your wine with a joyful heart, for God has already approved what you do."
+                            </p>
+                            <span class="block text-xs font-bold text-amber-800 mt-3">— Ecclesiastes 9:7</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 1: BUDGET TRACKER HUB VIEW PANEL -->
+            <div id="view-budget" class="tab-content hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800">Monthly Budget Architecture Hub</h2>
+                        <p class="text-sm text-gray-500">Track allocations and filter records across custom weekly, kinsena, or monthly timelines.</p>
+                    </div>
+                    <!-- TRIGGER ADD BUDGET CONFIGURATION VIEW -->
+                    <button onclick="toggleForm('newMonthBudgetForm')" class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5 self-start sm:self-auto">
+                        ➕ Add New Budget
+                    </button>
+                </div>
+
+                <!-- ADD NEW MONTHLY BUDGET ACTION FORM PANEL -->
+                <div id="newMonthBudgetForm" class="hidden bg-white p-5 rounded-xl shadow-sm border border-emerald-100 mb-6 max-w-xl">
+                    <h3 class="text-base font-bold text-gray-800 mb-3">Initialize New Month Focus</h3>
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="col-span-2">
+                            <label class="text-[10px] font-bold text-gray-400 uppercase block mb-1">Select Statement Month</label>
+                            <input id="newBudgetDate" type="month" value="2026-07" class="w-full border px-3 py-1.5 text-sm rounded-lg bg-gray-50 text-gray-800 font-medium focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                        </div>
+                    </div>
+                    <div class="flex gap-2 justify-end">
+                        <button onclick="toggleForm('newMonthBudgetForm')" class="text-gray-500 hover:text-gray-800 text-xs px-2 font-medium">Cancel</button>
+                        <button onclick="addNewMonthlyBudgetHubRecord()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2 rounded-lg shadow-sm transition">
+                            Create Month Folder
+                        </button>
+                    </div>
+                </div>
+
+                <!-- HISTORICAL ARCHIVE STREAM GRID CONTAINER -->
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Saved Monthly Statement Folders</h3>
+                <div id="monthlyBudgetsHubGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                    <!-- Dynamic historical cards append here -->
+                </div>
+
+                <!-- SEPARATOR RUNTIME DEPLOYMENT -->
+                <hr class="border-gray-200 my-8">
+
+                <!-- MAIN INTERACTIVE LEDGER REGION BLOCK -->
+                <div id="activeLedgerWorkspaceSection" class="hidden">
+                    <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-xl flex items-center justify-between mb-4 flex-wrap gap-2">
+                        <div>
+                            <span class="text-xs text-emerald-800 font-bold uppercase tracking-wider">Currently Inspecting Workspace:</span>
+                            <h2 id="activeWorkspaceMonthTitle" class="text-xl font-black text-emerald-950">Month Context</h2>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] text-emerald-800 font-bold uppercase block">Aggregated Active Allowance Pool</span>
+                            <span id="activeWorkspaceBudgetValue" class="text-xl font-mono font-black text-emerald-900">₱0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                        <p class="text-sm text-gray-500">Filter workspace details dynamically by specification intervals below.</p>
+                        <!-- LOCALIZED DYNAMIC SPECIFICATION QUICK FILTERS -->
+                        <div class="flex flex-wrap gap-1.5 bg-white p-1.5 rounded-xl border border-gray-100 shadow-sm">
+                            <button onclick="applySpecificationFilter('all')" class="bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm" id="filter-spec-all">✨ All</button>
+                            <button onclick="applySpecificationFilter('Monthly')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-Monthly">🗓️ Monthly</button>
+                            <button onclick="applySpecificationFilter('1st Cut (1st-15th)')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-1st">🌓 1st Cut</button>
+                            <button onclick="applySpecificationFilter('2nd Cut (16th-End)')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-2nd">🌓 2nd Cut</button>
+                            <button onclick="applySpecificationFilter('Week 1')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w1">W1</button>
+                            <button onclick="applySpecificationFilter('Week 2')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w2">W2</button>
+                            <button onclick="applySpecificationFilter('Week 3')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w3">W3</button>
+                            <button onclick="applySpecificationFilter('Week 4')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w4">W4</button>
+                        </div>
+                    </div>
+
+                    <!-- REVENUE COMPILATION BANNER BAR -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex flex-wrap items-center justify-end gap-6 text-right">
+                        <div>
+                            <span class="text-xs font-semibold text-gray-400 block">Active Specification Income Pool</span>
+                            <span id="ledgerTotalIncome" class="text-xl font-bold text-emerald-600">₱0.00</span>
+                        </div>
+                        <div class="border-l pl-6 border-gray-100">
+                            <span class="text-xs font-semibold text-gray-400 block">Filtered Tracked Expenses</span>
+                            <span id="ledgerTotalExpenses" class="text-xl font-bold text-rose-500">-₱0.00</span>
+                        </div>
+                        <div class="border-l pl-6 border-gray-100">
+                            <span class="text-xs font-semibold text-gray-400 block">Net Margin Balance</span>
+                            <span id="ledgerNetSavings" class="text-xl font-bold text-gray-800">₱0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- REAL-TIME EXPENSE CATEGORY DISTRIBUTION ANALYTICS (WITH LIVE PIE CHART) -->
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 mb-6">
+                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                            📊 Filtered Expense Allocation Breakdown
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-3 gap-6 items-center">
+                            <!-- PIE CHART VISUAL BLOCK -->
+                            <div class="flex flex-col items-center justify-center bg-gray-50 p-4 rounded-xl border border-gray-100/70 h-full min-h-[220px]">
+                                <div class="relative w-40 h-40">
+                                    <svg id="pieChartSvg" viewBox="0 0 32 32" class="w-full h-full transform -rotate-90 rounded-full bg-gray-100 transition-all duration-500">
+                                        <!-- Dynamic SVG segments loop here -->
+                                    </svg>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-white rounded-full m-[22%] shadow-sm border border-gray-100">
+                                        <span class="text-[9px] font-bold text-gray-400 uppercase tracking-tight">Total Spent</span>
+                                        <span id="pieCenterTotal" class="text-xs font-black text-gray-800">₱0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- DYNAMIC LIST LEGEND + PROGRESS BARS -->
+                            <div id="categoryBreakdownContainer" class="md:col-span-2 grid sm:grid-cols-2 gap-4">
+                                <p class="text-xs text-gray-400 italic col-span-full">No active expenses logged within this date window.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SIDE-BY-SIDE LEDGERS WORKSPACE -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- INCOME / ALLOWANCE LEDGER COLUMN -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between min-h-[400px]">
+                            <div>
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+                                    <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                        <span class="text-emerald-600">📥</span> Income & Allowance Streams
+                                    </h3>
+                                    <button onclick="toggleForm('incomeForm')" class="bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg font-bold hover:bg-emerald-800 shadow-sm transition">+ Add</button>
+                                </div>
+
+                                <!-- Dynamic Form Container -->
+                                <div id="incomeForm" class="hidden bg-emerald-50/60 p-4 rounded-xl border border-emerald-100 mb-4 space-y-3">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="text-[10px] font-bold text-emerald-800 uppercase">Source Name</label>
+                                            <input id="incDesc" type="text" placeholder="e.g. Salary, Allowance" class="w-full bg-white text-gray-800 border border-emerald-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] font-bold text-emerald-800 uppercase">Amount (₱)</label>
+                                            <input id="incAmount" type="number" placeholder="0" class="w-full bg-white text-gray-800 border border-emerald-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="text-[10px] font-bold text-emerald-800 uppercase">Specification Cadence</label>
+                                            <select id="incSpec" class="w-full bg-white text-gray-800 border border-emerald-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                                                <option value="Monthly">🗓️ Monthly (Full Cycle)</option>
+                                                <option value="1st Cut (1st-15th)">🌓 Kinsena: 1st Cut (1st-15th)</option>
+                                                <option value="2nd Cut (16th-End)">🌓 Kinsena: 2nd Cut (16th-End)</option>
+                                                <option value="Week 1">📆 Week 1</option>
+                                                <option value="Week 2">📆 Week 2</option>
+                                                <option value="Week 3">📆 Week 3</option>
+                                                <option value="Week 4">📆 Week 4</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] font-bold text-emerald-800 uppercase">Date Logged</label>
+                                            <input id="incDate" type="date" class="w-full bg-white text-gray-800 border border-emerald-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2 pt-1 justify-end">
+                                        <button onclick="toggleForm('incomeForm')" class="text-gray-500 hover:text-gray-800 text-xs px-2 font-medium">✕ Cancel</button>
+                                        <button onclick="addLedgerItem('income')" class="bg-emerald-700 text-white font-bold text-xs px-4 py-1.5 rounded-lg hover:bg-emerald-800 shadow-sm transition">Save Allocation</button>
+                                    </div>
+                                </div>
+
+                                <!-- List Entries Stack -->
+                                <div id="incomeItemsList" class="space-y-2 overflow-y-auto max-h-[250px] pr-1">
+                                    <!-- Appends via JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- EXPENSES LEDGER COLUMN -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between min-h-[400px]">
+                            <div>
+                                <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+                                    <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                        <span class="text-rose-500">📤</span> Expenses
+                                    </h3>
+                                    <button onclick="toggleForm('expenseForm')" class="bg-rose-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold hover:bg-rose-700 shadow-sm transition">+ Add</button>
+                                </div>
+
+                                <!-- Dynamic Form Container -->
+                                <div id="expenseForm" class="hidden bg-rose-50/60 p-4 rounded-xl border border-rose-100 mb-4 space-y-3">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="text-[10px] font-bold text-rose-800 uppercase">Description</label>
+                                            <input id="expDesc" type="text" placeholder="e.g. Electric, Rent" class="w-full bg-white text-gray-800 border border-rose-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-rose-500">
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] font-bold text-rose-800 uppercase">Amount (₱)</label>
+                                            <input id="expAmount" type="number" placeholder="0" class="w-full bg-white text-gray-800 border border-rose-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-rose-500">
+                                        </div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="text-[10px] font-bold text-rose-800 uppercase">Category Group</label>
+                                            <select id="expCategory" class="w-full bg-white text-gray-800 border border-rose-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-rose-500">
+                                                <option>Food & Groceries</option>
+                                                <option>Electricity (Meralco)</option>
+                                                <option>Water Bill</option>
+                                                <option>House Rent</option>
+                                                <option>Internet / Load</option>
+                                                <option>Other Bills</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] font-bold text-rose-800 uppercase">Specification Target</label>
+                                            <select id="expSpec" class="w-full bg-white text-gray-800 border border-rose-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-rose-500">
+                                                <option value="Monthly">🗓️ Monthly (Full Cycle)</option>
+                                                <option value="1st Cut (1st-15th)">🌓 Kinsena: 1st Cut (1st-15th)</option>
+                                                <option value="2nd Cut (16th-End)">🌓 Kinsena: 2nd Cut (16th-End)</option>
+                                                <option value="Week 1">📆 Week 1</option>
+                                                <option value="Week 2">📆 Week 2</option>
+                                                <option value="Week 3">📆 Week 3</option>
+                                                <option value="Week 4">📆 Week 4</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label class="text-[10px] font-bold text-rose-800 uppercase block">Date Logged</label>
+                                        <input id="expDate" type="date" class="w-full bg-white text-gray-800 border border-rose-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-rose-500">
+                                    </div>
+                                    <div class="flex gap-2 pt-1 justify-end">
+                                        <button onclick="toggleForm('expenseForm')" class="text-gray-500 hover:text-gray-800 text-xs px-2 font-medium">✕ Cancel</button>
+                                        <button onclick="addLedgerItem('expense')" class="bg-rose-600 text-white font-bold text-xs px-4 py-1.5 rounded-lg hover:bg-rose-700 shadow-sm transition">Save Expense</button>
+                                    </div>
+                                </div>
+
+                                <!-- List Entries Stack -->
+                                <div id="expenseItemsList" class="space-y-2 overflow-y-auto max-h-[250px] pr-1">
+                                    <!-- Appends via JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: MEAL PLANNER VIEW PANEL -->
+            <div id="view-meal" class="tab-content hidden">
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-6">
+                        <h2 class="text-3xl font-black text-gray-800">Create your meal plan right here in seconds</h2>
+                        <p class="text-sm text-gray-500 mt-1">Tailored for Filipino households, budgets, and allergies.</p>
+                    </div>
+
+                    <!-- MAIN GENERATOR CARD CONTAINER -->
+                    <!-- ============================= -->
+<!-- SMART MEAL PLANNER HEADER -->
+<!-- ============================= -->
+
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
+
+    <div class="flex items-center justify-between flex-wrap gap-4">
+
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800">
+                🍽️ Smart Weekly Meal Planner
+            </h2>
+
+            <p class="text-gray-500 mt-2">
+                Create your own weekly meal plan or let Palengke Helper+ generate one
+                based on your budget and family size.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ============================= -->
+<!-- PLANNING MODE -->
+<!-- ============================= -->
+
+<div id="mealPlannerIntro" class="grid md:grid-cols-2 gap-6 mb-6">
+
+    <!-- AUTO -->
+
+    <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">
+
+            🤖 Generate Automatically
+
+        </h3>
+
+        <div class="space-y-4">
+
+            <div>
+
+                <label class="text-sm text-gray-600">
+
+                    Weekly Budget
+
+                </label>
+
+                <input
+                    id="plannerBudget"
+                    type="number"
+                    placeholder="2500"
+                    class="w-full mt-1 rounded-xl border border-gray-300 p-3">
+
+            </div>
+
+            <div>
+
+                <label class="text-sm text-gray-600">
+
+                    Family Members (Pax)
+
+                </label>
+
+                <input
+                    id="plannerPax"
+                    type="number"
+                    placeholder="4"
+                    class="w-full mt-1 rounded-xl border border-gray-300 p-3">
+
+            </div>
+
+            <div>
+
+                <label class="text-sm text-gray-600">
+
+                    Preferred Diet
+
+                </label>
+
+                <select
+                    id="plannerDiet"
+                    class="w-full mt-1 rounded-xl border border-gray-300 p-3">
+
+                    <option value="anything">Lutong Bahay</option>
+                    <option value="tipid">Petsa de Peligro</option>
+                    <option value="healthy">Healthy</option>
+                    <option value="protein">High Protein</option>
+                    <option value="nopork">Vegetarian</option>
+
+                </select>
+
+            </div>
+
+            <button
+                id="generateMealPlanBtn"
+                class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold">
+
+                ⚡ Generate Meal Plan
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- MANUAL -->
+
+    <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">
+
+            ✍️ Create Your Own
+
+        </h3>
+
+        <p class="text-gray-600 mb-5">
+
+            Build your own weekly meal plan by selecting dishes for breakfast,
+            lunch and dinner.
+
+        </p>
+
+        <button
+            id="customizeMealBtn"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold">
+
+            🍳 Customize Meal Plan
+
+        </button>
+
+    </div>
+
+</div>
+<!-- ====================================== -->
+<!-- MEAL SCHEDULE & SAVED PLANS WRAPPER -->
+<!-- ====================================== -->
+
+<div id="mealScheduleWrapper" class="hidden">
+    <div id="mealScheduleActions" class="hidden mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <p class="text-sm text-gray-600">Customize your weekly schedule, then click Complete to view the meal plan summary and save it.</p>
+        <button id="completeMealPlanBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-3 rounded-xl font-semibold shadow">Complete Meal Plan</button>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
+
+        <div class="flex items-center justify-between mb-6">
+
+            <div>
+
+                <h3 class="text-2xl font-bold text-gray-800">
+
+                    📅 Weekly Meal Schedule
+
+                </h3>
+
+                <p class="text-gray-500">
+
+                    Click any meal slot to choose a recipe.
+
+                </p>
+
+            </div>
+
+            <button
+                id="clearMealPlanBtn"
+                class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl">
+
+                🗑 Clear Week
+
+            </button>
+
+        </div>
+
+        <div id="weeklyPlanner" class="space-y-4">
+
+        </div>
+
+    </div>
+
+    <div id="plannerResultsSection" class="hidden bg-emerald-50 rounded-2xl border border-emerald-100 p-6 mb-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
+            <div>
+                <button id="backToSavedPlansBtn" class="hidden mb-2 text-emerald-700 hover:text-emerald-800 font-semibold text-sm flex items-center gap-1">
+                    ← Back to Meal Plans
+                </button>
+                <h3 class="text-xl font-bold text-gray-800">🧾 Meal Plan Summary</h3>
+                <p id="plannerSummaryText" class="text-gray-600 text-sm mt-1">Your generated plan appears below. Click a meal name to view ingredients, cost, and recipe.</p>
+            </div>
+            <div class="text-right flex flex-col items-end gap-3">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2 w-full">
+                    <input id="mealPlanNameInput" type="text" placeholder="Meal plan name" class="w-full sm:w-auto min-w-[220px] border border-gray-200 rounded-xl px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                    <button id="saveMealPlanBtn" class="hidden bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-xl font-semibold">Save Meal Plan</button>
+                    <button id="backToGenerateBtn" class="hidden bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-xl font-semibold">Generate New Plan</button>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Estimated Week Cost</p>
+                    <p id="plannerSummaryCost" class="text-2xl font-bold text-emerald-700">₱0</p>
+                    <p id="plannerSummaryWarning" class="text-sm text-rose-600 font-semibold"></p>
+                </div>
+            </div>
+        </div>
+        <div id="weeklyScheduleCardsContainer" class="grid gap-4"></div>
+    </div>
+
+    </div>
+</div>
+
+<div id="savedMealPlansWrapper" class="hidden bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6 max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-5">
+        <h3 class="text-xl font-bold text-gray-800">💾 Saved Meal Plans</h3>
+        <button id="refreshMealPlansBtn" class="text-emerald-700 hover:text-emerald-800 font-semibold">Refresh</button>
+    </div>
+    <div id="savedMealPlans" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+</div>
+</div>
+</div>
+</div>
+
+            <!-- TAB 3: PALENGKE PRICES MONITOR VIEW PANEL -->
+            <div id="view-prices" class="tab-content hidden">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">Palengke Market Prices</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 max-w-4xl">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-100 pb-3 mb-4 gap-2">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">Bantay Presyo Watchlist</h3>
+                            <p class="text-sm text-gray-500 mt-0.5">Estimated baseline reference market rates for key commodities.</p>
+                        </div>
+                        <span class="bg-emerald-50 text-emerald-800 font-bold text-xs px-3 py-1.5 rounded-full whitespace-nowrap">● Standard Public Market Pricing</span>
+                    </div>
+                    <div class="overflow-x-auto border border-gray-200 rounded-xl">
+                        <table class="w-full text-left text-sm border-collapse">
+                            <thead class="bg-gray-50 border-b border-gray-200 font-bold text-gray-700 uppercase tracking-wider text-xs">
+                                <tr>
+                                    <th class="p-3 border-r border-gray-200">Commodity Item Classification</th>
+                                    <th class="p-3 text-right">Reference Price Basis</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-gray-600">
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="p-3 border-r border-gray-200 font-medium">🍗 Whole Fresh Chicken (per kg)</td>
+                                    <td class="p-3 text-right font-mono font-bold text-gray-800">₱180.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="p-3 border-r border-gray-200 font-medium">🥩 Pork Kasim / Lean Shoulder (per kg)</td>
+                                    <td class="p-3 text-right font-mono font-bold text-gray-800">₱320.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="p-3 border-r border-gray-200 font-medium">🐟 Fresh Tilapia Large Catch (per kg)</td>
+                                    <td class="p-3 text-right font-mono font-bold text-gray-800">₱140.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="p-3 border-r border-gray-200 font-medium">🍆 Native Long Eggplant / Talong (per kg)</td>
+                                    <td class="p-3 text-right font-mono font-bold text-gray-800">₱90.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="p-3 border-r border-gray-200 font-medium">🧅 Red Onions Medium Size (per kg)</td>
+                                    <td class="p-3 text-right font-mono font-bold text-gray-800">₱160.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: AI SUGGESTIONS VIEW PANEL -->
+            <div id="view-suggestions" class="tab-content hidden">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">AI Suggestions</h2>
+                <div class="space-y-6 max-w-6xl mx-auto">
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="bg-emerald-50 border border-emerald-100 rounded-3xl p-5 shadow-sm">
+                            <span class="text-xs uppercase tracking-wide text-emerald-700 font-bold">Weekly Budget</span>
+                            <p id="suggestionBudgetValue" class="mt-3 text-2xl font-bold text-gray-900">₱0</p>
+                        </div>
+                        <div class="bg-sky-50 border border-sky-100 rounded-3xl p-5 shadow-sm">
+                            <span class="text-xs uppercase tracking-wide text-sky-700 font-bold">Family Size</span>
+                            <p id="suggestionPaxValue" class="mt-3 text-2xl font-bold text-gray-900">0 Pax</p>
+                        </div>
+                        <div class="bg-yellow-50 border border-yellow-100 rounded-3xl p-5 shadow-sm">
+                            <span class="text-xs uppercase tracking-wide text-yellow-700 font-bold">Meal Plan Status</span>
+                            <p id="suggestionPlanStatus" class="mt-3 text-2xl font-bold text-gray-900">No active plan</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <p class="text-sm text-gray-600">Recommendations are based on your current plan, budget, and grocery list. Refresh after making updates.</p>
+                        <button onclick="evaluateDynamicContextualAISuggestions()" class="self-start sm:self-auto bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-xl font-semibold transition">Refresh Suggestions</button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                        <p class="mb-4 font-semibold text-gray-600 flex items-center gap-2">
+                            <span>💡</span> Smart suggestions for your budget and meal plan:
+                        </p>
+                        <ul id="aiSuggestionsList" class="list-disc pl-6 space-y-3 text-gray-700"></ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                        <div class="flex flex-col gap-4">
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Ask the AI</h3>
+                                <p class="text-sm text-gray-600">Type a question and the assistant will respond using your current budget, family size, and meal plan.</p>
+                            </div>
+                            <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                                <button onclick="handleQuickPrompt('What should I cook for dinner?')" class="rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 text-sm text-gray-700 hover:bg-slate-100 transition text-left">What should I cook for dinner?</button>
+                                <button onclick="handleQuickPrompt('How can I save money on groceries?')" class="rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 text-sm text-gray-700 hover:bg-slate-100 transition text-left">How can I save money on groceries?</button>
+                                <button onclick="handleQuickPrompt('Give me budget-friendly lunch ideas.')" class="rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 text-sm text-gray-700 hover:bg-slate-100 transition text-left">Give me budget-friendly lunch ideas.</button>
+                                <button onclick="handleQuickPrompt('What breakfast can I make for 4 people?')" class="rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 text-sm text-gray-700 hover:bg-slate-100 transition text-left">What breakfast can I make for 4 people?</button>
+                            </div>
+                            <textarea id="aiQuestionInput" rows="4" class="w-full border border-gray-200 rounded-3xl p-4 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Ask something like: What should I cook for dinner? or How can I save money this week?"></textarea>
+                            <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+                                <button id="aiAskBtn" onclick="processAISuggestionQuery()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-3 rounded-xl font-semibold transition">Ask AI</button>
+                                <button onclick="clearAIChatHistory()" class="text-gray-500 hover:text-gray-800 text-sm">Clear chat</button>
+                            </div>
+                            <p class="text-xs text-gray-500">Press <span class="font-semibold">Ctrl+Enter</span> to send.</p>
+                            <div class="bg-gray-50 border border-gray-200 rounded-3xl p-4 max-h-[460px] overflow-y-auto flex flex-col gap-4" id="aiChatHistory">
+                                <div class="self-start bg-white border border-gray-200 rounded-3xl p-4 text-sm text-gray-500 max-w-[90%]">Your AI conversation will appear here after you ask a question.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: GROCERY LIST TRACKER -->
+            <div id="view-grocery" class="tab-content hidden">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">Grocery List Tracker</h2>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    
+                    <div class="mb-4 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center justify-between">
+                        <span class="text-sm font-bold text-emerald-800">📋 Tracking Target Routine:</span>
+                        <select id="groceryCycle" class="border border-gray-200 p-1.5 rounded-lg text-sm bg-white font-medium text-gray-800">
+                            <option value="weekly" selected>Weekly Budget Interval (Lingguhan)</option>
+                            <option value="biweekly">15-Day Cycle Target (Kinsenas)</option>
+                            <option value="monthly">Full Monthly List (Buwanan)</option>
+                        </select>
+                    </div>
+
+                    <input id="grocerySearchInput" onkeyup="searchItems()" placeholder="🔍 Search purely by item name keywords..." class="border border-gray-200 p-2.5 rounded-lg w-full mb-4 bg-gray-50 text-gray-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+
+                    <div class="flex flex-col lg:flex-row gap-3 mb-4">
+                        <input id="itemName" type="text" placeholder="Item Name" class="border border-gray-200 bg-white text-gray-800 p-2 rounded-lg flex-1 min-w-[180px]">
+                        <input id="itemPrice" type="number" placeholder="Price (₱)" class="border border-gray-200 bg-white text-gray-800 p-2 rounded-lg w-full lg:w-32">
+                        <input id="itemQuantity" type="number" placeholder="Qty" class="border border-gray-200 bg-white text-gray-800 p-2 rounded-lg w-full lg:w-24">
+                        
+                        <select id="itemCategory" class="border border-gray-200 p-2 rounded-lg bg-white w-full lg:w-56 text-sm text-gray-800">
+                            <option>Meat & Fish (Karne / Isda)</option>
+                            <option>Vegetables & Fruits (Gulay / Prutas)</option>
+                            <option>Rice, Eggs & Grains (Bigas / Itlog)</option>
+                            <option>Condiments & Spices (Instant / Sahog)</option>
+                            <option>Canned & Packaged Goods</option>
+                            <option>Household Essentials & Toiletries</option>
+                        </select>
+                        <button onclick="addItem()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2 rounded-lg font-semibold transition shadow-sm whitespace-nowrap">Add Item</button>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-xl border border-gray-200">
+                        <table class="w-full border-collapse text-left text-sm">
+                            <thead class="bg-gray-50 text-gray-700 uppercase text-xs font-bold tracking-wider border-b border-gray-200">
+                                <tr>
+                                    <th class="p-3 border-r border-gray-200">Category</th>
+                                    <th class="p-3 border-r border-gray-200">Item</th>
+                                    <th class="p-3 border-r border-gray-200 text-center">Qty</th>
+                                    <th class="p-3 border-r border-gray-200 text-right">Price</th>
+                                    <th class="p-3 border-r border-gray-200 text-right">Subtotal</th>
+                                    <th class="p-3 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="groceryTable" class="divide-y divide-gray-100 text-gray-600">
+                                <!-- Dynamic Row Appends Occur Instantly Here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 gap-2">
+                        <h4 class="text-xl font-bold text-gray-800">Total Grocery Cost: <span id="totalCost" class="text-emerald-700">₱0</span></h4>
+                        <p id="budgetWarning" class="text-rose-600 font-bold animate-pulse text-sm"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOCAL NETWORK OFFLINE STATUS CONTROLLER ALERT -->
+            <div class="mt-8">
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl flex items-start gap-3 shadow-sm">
+                    <div class="text-xl">📡</div>
+                    <div>
+                        <h3 class="font-bold text-lg text-amber-900">Local Cache Active</h3>
+                        <p class="text-amber-800 text-sm mt-0.5">This platform fully operates independent of server connections by writing and compiling execution data tracking records to sandboxed storage.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER LAYER CONTAINER -->
+        <footer class="bg-emerald-800 text-white text-center p-6 mt-12 border-t border-emerald-900">
+            <p class="text-sm opacity-80">© 2026 Palengke Helper+ | Engineered for Filipino Household Budget Allocation Optimization</p>
+        </footer>
+    </div>
+    <!-- ====================================== -->
+<!-- RECIPE SELECTOR -->
+<!-- ====================================== -->
+
+<div
+id="recipeSelectorModal"
+class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+
+<div class="bg-white rounded-2xl shadow-xl w-11/12 max-w-5xl max-h-[90vh] overflow-hidden">
+
+<div class="p-6 border-b">
+
+<div class="flex justify-between items-center">
+
+<h2 class="text-2xl font-bold">
+
+🍽 Select Recipe
+
+</h2>
+
+<button
+id="closeRecipeSelector"
+class="text-2xl">
+
+✕
+
+</button>
+<!-- CUSTOM RECIPE MODAL -->
+<div id="customRecipeModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-xl w-11/12 max-w-2xl overflow-hidden">
+        <div class="p-6 border-b flex justify-between items-center">
+            <h2 class="text-2xl font-bold">✍️ Create Custom Recipe</h2>
+            <button id="closeCustomRecipeModal" class="text-2xl">✕</button>
+        </div>
+        <div class="p-6 space-y-4">
+            <input id="customRecipeName" placeholder="Dish name" class="w-full border p-2 rounded" />
+            <div class="grid grid-cols-2 gap-2">
+                <input id="customRecipeServings" type="number" placeholder="Servings" class="w-full border p-2 rounded" />
+                <input id="customRecipeEstimatedCost" type="number" placeholder="Estimated cost" class="w-full border p-2 rounded" />
+            </div>
+            <textarea id="customRecipeIngredients" placeholder="Ingredients (comma separated)" class="w-full border p-2 rounded"></textarea>
+            <textarea id="customRecipeInstructions" placeholder="Instructions (semicolon separated)" class="w-full border p-2 rounded"></textarea>
+            <div class="flex justify-end gap-2">
+                <button id="cancelCustomRecipe" class="px-4 py-2 rounded border" onclick="document.getElementById('customRecipeModal').classList.add('hidden')">Cancel</button>
+                <button id="saveCustomRecipeBtn" class="px-4 py-2 bg-emerald-700 text-white rounded">Save Recipe</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<input
+id="recipeSearch"
+
+type="text"
+
+placeholder="Search recipes..."
+
+class="mt-5 w-full border rounded-xl p-3">
+
+</div>
+
+<div
+
+id="recipeSelectionList"
+
+class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 p-6 overflow-y-auto max-h-[70vh]">
+
+</div>
+
+</div>
+
+</div>
+<!-- ====================================== -->
+<!-- RECIPE DETAILS -->
+<!-- ====================================== -->
+
+<div
+id="recipeDetailsModal"
+class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-xl w-11/12 max-w-6xl overflow-hidden">
+        <div class="p-6 border-b flex items-center justify-between">
+            <h2 class="text-2xl font-bold">🍳 Recipe Details</h2>
+            <button id="closeRecipeDetails" class="text-2xl">✕</button>
+        </div>
+        <div id="recipeDetailsContent" class="p-6">
+            <!-- Recipe details populate here -->
+        </div>
+    </div>
+</div>
+
+    <!-- Modular Operational Architecture Decoupled Initialization -->
+    
+    <script src="data/recipes.js"></script>
+<script src="app.js"></script>
+    <script>
+        function switchTab(tabId) {
+            const views = document.querySelectorAll('.tab-content');
+            views.forEach(v => v.classList.add('hidden'));
+            
+            const target = document.getElementById('view-' + tabId);
+            if (target) {
+                target.classList.remove('hidden');
+            }
+            
+            if (tabId === 'suggestions') {
+                if (typeof renderAIWelcomeMessage === 'function') {
+                    renderAIWelcomeMessage();
+                }
+                if (typeof evaluateDynamicContextualAISuggestions === 'function') {
+                    evaluateDynamicContextualAISuggestions();
+                }
+            }
+            const tabButtons = document.querySelectorAll('.tab-link');
+            tabButtons.forEach(btn => {
+                btn.classList.remove('text-white', 'font-bold', 'underline', 'underline-offset-4');
+                if (btn.dataset.tab === tabId) {
+                    btn.classList.add('text-white', 'font-bold', 'underline', 'underline-offset-4');
+                }
+            });
+            if (tabId === 'meal') {
+                const mealWrapper = document.getElementById('mealScheduleWrapper');
+                if (mealWrapper) mealWrapper.classList.add('hidden');
+                const plannerResult = document.getElementById('plannerResultsSection');
+                if (plannerResult) plannerResult.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
