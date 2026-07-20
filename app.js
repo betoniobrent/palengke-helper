@@ -699,7 +699,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const aiQuestionInput = document.getElementById('aiQuestionInput');
     if (aiQuestionInput) {
         aiQuestionInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+            if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault();
                 processAISuggestionQuery();
             }
