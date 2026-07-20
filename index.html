@@ -19,9 +19,8 @@
             <!-- LOGIN SUBSYSTEM VIEW -->
             <div id="loginBox">
                 <h2 class="text-xl font-bold mb-3 text-gray-800">Login</h2>
-                <input id="loginEmail" type="email" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Email">
-                <input id="loginPassword" type="password" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Password">
-                
+                <input id="loginEmail" type="email" class="ph-input mb-2" placeholder="Email">
+                <input id="loginPassword" type="password" class="ph-input mb-2" placeholder="Password">
                 <div class="space-y-2 mt-1">
                     <button onclick="login()" class="w-full bg-emerald-700 text-white p-2 rounded hover:bg-emerald-800 transition font-medium shadow-sm">Login</button>
                     <button onclick="loginAsGuest()" class="w-full bg-gray-100 text-gray-700 p-2 rounded hover:bg-gray-200 transition font-medium shadow-sm flex items-center justify-center gap-1">
@@ -37,11 +36,11 @@
             <!-- REGISTER SUBSYSTEM VIEW -->
             <div id="registerBox" class="hidden">
                 <h2 class="text-xl font-bold mb-3 text-gray-800">Register</h2>
-                <input id="fullname" type="text" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Full Name">
-                <input id="email" type="email" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Email">
-                <input id="age" type="number" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Age">
-                <input id="address" type="text" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Address">
-                <input id="password" type="password" class="w-full border p-2 mb-2 rounded bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-600" placeholder="Password">
+               <input id="fullname" type="text" class="ph-input mb-2" placeholder="Full Name">
+                <input id="email" type="email" class="ph-input mb-2" placeholder="Email">
+                <input id="age" type="number" class="ph-input mb-2" placeholder="Age">
+                <input id="address" type="text" class="ph-input mb-2" placeholder="Address">
+                <input id="password" type="password" class="ph-input mb-2" placeholder="Password">  
                 <button onclick="register()" class="w-full bg-emerald-700 text-white p-2 rounded hover:bg-emerald-800 transition">Register</button>
                 <p class="mt-3 text-center">
                     <a href="#" onclick="showLogin()" class="text-emerald-700 font-bold hover:underline">Back to Login</a>
