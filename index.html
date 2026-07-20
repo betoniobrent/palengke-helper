@@ -81,16 +81,11 @@
             </div>
         </nav>
 
-        <!-- LOCALSTORAGE PERSISTENT INTEGRITY WARNING BANNER PANEL -->
+        <!-- DATA BACKUP NOTICE -->
         <div class="max-w-7xl mx-auto px-6 mt-4">
-            <div class="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-sm font-medium shadow-sm">
-                <div class="flex items-center gap-2">
-                    <span>⚠️</span>
-                    <span><strong>Data saved in your browser (localStorage).</strong> Clearing cache will erase your data. Backup regularly.</span>
-                </div>
-                <button id="exportCsvBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap shadow-sm">
-                    ⬇️ Export CSV Backup
-                </button>
+            <div class="bg-white border border-gray-200 text-gray-500 px-4 py-2 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-2 text-xs shadow-sm">
+                <span>Your data is saved in this browser — clearing the cache erases it. Back up regularly.</span>
+                <button id="exportCsvBtn" class="text-emerald-700 hover:text-emerald-900 font-bold whitespace-nowrap transition">Export CSV Backup</button>
             </div>
         </div>
 
@@ -204,12 +199,12 @@
             <div id="view-budget" class="tab-content hidden">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <div>
-                        <h2 class="text-3xl font-bold text-gray-800">Monthly Budget Architecture Hub</h2>
-                        <p class="text-sm text-gray-500">Track allocations and filter records across custom weekly, kinsena, or monthly timelines.</p>
+                        <h2 class="text-3xl font-bold text-gray-800">Budget Tracker</h2>
+                        <p class="text-sm text-gray-500">Track income and expenses across weekly, kinsena, or monthly timelines.</p>
                     </div>
                     <!-- TRIGGER ADD BUDGET CONFIGURATION VIEW -->
                     <button onclick="toggleForm('newMonthBudgetForm')" class="bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5 self-start sm:self-auto">
-                        ➕ Add New Budget
+                        + Add New Budget
                     </button>
                 </div>
 
@@ -435,34 +430,10 @@
             <!-- TAB 2: MEAL PLANNER VIEW PANEL -->
             <div id="view-meal" class="tab-content hidden">
                 <div class="max-w-4xl mx-auto">
-                    <div class="text-center mb-6">
-                        <h2 class="text-3xl font-black text-gray-800">Create your meal plan right here in seconds</h2>
-                        <p class="text-sm text-gray-500 mt-1">Tailored for Filipino households, budgets, and allergies.</p>
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Meal Planner</h2>
+                        <p class="text-sm text-gray-500 mt-1">Create a weekly plan tailored to your budget, household size, and diet — or build your own.</p>
                     </div>
-
-                    <!-- MAIN GENERATOR CARD CONTAINER -->
-                    <!-- ============================= -->
-<!-- SMART MEAL PLANNER HEADER -->
-<!-- ============================= -->
-
-<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
-
-    <div class="flex items-center justify-between flex-wrap gap-4">
-
-        <div>
-            <h2 class="text-3xl font-bold text-gray-800">
-                🍽️ Smart Weekly Meal Planner
-            </h2>
-
-            <p class="text-gray-500 mt-2">
-                Create your own weekly meal plan or let Palengke Helper+ generate one
-                based on your budget and family size.
-            </p>
-        </div>
-
-    </div>
-
-</div>
 
 <!-- ============================= -->
 <!-- PLANNING MODE -->
@@ -538,9 +509,9 @@
 
             <button
                 id="generateMealPlanBtn"
-                class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold">
+                class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold transition">
 
-                ⚡ Generate Meal Plan
+                Generate Meal Plan
 
             </button>
 
@@ -567,9 +538,9 @@
 
         <button
             id="customizeMealBtn"
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold">
+            class="w-full bg-white border-2 border-emerald-700 text-emerald-700 hover:bg-emerald-50 py-3 rounded-xl font-semibold transition">
 
-            🍳 Customize Meal Plan
+            Customize Meal Plan
 
         </button>
 
@@ -608,9 +579,9 @@
 
             <button
                 id="clearMealPlanBtn"
-                class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl">
+                class="bg-white border border-rose-300 text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-xl text-sm font-semibold transition">
 
-                🗑 Clear Week
+                Clear Week
 
             </button>
 
@@ -634,7 +605,7 @@
             <div class="text-right flex flex-col items-end gap-3">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2 w-full">
                     <input id="mealPlanNameInput" type="text" placeholder="Meal plan name" class="w-full sm:w-auto min-w-[220px] border border-gray-200 rounded-xl px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-                    <button id="saveMealPlanBtn" class="hidden bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-xl font-semibold">Save Meal Plan</button>
+                    <button id="saveMealPlanBtn" class="hidden bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-xl font-semibold whitespace-nowrap">Save Meal Plan</button>
                     <button id="backToGenerateBtn" class="hidden bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-xl font-semibold">Generate New Plan</button>
                 </div>
                 <div>
@@ -656,8 +627,6 @@
         <button id="refreshMealPlansBtn" class="text-emerald-700 hover:text-emerald-800 font-semibold">Refresh</button>
     </div>
     <div id="savedMealPlans" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-</div>
-</div>
 </div>
 </div>
 
@@ -712,16 +681,16 @@
                 <h2 class="text-3xl font-bold mb-6 text-gray-800">AI Suggestions</h2>
                 <div class="space-y-6 max-w-6xl mx-auto">
                     <div class="grid md:grid-cols-3 gap-4">
-                        <div class="bg-emerald-50 border border-emerald-100 rounded-3xl p-5 shadow-sm">
-                            <span class="text-xs uppercase tracking-wide text-emerald-700 font-bold">Weekly Budget</span>
-                            <p id="suggestionBudgetValue" class="mt-3 text-2xl font-bold text-gray-900">₱0</p>
+                        <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                            <span class="text-xs uppercase tracking-wide text-gray-500 font-bold">Weekly Budget</span>
+                            <p id="suggestionBudgetValue" class="mt-3 text-2xl font-bold text-emerald-700">₱0</p>
                         </div>
-                        <div class="bg-sky-50 border border-sky-100 rounded-3xl p-5 shadow-sm">
-                            <span class="text-xs uppercase tracking-wide text-sky-700 font-bold">Family Size</span>
+                        <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                            <span class="text-xs uppercase tracking-wide text-gray-500 font-bold">Family Size</span>
                             <p id="suggestionPaxValue" class="mt-3 text-2xl font-bold text-gray-900">0 Pax</p>
                         </div>
-                        <div class="bg-yellow-50 border border-yellow-100 rounded-3xl p-5 shadow-sm">
-                            <span class="text-xs uppercase tracking-wide text-yellow-700 font-bold">Meal Plan Status</span>
+                        <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                            <span class="text-xs uppercase tracking-wide text-gray-500 font-bold">Meal Plan Status</span>
                             <p id="suggestionPlanStatus" class="mt-3 text-2xl font-bold text-gray-900">No active plan</p>
                         </div>
                     </div>
@@ -821,21 +790,11 @@
                 </div>
             </div>
 
-            <!-- LOCAL NETWORK OFFLINE STATUS CONTROLLER ALERT -->
-            <div class="mt-8">
-                <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl flex items-start gap-3 shadow-sm">
-                    <div class="text-xl">📡</div>
-                    <div>
-                        <h3 class="font-bold text-lg text-amber-900">Local Cache Active</h3>
-                        <p class="text-amber-800 text-sm mt-0.5">This platform fully operates independent of server connections by writing and compiling execution data tracking records to sandboxed storage.</p>
-                    </div>
-                </div>
-            </div>
         </section>
 
         <!-- FOOTER LAYER CONTAINER -->
         <footer class="bg-emerald-800 text-white text-center p-6 mt-12 border-t border-emerald-900">
-            <p class="text-sm opacity-80">© 2026 Palengke Helper+ | Engineered for Filipino Household Budget Allocation Optimization</p>
+            <p class="text-sm opacity-80">© 2026 Palengke Helper+ · Smart budgeting and meal planning for Filipino families</p>
         </footer>
     </div>
     <!-- ====================================== -->
@@ -865,28 +824,6 @@ class="text-2xl">
 ✕
 
 </button>
-<!-- CUSTOM RECIPE MODAL -->
-<div id="customRecipeModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl shadow-xl w-11/12 max-w-2xl overflow-hidden">
-        <div class="p-6 border-b flex justify-between items-center">
-            <h2 class="text-2xl font-bold">✍️ Create Custom Recipe</h2>
-            <button id="closeCustomRecipeModal" class="text-2xl">✕</button>
-        </div>
-        <div class="p-6 space-y-4">
-            <input id="customRecipeName" placeholder="Dish name" class="w-full border p-2 rounded" />
-            <div class="grid grid-cols-2 gap-2">
-                <input id="customRecipeServings" type="number" placeholder="Servings" class="w-full border p-2 rounded" />
-                <input id="customRecipeEstimatedCost" type="number" placeholder="Estimated cost" class="w-full border p-2 rounded" />
-            </div>
-            <textarea id="customRecipeIngredients" placeholder="Ingredients (comma separated)" class="w-full border p-2 rounded"></textarea>
-            <textarea id="customRecipeInstructions" placeholder="Instructions (semicolon separated)" class="w-full border p-2 rounded"></textarea>
-            <div class="flex justify-end gap-2">
-                <button id="cancelCustomRecipe" class="px-4 py-2 rounded border" onclick="document.getElementById('customRecipeModal').classList.add('hidden')">Cancel</button>
-                <button id="saveCustomRecipeBtn" class="px-4 py-2 bg-emerald-700 text-white rounded">Save Recipe</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 </div>
 
@@ -912,6 +849,33 @@ class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 p-6 overflow-y-auto max-h-[70vh]
 </div>
 
 </div>
+
+<!-- ====================================== -->
+<!-- CUSTOM RECIPE MODAL -->
+<!-- ====================================== -->
+
+<div id="customRecipeModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-xl w-11/12 max-w-2xl overflow-hidden">
+        <div class="p-6 border-b flex justify-between items-center">
+            <h2 class="text-2xl font-bold">✍️ Create Custom Recipe</h2>
+            <button id="closeCustomRecipeModal" class="text-2xl">✕</button>
+        </div>
+        <div class="p-6 space-y-4">
+            <input id="customRecipeName" placeholder="Dish name" class="w-full border p-2 rounded" />
+            <div class="grid grid-cols-2 gap-2">
+                <input id="customRecipeServings" type="number" placeholder="Servings" class="w-full border p-2 rounded" />
+                <input id="customRecipeEstimatedCost" type="number" placeholder="Estimated cost" class="w-full border p-2 rounded" />
+            </div>
+            <textarea id="customRecipeIngredients" placeholder="Ingredients (comma separated)" class="w-full border p-2 rounded"></textarea>
+            <textarea id="customRecipeInstructions" placeholder="Instructions (semicolon separated)" class="w-full border p-2 rounded"></textarea>
+            <div class="flex justify-end gap-2">
+                <button id="cancelCustomRecipe" class="px-4 py-2 rounded border" onclick="document.getElementById('customRecipeModal').classList.add('hidden')">Cancel</button>
+                <button id="saveCustomRecipeBtn" class="px-4 py-2 bg-emerald-700 text-white rounded">Save Recipe</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ====================================== -->
 <!-- RECIPE DETAILS -->
 <!-- ====================================== -->
@@ -938,6 +902,9 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
         function switchTab(tabId) {
             const views = document.querySelectorAll('.tab-content');
             views.forEach(v => v.classList.add('hidden'));
+
+            const hero = document.getElementById('homeHero');
+            if (hero) hero.classList.toggle('hidden', tabId !== 'home');
             
             const target = document.getElementById('view-' + tabId);
             if (target) {
