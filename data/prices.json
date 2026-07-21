@@ -343,5 +343,76 @@
     "source": "DA Bantay Presyo - NCR",
     "reportDate": "2026-07-20",
     "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "bar-soap",
+    "name": "Bar Soap (Bath)",
+    "category": "Household & Basic Necessities",
+    "keys": [
+      "soap",
+      "sabon"
+    ],
+    "price": 15.0,
+    "unit": "bar",
+    "source": "Manual estimate (not DA-tracked)",
+    "reportDate": "2026-07-21",
+    "updatedAt": "2026-07-21"
+  },
+  {
+    "id": "laundry-detergent",
+    "name": "Laundry Detergent (Powder, 1kg)",
+    "category": "Household & Basic Necessities",
+    "keys": [
+      "detergent",
+      "panlaba"
+    ],
+    "price": 75.0,
+    "unit": "kg",
+    "source": "Manual estimate (not DA-tracked)",
+    "reportDate": "2026-07-21",
+    "updatedAt": "2026-07-21"
+  },
+  {
+    "id": "dishwashing-liquid",
+    "name": "Dishwashing Liquid (250ml)",
+    "category": "Household & Basic Necessities",
+    "keys": [
+      "dishwashing",
+      "panghugas"
+    ],
+    "price": 35.0,
+    "unit": "bottle",
+    "source": "Manual estimate (not DA-tracked)",
+    "reportDate": "2026-07-21",
+    "updatedAt": "2026-07-21"
+  },
+  {
+    "id": "lpg-11kg",
+    "name": "LPG Tank Refill (11kg)",
+    "category": "Household & Basic Necessities",
+    "keys": [
+      "lpg",
+      "gas",
+      "gasul"
+    ],
+    "price": 950.0,
+    "unit": "tank",
+    "source": "Manual estimate (not DA-tracked)",
+    "reportDate": "2026-07-21",
+    "updatedAt": "2026-07-21"
+  },
+  {
+    "id": "toilet-paper",
+    "name": "Toilet Paper (2-ply, roll)",
+    "category": "Household & Basic Necessities",
+    "keys": [
+      "toilet paper",
+      "tissue"
+    ],
+    "price": 15.0,
+    "unit": "roll",
+    "source": "Manual estimate (not DA-tracked)",
+    "reportDate": "2026-07-21",
+    "updatedAt": "2026-07-21"
   }
 ]

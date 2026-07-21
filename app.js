@@ -1698,6 +1698,30 @@ function formatPriceValue(item) {
     return `₱${Number(item.price).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/${item.unit || 'unit'}`;
 }
 
+// Maps the DA report's granular categories into broad tab groups.
+const CATEGORY_GROUP_MAP = {
+    'Local Commercial Rice': 'Rice',
+    'Imported Commercial Rice': 'Rice',
+    'Corn Products': 'Rice',
+    'Beef Meat Products': 'Meats',
+    'Pork Meat Products': 'Meats',
+    'Poultry Products': 'Meats',
+    'Other Livestock Meat Products': 'Meats',
+    'Fish Products': 'Fish & Seafood',
+    'Lowland Vegetables': 'Vegetables',
+    'Highland Vegetables': 'Vegetables',
+    'Legumes': 'Vegetables',
+    'Spices': 'Vegetables',
+    'Fruits': 'Fruits',
+    'Other Basic Commodities': 'Basic Commodities',
+    'Household & Basic Necessities': 'Household & Necessities'
+};
+const CATEGORY_GROUP_ORDER = ['Rice', 'Meats', 'Fish & Seafood', 'Vegetables', 'Fruits', 'Basic Commodities', 'Household & Necessities', 'Other'];
+
+function groupNameFor(item) {
+    return CATEGORY_GROUP_MAP[item.category] || 'Other';
+}
+
 function renderMarketPricesTable(items) {
     const tbody = document.getElementById('marketPricesTableBody');
     if (!tbody) return;
@@ -1707,12 +1731,31 @@ function renderMarketPricesTable(items) {
         return;
     }
 
-    tbody.innerHTML = items.map(item => `
+    const grouped = {};
+    items.forEach(item => {
+        const g = groupNameFor(item);
+        if (!grouped[g]) grouped[g] = [];
+        grouped[g].push(item);
+    });
+
+    let html = '';
+    CATEGORY_GROUP_ORDER.forEach(groupName => {
+        const groupItems = grouped[groupName];
+        if (!groupItems || groupItems.length === 0) return;
+        html += `
+        <tr class="bg-emerald-50/60">
+            <td colspan="2" class="p-2 px-3 text-xs font-bold uppercase tracking-wider text-emerald-800">${groupName}</td>
+        </tr>`;
+        groupItems.forEach(item => {
+            html += `
         <tr class="hover:bg-gray-50 transition">
-            <td class="p-3 border-r border-gray-200 font-medium">${guessPriceEmoji(item)} ${item.name}${item.category ? ` <span class="text-xs text-gray-400">(${item.category})</span>` : ''}</td>
+            <td class="p-3 border-r border-gray-200 font-medium">${guessPriceEmoji(item)} ${item.name}</td>
             <td class="p-3 text-right font-mono font-bold text-gray-800">${formatPriceValue(item)}</td>
-        </tr>
-    `).join('');
+        </tr>`;
+        });
+    });
+
+    tbody.innerHTML = html;
 }
 
 function buildMarketPriceReferenceFromFeed(items) {
