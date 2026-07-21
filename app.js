@@ -1637,7 +1637,9 @@ function generateAIResponse(question) {
 // 7b. PALENGKE AI KNOWLEDGE BASE
 // ==========================================
 
-const MARKET_PRICE_REFERENCE = [
+// Static fallback reference used if the live DA price feed can't be reached
+// (offline, GitHub down, etc). Kept intentionally small and approximate.
+const MARKET_PRICE_FALLBACK = [
     { keys: ['rice', 'bigas', 'kanin'], label: 'Well-milled rice', price: '₱48–55/kg' },
     { keys: ['chicken', 'manok'], label: 'Whole chicken', price: '₱170–190/kg' },
     { keys: ['egg', 'itlog'], label: 'Chicken eggs', price: '₱8–9/pc' },
@@ -1663,6 +1665,113 @@ const MARKET_PRICE_REFERENCE = [
     { keys: ['oil', 'mantika'], label: 'Cooking oil', price: '₱80–100/L' },
     { keys: ['sugar', 'asukal'], label: 'Sugar', price: '₱80–90/kg' }
 ];
+
+// Live reference, replaced once the GitHub-hosted DA price feed loads.
+// Starts as the fallback so the AI always has something to answer with.
+let MARKET_PRICE_REFERENCE = MARKET_PRICE_FALLBACK;
+
+// ==========================================
+// 7c. LIVE DA PRICE FEED (GitHub-hosted JSON, synced from the admin panel)
+// ==========================================
+
+const PRICE_FEED_URL = 'https://raw.githubusercontent.com/betoniobrent/palengke-helper/main/data/prices.json';
+const PRICE_EMOJI_MAP = {
+    'rice': '🍚', 'chicken': '🍗', 'egg': '🥚', 'pork': '🥩',
+    'beef': '🥩', 'tilapia': '🐟', 'bangus': '🐟', 'galunggong': '🐟',
+    'sardines': '🐟', 'eggplant': '🍆', 'pechay': '🥬', 'squash': '🎃',
+    'onion': '🧅', 'garlic': '🧄', 'oil': '🧂', 'sugar': '🧂',
+    'mungbean': '🫘', 'monggo': '🫘'
+};
+
+function guessPriceEmoji(item) {
+    const haystack = `${item.id || ''} ${item.name || ''}`.toLowerCase();
+    for (const [needle, emoji] of Object.entries(PRICE_EMOJI_MAP)) {
+        if (haystack.includes(needle)) return emoji;
+    }
+    return '🛒';
+}
+
+function formatPriceValue(item) {
+    if (item.price === null || item.price === undefined || Number.isNaN(Number(item.price))) {
+        return 'n/a';
+    }
+    return `₱${Number(item.price).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/${item.unit || 'unit'}`;
+}
+
+function renderMarketPricesTable(items) {
+    const tbody = document.getElementById('marketPricesTableBody');
+    if (!tbody) return;
+
+    if (!items || items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" class="p-3 text-center text-gray-400">No price data available right now.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = items.map(item => `
+        <tr class="hover:bg-gray-50 transition">
+            <td class="p-3 border-r border-gray-200 font-medium">${guessPriceEmoji(item)} ${item.name}${item.category ? ` <span class="text-xs text-gray-400">(${item.category})</span>` : ''}</td>
+            <td class="p-3 text-right font-mono font-bold text-gray-800">${formatPriceValue(item)}</td>
+        </tr>
+    `).join('');
+}
+
+function buildMarketPriceReferenceFromFeed(items) {
+    return items
+        .filter(item => Array.isArray(item.keys) && item.keys.length > 0)
+        .map(item => ({
+            keys: item.keys,
+            label: item.name,
+            price: formatPriceValue(item)
+        }));
+}
+
+async function loadLiveMarketPrices() {
+    const updatedLabel = document.getElementById('pricesUpdatedLabel');
+    const statusBadge = document.getElementById('pricesStatusBadge');
+
+    try {
+        const response = await fetch(PRICE_FEED_URL, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const items = await response.json();
+        if (!Array.isArray(items) || items.length === 0) throw new Error('Empty price feed');
+
+        renderMarketPricesTable(items);
+
+        const liveReference = buildMarketPriceReferenceFromFeed(items);
+        if (liveReference.length > 0) {
+            MARKET_PRICE_REFERENCE = liveReference;
+        }
+
+        const reportDate = items.find(i => i.reportDate)?.reportDate;
+        if (updatedLabel) {
+            updatedLabel.textContent = reportDate
+                ? `Official DA Bantay Presyo rates — NCR, as of ${new Date(reportDate).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}.`
+                : 'Official DA Bantay Presyo reference rates.';
+        }
+        if (statusBadge) {
+            statusBadge.textContent = '● Live DA Bantay Presyo (NCR)';
+            statusBadge.className = 'bg-emerald-50 text-emerald-800 font-bold text-xs px-3 py-1.5 rounded-full whitespace-nowrap';
+        }
+    } catch (error) {
+        console.warn('Live price feed unavailable, using fallback prices:', error);
+        renderMarketPricesTable(MARKET_PRICE_FALLBACK.map(entry => ({
+            id: entry.keys[0],
+            name: entry.label,
+            price: null,
+            unit: '',
+            category: null
+        })));
+        if (updatedLabel) {
+            updatedLabel.textContent = 'Showing offline estimated rates — live DA feed unavailable right now.';
+        }
+        if (statusBadge) {
+            statusBadge.textContent = '● Offline Estimate';
+            statusBadge.className = 'bg-amber-50 text-amber-800 font-bold text-xs px-3 py-1.5 rounded-full whitespace-nowrap';
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadLiveMarketPrices);
 
 function respondToPriceQuery(question) {
     const matches = MARKET_PRICE_REFERENCE.filter(entry => entry.keys.some(k => question.includes(k)));

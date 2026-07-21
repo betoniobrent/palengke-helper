@@ -1,0 +1,347 @@
+[
+  {
+    "id": "rice",
+    "name": "Well-Milled Rice (Local)",
+    "category": "Local Commercial Rice",
+    "keys": [
+      "rice",
+      "bigas",
+      "kanin"
+    ],
+    "price": 48.62,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "chicken",
+    "name": "Whole Chicken, Local",
+    "category": "Poultry Products",
+    "keys": [
+      "chicken",
+      "manok"
+    ],
+    "price": 209.48,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "egg",
+    "name": "Chicken Egg (Medium)",
+    "category": "Poultry Products",
+    "keys": [
+      "egg",
+      "itlog"
+    ],
+    "price": 7.91,
+    "unit": "piece",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "pork-kasim",
+    "name": "Pork Kasim (Picnic Shoulder), Local",
+    "category": "Pork Meat Products",
+    "keys": [
+      "pork",
+      "baboy",
+      "kasim"
+    ],
+    "price": 241.92,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "pork-liempo",
+    "name": "Pork Liempo (Belly), Local",
+    "category": "Pork Meat Products",
+    "keys": [
+      "liempo"
+    ],
+    "price": 380.7,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "beef",
+    "name": "Beef Brisket, Local",
+    "category": "Beef Meat Products",
+    "keys": [
+      "beef",
+      "baka"
+    ],
+    "price": 439.57,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "tilapia",
+    "name": "Tilapia (Medium)",
+    "category": "Fish Products",
+    "keys": [
+      "tilapia"
+    ],
+    "price": 152.64,
+    "unit": "piece",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "bangus",
+    "name": "Bangus (Medium)",
+    "category": "Fish Products",
+    "keys": [
+      "bangus",
+      "milkfish"
+    ],
+    "price": 234.0,
+    "unit": "piece",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "galunggong",
+    "name": "Galunggong, Local",
+    "category": "Fish Products",
+    "keys": [
+      "galunggong",
+      "gg"
+    ],
+    "price": 277.38,
+    "unit": "piece",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "eggplant",
+    "name": "Eggplant (Talong)",
+    "category": "Lowland Vegetables",
+    "keys": [
+      "talong",
+      "eggplant"
+    ],
+    "price": 117.63,
+    "unit": "piece",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "pechay",
+    "name": "Native Pechay",
+    "category": "Lowland Vegetables",
+    "keys": [
+      "pechay"
+    ],
+    "price": 91.41,
+    "unit": "bundle",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "squash",
+    "name": "Squash (Kalabasa)",
+    "category": "Lowland Vegetables",
+    "keys": [
+      "kalabasa",
+      "squash"
+    ],
+    "price": 66.97,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "tomato",
+    "name": "Tomato (Kamatis)",
+    "category": "Lowland Vegetables",
+    "keys": [
+      "tomato",
+      "kamatis"
+    ],
+    "price": 115.94,
+    "unit": "piece",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "red-onion",
+    "name": "Red Onion, Local",
+    "category": "Spices",
+    "keys": [
+      "onion",
+      "sibuyas"
+    ],
+    "price": 108.16,
+    "unit": "piece",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "garlic",
+    "name": "Garlic, Native/Local",
+    "category": "Spices",
+    "keys": [
+      "garlic",
+      "bawang"
+    ],
+    "price": 351.0,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "sardines",
+    "name": "Sardines (Tamban)",
+    "category": "Fish Products",
+    "keys": [
+      "sardines",
+      "sardinas"
+    ],
+    "price": 125.29,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "cooking-oil",
+    "name": "Cooking Oil (Palm, 1L)",
+    "category": "Other Basic Commodities",
+    "keys": [
+      "oil",
+      "mantika"
+    ],
+    "price": 100.38,
+    "unit": "bottle",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "sugar",
+    "name": "Sugar (Refined)",
+    "category": "Other Basic Commodities",
+    "keys": [
+      "sugar",
+      "asukal"
+    ],
+    "price": 81.49,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "mungbean",
+    "name": "Mungbean (Monggo)",
+    "category": "Legumes",
+    "keys": [
+      "monggo",
+      "munggo",
+      "mung bean"
+    ],
+    "price": 145.72,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "white-onion",
+    "name": "White Onion, Local",
+    "category": "Spices",
+    "keys": [
+      "white onion"
+    ],
+    "price": 103.09,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "chicken-breast",
+    "name": "Chicken Breast, Local",
+    "category": "Poultry Products",
+    "keys": [
+      "chicken breast"
+    ],
+    "price": 218.83,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "chicken-thigh",
+    "name": "Chicken Thigh, Local",
+    "category": "Poultry Products",
+    "keys": [
+      "chicken thigh"
+    ],
+    "price": 223.62,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "pork-belly-imp",
+    "name": "Pork Liempo (Belly), Imported",
+    "category": "Pork Meat Products",
+    "keys": [
+      "imported liempo"
+    ],
+    "price": 306.11,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "beef-short-ribs",
+    "name": "Beef Short Ribs, Local",
+    "category": "Beef Meat Products",
+    "keys": [
+      "beef ribs",
+      "short ribs"
+    ],
+    "price": 424.17,
+    "unit": "kg",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  },
+  {
+    "id": "cooking-oil-coco",
+    "name": "Cooking Oil (Coconut, 1L)",
+    "category": "Other Basic Commodities",
+    "keys": [
+      "coconut oil"
+    ],
+    "price": 159.87,
+    "unit": "bottle",
+    "source": "DA Bantay Presyo - NCR",
+    "reportDate": "2026-07-20",
+    "updatedAt": "2026-07-20"
+  }
+]
