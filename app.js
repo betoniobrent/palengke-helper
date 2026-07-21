@@ -1722,40 +1722,59 @@ function groupNameFor(item) {
     return CATEGORY_GROUP_MAP[item.category] || 'Other';
 }
 
-function renderMarketPricesTable(items) {
+let ALL_PRICE_ITEMS = [];
+let ACTIVE_PRICE_GROUP = 'All';
+
+function renderPriceCategoryTabs(items) {
+    const container = document.getElementById('priceCategoryTabs');
+    if (!container) return;
+
+    const present = new Set(items.map(groupNameFor));
+    const groups = ['All', ...CATEGORY_GROUP_ORDER.filter(g => present.has(g))];
+
+    container.innerHTML = groups.map(g => {
+        const active = g === ACTIVE_PRICE_GROUP;
+        const cls = active
+            ? 'bg-emerald-600 text-white'
+            : 'bg-gray-100 text-gray-600 hover:bg-gray-200';
+        return `<button onclick="selectPriceCategory('${g}')" class="${cls} text-xs font-semibold px-3 py-1.5 rounded-full transition">${g}</button>`;
+    }).join('');
+}
+
+function selectPriceCategory(groupName) {
+    ACTIVE_PRICE_GROUP = groupName;
+    renderPriceCategoryTabs(ALL_PRICE_ITEMS);
+    renderFilteredPriceRows();
+}
+
+function renderFilteredPriceRows() {
     const tbody = document.getElementById('marketPricesTableBody');
     if (!tbody) return;
+
+    const items = ACTIVE_PRICE_GROUP === 'All'
+        ? ALL_PRICE_ITEMS
+        : ALL_PRICE_ITEMS.filter(item => groupNameFor(item) === ACTIVE_PRICE_GROUP);
 
     if (!items || items.length === 0) {
         tbody.innerHTML = '<tr><td colspan="2" class="p-3 text-center text-gray-400">No price data available right now.</td></tr>';
         return;
     }
 
-    const grouped = {};
-    items.forEach(item => {
-        const g = groupNameFor(item);
-        if (!grouped[g]) grouped[g] = [];
-        grouped[g].push(item);
-    });
-
-    let html = '';
-    CATEGORY_GROUP_ORDER.forEach(groupName => {
-        const groupItems = grouped[groupName];
-        if (!groupItems || groupItems.length === 0) return;
-        html += `
-        <tr class="bg-emerald-50/60">
-            <td colspan="2" class="p-2 px-3 text-xs font-bold uppercase tracking-wider text-emerald-800">${groupName}</td>
-        </tr>`;
-        groupItems.forEach(item => {
-            html += `
+    tbody.innerHTML = items.map(item => `
         <tr class="hover:bg-gray-50 transition">
             <td class="p-3 border-r border-gray-200 font-medium">${guessPriceEmoji(item)} ${item.name}</td>
             <td class="p-3 text-right font-mono font-bold text-gray-800">${formatPriceValue(item)}</td>
-        </tr>`;
-        });
-    });
+        </tr>
+    `).join('');
+}
 
-    tbody.innerHTML = html;
+function renderMarketPricesTable(items) {
+    ALL_PRICE_ITEMS = items || [];
+    if (!CATEGORY_GROUP_ORDER.concat(['All']).includes(ACTIVE_PRICE_GROUP)) {
+        ACTIVE_PRICE_GROUP = 'All';
+    }
+    renderPriceCategoryTabs(ALL_PRICE_ITEMS);
+    renderFilteredPriceRows();
 }
 
 function buildMarketPriceReferenceFromFeed(items) {
