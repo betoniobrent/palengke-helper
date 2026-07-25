@@ -2,7 +2,6 @@
  * Palengke Helper+ - Core Application Engine
  * Operational Lifecycle Script (app.js)
  */
-
 // ==========================================
 // 1. STATE CONFIGURATION & DATA DICTIONARIES
 // ==========================================
@@ -10,6 +9,45 @@
 // Global State
 let currentActiveMonthId = null;
 let activeSpecificationFilter = 'all';
+
+// Notification System
+function showNotification(message, type = 'info') {
+    // Remove existing notification if any
+    const existingNotification = document.getElementById('notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.id = 'notification';
+    notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-lg text-white font-medium max-w-md transition-all duration-300 transform translate-x-full`;
+    
+    // Set color based on type
+    if (type === 'success') {
+        notification.classList.add('bg-emerald-600');
+    } else if (type === 'error') {
+        notification.classList.add('bg-rose-600');
+    } else {
+        notification.classList.add('bg-blue-600');
+    }
+
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    // Animate in
+    setTimeout(() => {
+        notification.classList.remove('translate-x-full');
+    }, 10);
+
+    // Auto dismiss after 3 seconds
+    setTimeout(() => {
+        notification.classList.add('translate-x-full');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
 
 // Multi-Tiered Filipino Recipe Database Matrix
 const FILIPINO_RECIPE_POOL = {
@@ -204,7 +242,16 @@ function enterMealScheduleFlow(){
     const saveButton = document.getElementById('saveMealPlanBtn');
 
     if (intro) intro.classList.add('hidden');
-    if (actions) actions.classList.remove('hidden');
+    
+    // Only show customize actions if in customize mode
+    if (actions) {
+        if (window.isGenerateMode === false) {
+            actions.classList.remove('hidden');
+        } else {
+            actions.classList.add('hidden');
+        }
+    }
+    
     if (summary) summary.classList.add('hidden');
     if (saveButton) saveButton.classList.add('hidden');
     showMealPlannerWrapper();
@@ -223,6 +270,10 @@ function completeMealPlan(){
 }
 
 function customizeMealPlan(){
+    // Set flag for customize mode
+    window.isGenerateMode = false;
+    
+    initializeMealPlanner();
     enterMealScheduleFlow();
     document.getElementById('weeklyPlanner').scrollIntoView({ behavior: 'smooth' });
 }
@@ -435,20 +486,115 @@ function saveCustomRecipeFromModal(){
     renderPlannerSummaryFromCurrentPlan();
 }
 
-function getMealPlans(){
+async function getMealPlans(){
+    const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
+    
+    // If authenticated user, fetch from Supabase
+    if (session.role === 'member' && session.supabaseUserId) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('user_meal_plans')
+                .select('*')
+                .order('created_at', { ascending: false });
+            
+            if (error) throw error;
+            
+            // Transform Supabase data to match localStorage format
+            return data.map(plan => ({
+                id: plan.id,
+                name: plan.plan_name,
+                createdAt: new Date(plan.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                plan: plan.weekly_plan,
+                budget: plan.target_budget,
+                pax: plan.target_pax,
+                diet: plan.diet_preference
+            }));
+        } catch (err) {
+            console.error('Error fetching meal plans from Supabase:', err);
+            // Fallback to localStorage on error
+            return JSON.parse(localStorage.getItem('palengke_saved_meal_plans')) || [];
+        }
+    }
+    
+    // Guest user - use localStorage
     return JSON.parse(localStorage.getItem('palengke_saved_meal_plans')) || [];
 }
 
-function setMealPlans(plans){
+async function setMealPlans(plans){
+    const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
+    
+    // If authenticated user, sync to Supabase
+    if (session.role === 'member' && session.supabaseUserId) {
+        try {
+            // This is a simplified sync - in production, you'd want more sophisticated conflict resolution
+            // For now, we'll just update localStorage as backup
+            localStorage.setItem('palengke_saved_meal_plans', JSON.stringify(plans));
+        } catch (err) {
+            console.error('Error syncing meal plans to Supabase:', err);
+        }
+    }
+    
+    // Always update localStorage as backup
     localStorage.setItem('palengke_saved_meal_plans', JSON.stringify(plans));
 }
 
-function saveCurrentMealPlan(){
+async function saveCurrentMealPlan(){
+    console.log('saveCurrentMealPlan called');
     const nameInput = document.getElementById('mealPlanNameInput');
     const defaultName = 'Weekly Meal Plan';
     const name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : defaultName;
 
-    const mealPlans = getMealPlans();
+    const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
+    console.log('Session:', session);
+    
+    // Calculate total cost
+    let totalCost = 0;
+    Object.values(currentMealPlan).forEach(dayPlan => {
+        if (dayPlan) {
+            Object.values(dayPlan).forEach(meal => {
+                if (meal && meal.estimatedCost) {
+                    totalCost += meal.estimatedCost;
+                }
+            });
+        }
+    });
+    console.log('Total cost:', totalCost);
+    console.log('Current meal plan:', currentMealPlan);
+
+    // If authenticated user, save to Supabase
+    if (session.role === 'member' && session.supabaseUserId) {
+        console.log('Attempting to save to Supabase');
+        console.log('Supabase client:', supabaseClient);
+        try {
+            const { data, error } = await supabaseClient
+                .from('user_meal_plans')
+                .insert({
+                    user_id: session.supabaseUserId,
+                    plan_name: name,
+                    weekly_plan: currentMealPlan,
+                    target_budget: parseFloat(document.getElementById('plannerBudget').value) || 0,
+                    target_pax: parseInt(document.getElementById('plannerPax').value) || 4,
+                    total_cost: totalCost,
+                    diet_preference: document.getElementById('plannerDiet').value || 'anything'
+                })
+                .select();
+            
+            console.log('Supabase response:', { data, error });
+            
+            if (error) throw error;
+            
+            renderSavedMealPlans();
+            showNotification('Meal plan saved successfully to your account.', 'success');
+            return;
+        } catch (err) {
+            console.error('Error saving meal plan to Supabase:', err);
+            // Fallback to localStorage on error
+        }
+    }
+
+    // Guest user or fallback - save to localStorage
+    console.log('Saving to localStorage');
+    const mealPlans = await getMealPlans();
     mealPlans.unshift({
         id: 'meal_plan_' + Date.now(),
         name,
@@ -459,9 +605,9 @@ function saveCurrentMealPlan(){
         diet: document.getElementById('plannerDiet').value || 'anything'
     });
 
-    setMealPlans(mealPlans);
+    await setMealPlans(mealPlans);
     renderSavedMealPlans();
-    alert('Meal plan saved successfully.');
+    showNotification('Meal plan saved successfully.', 'success');
 }
 
 function clearCurrentMealPlan(){
@@ -474,26 +620,21 @@ function clearCurrentMealPlan(){
     document.getElementById('plannerResultsSection').classList.add('hidden');
 }
 
-function updateSavedMealPlansVisibility(){
-    const wrapper = document.getElementById('savedMealPlansWrapper');
-    if (!wrapper) return;
-    const mealPlans = getMealPlans();
-    if (mealPlans.length > 0) {
-        wrapper.classList.remove('hidden');
-    } else {
-        wrapper.classList.add('hidden');
-    }
+function backToMealPlannerIntro(){
+    document.getElementById('mealScheduleWrapper').classList.add('hidden');
+    document.getElementById('mealPlannerIntro').classList.remove('hidden');
+    document.getElementById('mealScheduleActions').classList.add('hidden');
+    initializeMealPlanner();
 }
 
-function renderSavedMealPlans(){
+async function renderSavedMealPlans(){
     const container = document.getElementById('savedMealPlans');
     if (!container) return;
-    const mealPlans = getMealPlans();
+    const mealPlans = await getMealPlans();
     container.innerHTML = '';
 
     if (mealPlans.length === 0) {
         container.innerHTML = `<p class="text-sm text-gray-500 italic col-span-full">No saved meal plans yet.</p>`;
-        updateSavedMealPlansVisibility();
         return;
     }
 
@@ -513,15 +654,16 @@ function renderSavedMealPlans(){
         `;
         container.appendChild(card);
     });
-
-    updateSavedMealPlansVisibility();
 }
 
-function loadMealPlan(id){
+async function loadMealPlan(id){
     try {
-        const mealPlans = getMealPlans();
+        const mealPlans = await getMealPlans();
         const plan = mealPlans.find(item => item.id === id);
-        if (!plan) return alert('Saved meal plan not found.');
+        if (!plan) {
+            showNotification('Saved meal plan not found.', 'error');
+            return;
+        }
 
         currentMealPlan = JSON.parse(JSON.stringify(plan.plan));
         document.getElementById('plannerBudget').value = plan.budget;
@@ -543,10 +685,10 @@ function loadMealPlan(id){
         document.getElementById('mealScheduleActions')?.classList.add('hidden');
         document.getElementById('mealPlannerIntro')?.classList.add('hidden');
         renderSavedMealPlans();
-        alert('Loaded saved meal plan.');
+        showNotification('Loaded saved meal plan.', 'success');
     } catch (error) {
         console.error('Error loading meal plan:', error);
-        alert('There was an error loading the saved meal plan. Please try again.');
+        showNotification('There was an error loading the saved meal plan. Please try again.', 'error');
     }
 }
 
@@ -561,11 +703,13 @@ function backFromLoadedMealPlan(){
     renderSavedMealPlans();
 }
 
-function deleteMealPlan(id){
+async function deleteMealPlan(id){
     if (!confirm('Delete this saved meal plan?')) return;
-    const mealPlans = getMealPlans().filter(item => item.id !== id);
-    setMealPlans(mealPlans);
+    const mealPlans = await getMealPlans();
+    const filteredPlans = mealPlans.filter(item => item.id !== id);
+    await setMealPlans(filteredPlans);
     renderSavedMealPlans();
+    showNotification('Meal plan deleted.', 'success');
 }
 
 function showRecipeDetails(recipe){
@@ -622,20 +766,91 @@ let activeSelectedDietStyle = 'anything';
 // 2. AUTHORIZATION & SESSION GATEWAY MANAGEMENT
 // ==========================================
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('App.js loaded');
+
+    // Check for existing session
     const cachedUser = localStorage.getItem('palengke_session');
+    console.log('Cached user:', cachedUser);
+
+    const authPage = document.getElementById('authPage');
+    const appPage = document.getElementById('appPage');
+
+    console.log('authPage element:', authPage);
+    console.log('appPage element:', appPage);
+
     if (cachedUser) {
-        const authPage = document.getElementById('authPage');
-        const appPage = document.getElementById('appPage');
-        if (authPage) authPage.classList.add('hidden');
-        if (appPage) appPage.classList.remove('hidden');
-        initializeBudgetHubEngine();
-        renderGroceryItems();
-        renderSavedMealPlans();
-        calculatePlanMetrics();
-        hideMealPlannerWrapper();
+        const session = JSON.parse(cachedUser);
+        console.log('Session role:', session.role);
+
+        // Restore Supabase session if member
+        if (session.role === 'member' && supabaseClient) {
+            console.log('Restoring Supabase session...');
+            const { data, error } = await supabaseClient.auth.setSession({
+                access_token: session.accessToken,
+                refresh_token: session.refreshToken
+            });
+            if (error) {
+                console.error('Error restoring Supabase session:', error);
+                // If session restore fails, clear and show auth
+                localStorage.removeItem('palengke_session');
+                location.reload();
+            } else {
+                console.log('Supabase session restored successfully:', data);
+            }
+        }
+
+        // Hide auth page
+        if (authPage) {
+            authPage.style.setProperty('display', 'none', 'important');
+            authPage.classList.add('hidden');
+            console.log('AuthPage hidden');
+        }
+
+        // Show app page - remove Tailwind hidden class and set display
+        if (appPage) {
+            appPage.classList.remove('hidden');
+            appPage.style.setProperty('display', 'block', 'important');
+            appPage.style.visibility = 'visible';
+            console.log('AppPage display set to block with !important');
+            console.log('AppPage computed display:', window.getComputedStyle(appPage).display);
+        } else {
+            console.error('appPage element not found!');
+        }
+
+        // Initialize app functions if they exist
+        try {
+            if (typeof initializeBudgetHubEngine === 'function') initializeBudgetHubEngine();
+            if (typeof renderGroceryItems === 'function') renderGroceryItems();
+            if (typeof renderSavedMealPlans === 'function') renderSavedMealPlans();
+            if (typeof calculatePlanMetrics === 'function') calculatePlanMetrics();
+            if (typeof hideMealPlannerWrapper === 'function') hideMealPlannerWrapper();
+            if (typeof initializeMealPlanner === 'function') initializeMealPlanner();
+            // Delay switchTab to ensure DOM is ready
+            setTimeout(() => {
+                if (typeof switchTab === 'function') {
+                    console.log('Calling switchTab(home) after initialization');
+                    switchTab('home');
+                }
+            }, 100);
+            console.log('App initialized successfully');
+        } catch (err) {
+            console.error('Error initializing app:', err);
+        }
+    } else {
+        console.log('No cached user, showing auth page');
+        // Ensure auth page is visible
+        if (authPage) {
+            authPage.style.display = 'flex';
+            authPage.classList.remove('hidden');
+        }
+        if (appPage) {
+            appPage.classList.add('hidden');
+            appPage.style.display = 'none';
+        }
     }
 
+    // Add event listeners for meal planner
     const plannerBudget = document.getElementById('plannerBudget');
     const plannerPax = document.getElementById('plannerPax');
     const plannerDiet = document.getElementById('plannerDiet');
@@ -652,12 +867,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeRecipeSelector = document.getElementById('closeRecipeSelector');
     const recipeSelectorModal = document.getElementById('recipeSelectorModal');
 
-    if (plannerBudget) plannerBudget.addEventListener('input', calculatePlanMetrics);
-    if (plannerPax) plannerPax.addEventListener('change', calculatePlanMetrics);
+    if (plannerBudget) {
+        plannerBudget.addEventListener('input', calculatePlanMetrics);
+        plannerBudget.addEventListener('input', function() {
+            this.classList.remove('border-rose-500', 'border-red-500');
+            const budgetError = document.getElementById('budgetError');
+            if (budgetError) budgetError.classList.add('hidden');
+        });
+    }
+    if (plannerPax) {
+        plannerPax.addEventListener('change', calculatePlanMetrics);
+        plannerPax.addEventListener('input', function() {
+            this.classList.remove('border-rose-500', 'border-red-500');
+            const paxError = document.getElementById('paxError');
+            if (paxError) paxError.classList.add('hidden');
+        });
+    }
     if (plannerDiet) plannerDiet.addEventListener('change', calculatePlanMetrics);
     if (generateMealPlanBtn) generateMealPlanBtn.addEventListener('click', () => {
         generateFilipinoMealPlan();
-        enterMealScheduleFlow();
     });
     if (customizeMealBtnEl) customizeMealBtnEl.addEventListener('click', customizeMealPlan);
     if (saveMealPlanBtn) saveMealPlanBtn.addEventListener('click', saveCurrentMealPlan);
@@ -724,41 +952,197 @@ document.addEventListener('DOMContentLoaded', function() {
             evaluateDynamicContextualAISuggestions();
         });
     }
-
-    initializeMealPlanner();
 });
 
-function login() {
-    const email = document.getElementById('loginEmail').value.trim();
-    if (!email) return alert('Please enter a valid credential pattern.');
-    localStorage.setItem('palengke_session', JSON.stringify({ user: email, role: 'member' }));
-    location.reload();
-}
-
 function loginAsGuest() {
-    localStorage.setItem('palengke_session', JSON.stringify({ user: 'Guest_User', role: 'guest' }));
+    console.log('loginAsGuest called');
+    localStorage.setItem('palengke_session', JSON.stringify({
+        user: 'Guest_User',
+        role: 'guest'
+    }));
+    console.log('Session set, reloading...');
     location.reload();
 }
 
-function logout() {
+async function logout() {
+    const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
+
+    // Sign out from Supabase if logged in as member
+    if (session.role === 'member' && session.supabaseUserId) {
+        try {
+            await supabaseClient.auth.signOut();
+        } catch (err) {
+            console.error('Supabase signout error:', err);
+        }
+    }
+
     localStorage.removeItem('palengke_session');
     location.reload();
 }
 
 function showRegister() {
-    document.getElementById('loginBox').classList.add('hidden');
-    document.getElementById('registerBox').classList.remove('hidden');
+    const loginBox = document.getElementById('loginBox');
+    const registerBox = document.getElementById('registerBox');
+    if (loginBox) loginBox.style.display = 'none';
+    if (registerBox) registerBox.style.display = 'block';
 }
 
 function showLogin() {
-    document.getElementById('registerBox').classList.add('hidden');
-    document.getElementById('loginBox').classList.remove('hidden');
+    const loginBox = document.getElementById('loginBox');
+    const registerBox = document.getElementById('registerBox');
+    if (registerBox) registerBox.style.display = 'none';
+    if (loginBox) loginBox.style.display = 'block';
 }
 
-function register() {
-    alert('Account structural initialization template mock processing complete. Switching view.');
-    showLogin();
+// Supabase-based registration using email & password
+async function registerWithEmail() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const fullname = document.getElementById('fullname').value.trim();
+
+    if (!email || !password) {
+        showNotification('Please enter both email and password.', 'error');
+        return;
+    }
+
+    try {
+        const { data, error } = await supabaseClient.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    full_name: fullname
+                }
+            }
+        });
+
+        if (error) {
+            showNotification('Registration error: ' + error.message, 'error');
+            return;
+        }
+
+        // If email confirmation is enabled, show message
+        if (data.user && !data.session) {
+            showNotification('Registration successful! Please check your email to confirm your account.', 'success');
+            showLogin();
+        } else if (data.session) {
+            // Auto-login if email confirmation is disabled
+            localStorage.setItem('palengke_session', JSON.stringify({
+                user: email,
+                role: 'member',
+                supabaseUserId: data.user.id,
+                accessToken: data.session.access_token,
+                refreshToken: data.session.refresh_token
+            }));
+            location.reload();
+        }
+    } catch (err) {
+        showNotification('An unexpected error occurred during registration.', 'error');
+        console.error(err);
+    }
 }
+
+// Supabase-based login using email & password
+async function loginWithEmail() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+
+    if (!email || !password) {
+        showNotification('Please enter both email and password.', 'error');
+        return;
+    }
+
+    try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            showNotification('Login error: ' + error.message, 'error');
+            return;
+        }
+
+        localStorage.setItem('palengke_session', JSON.stringify({
+            user: email,
+            role: 'member',
+            supabaseUserId: data.user.id,
+            accessToken: data.session.access_token,
+            refreshToken: data.session.refresh_token
+        }));
+        location.reload();
+    } catch (err) {
+        showNotification('An unexpected error occurred during login.', 'error');
+        console.error(err);
+    }
+}
+
+// Google OAuth login
+async function loginWithGoogle() {
+    try {
+        const { data, error } = await supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin,
+                queryParams: {
+                    access_type: 'offline',
+                    prompt: 'consent',
+                }
+            }
+        });
+
+        if (error) {
+            showNotification('Google login error: ' + error.message, 'error');
+            return;
+        }
+
+        // Supabase will handle the redirect and callback
+        // The session will be set automatically after redirect
+    } catch (err) {
+        showNotification('An unexpected error occurred during Google login.', 'error');
+        console.error(err);
+    }
+}
+
+// Handle OAuth callback
+async function handleOAuthCallback() {
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = hashParams.get('access_token');
+    const error = hashParams.get('error');
+
+    if (error) {
+        showNotification('OAuth error: ' + error, 'error');
+        return;
+    }
+
+    if (accessToken) {
+        try {
+            const { data, error } = await supabaseClient.auth.getSession();
+            if (data.session) {
+                localStorage.setItem('palengke_session', JSON.stringify({
+                    user: data.session.user.email,
+                    role: 'member',
+                    supabaseUserId: data.session.user.id,
+                    accessToken: data.session.access_token,
+                    refreshToken: data.session.refresh_token
+                }));
+                // Clear URL hash
+                window.location.hash = '';
+                location.reload();
+            }
+        } catch (err) {
+            showNotification('Error handling OAuth callback', 'error');
+            console.error(err);
+        }
+    }
+}
+
+// Check for OAuth callback on page load
+window.addEventListener('load', () => {
+    if (window.location.hash && window.location.hash.includes('access_token')) {
+        handleOAuthCallback();
+    }
+});
 
 function toggleMenu() {
     const mm = document.getElementById('mobileMenu');
@@ -1167,24 +1551,65 @@ function calculatePlanMetrics() {
 }
 
 function generateFilipinoMealPlan() {
-    const budgetValue = document.getElementById('plannerBudget').value.trim();
-    const paxValue = document.getElementById('plannerPax').value.trim();
+    const budgetInput = document.getElementById('plannerBudget');
+    const paxInput = document.getElementById('plannerPax');
+    const budgetError = document.getElementById('budgetError');
+    const paxError = document.getElementById('paxError');
+    const budgetValue = budgetInput.value.trim();
+    const paxValue = paxInput.value.trim();
     
-    if (!budgetValue || !paxValue) {
-        alert('Please enter your weekly budget and family size before generating a meal plan.');
+    // Clear previous validation styles and error messages
+    budgetInput.classList.remove('border-rose-500', 'border-red-500');
+    paxInput.classList.remove('border-rose-500', 'border-red-500');
+    if (budgetError) budgetError.classList.add('hidden');
+    if (paxError) paxError.classList.add('hidden');
+    
+    // Validate inputs
+    let hasError = false;
+    
+    if (!budgetValue) {
+        budgetInput.classList.add('border-rose-500');
+        if (budgetError) budgetError.classList.remove('hidden');
+        hasError = true;
+    }
+    
+    if (!paxValue) {
+        paxInput.classList.add('border-rose-500');
+        if (paxError) paxError.classList.remove('hidden');
+        hasError = true;
+    }
+    
+    if (hasError) {
         return;
     }
 
     const targetWeekBudget = parseFloat(budgetValue);
     const targetPaxCount = parseInt(paxValue, 10);
 
-    if (isNaN(targetWeekBudget) || targetWeekBudget <= 0 || isNaN(targetPaxCount) || targetPaxCount <= 0) {
-        alert('Please enter valid numeric values for budget and family members.');
+    if (isNaN(targetWeekBudget) || targetWeekBudget <= 0) {
+        budgetInput.classList.add('border-rose-500');
+        if (budgetError) {
+            budgetError.textContent = 'Budget must be greater than 0';
+            budgetError.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    if (isNaN(targetPaxCount) || targetPaxCount <= 0) {
+        paxInput.classList.add('border-rose-500');
+        if (paxError) {
+            paxError.textContent = 'Family members must be greater than 0';
+            paxError.classList.remove('hidden');
+        }
         return;
     }
 
     initializeMealPlanner();
     showMealPlannerWrapper();
+    enterMealScheduleFlow();
+    
+    // Set flag for generate mode
+    window.isGenerateMode = true;
 
     // Read active exclusion list checkboxes array
     const selectedExclusions = Array.from(document.querySelectorAll('#allergyChipsContainer input:checked')).map(cb => cb.value);
@@ -1235,12 +1660,15 @@ function generateFilipinoMealPlan() {
         if (options.length === 0) return getSafeRecipe([], RECIPE_DATABASE, type);
 
         const withMatchScore = options.map(recipe => {
-            const perServingCost = recipe.estimatedCost / Math.max(recipe.servings, 1);
+            // Use market-based pricing for accurate cost calculation
+            const marketBasedCost = calculateRecipeCostFromMarket(recipe);
+            const perServingCost = marketBasedCost / Math.max(recipe.servings, 1);
             const costDistance = Math.abs(perServingCost - budgetPerServing);
             const servingDistance = Math.abs(recipe.servings - targetPaxCount);
             return {
                 recipe,
                 perServingCost,
+                marketBasedCost,
                 score: costDistance * 1.4 + servingDistance * 1.2
             };
         });
@@ -1280,9 +1708,14 @@ function generateFilipinoMealPlan() {
             Dinner: dMeal
         };
 
-        const bCost = (bMeal.estimatedCost / Math.max(bMeal.servings, 1)) * targetPaxCount;
-        const lCost = (lMeal.estimatedCost / Math.max(lMeal.servings, 1)) * targetPaxCount;
-        const dCost = (dMeal.estimatedCost / Math.max(dMeal.servings, 1)) * targetPaxCount;
+        // Use market-based pricing for accurate cost calculation
+        const bMarketCost = calculateRecipeCostFromMarket(bMeal);
+        const lMarketCost = calculateRecipeCostFromMarket(lMeal);
+        const dMarketCost = calculateRecipeCostFromMarket(dMeal);
+
+        const bCost = (bMarketCost / Math.max(bMeal.servings, 1)) * targetPaxCount;
+        const lCost = (lMarketCost / Math.max(lMeal.servings, 1)) * targetPaxCount;
+        const dCost = (dMarketCost / Math.max(dMeal.servings, 1)) * targetPaxCount;
         const dayCost = bCost + lCost + dCost;
         totalPlanCostAccumulator += dayCost;
 
@@ -1314,6 +1747,16 @@ function generateFilipinoMealPlan() {
     document.getElementById('plannerResultsSection').classList.remove('hidden');
     renderWeeklyPlanner();
     renderPlannerSummaryFromCurrentPlan();
+    
+    // Show save button for generate mode
+    const saveButton = document.getElementById('saveMealPlanBtn');
+    if (saveButton) {
+        saveButton.classList.remove('hidden');
+        console.log('Save button shown');
+    } else {
+        console.log('Save button not found');
+    }
+    
     const summaryWarning = document.getElementById('plannerSummaryWarning');
     if (totalPlanCostAccumulator > targetWeekBudget) {
         if (summaryWarning) {
@@ -1337,9 +1780,9 @@ function setGroceryData(data) {
 }
 
 function renderGroceryItems(filteredItems = null) {
-    const tableBody = document.getElementById('groceryTable');
-    if (!tableBody) return;
-    tableBody.innerHTML = '';
+    const cartContainer = document.getElementById('groceryCartItems');
+    if (!cartContainer) return;
+    cartContainer.innerHTML = '';
 
     const items = filteredItems || getGroceryData();
     let totalCost = 0;
@@ -1347,24 +1790,93 @@ function renderGroceryItems(filteredItems = null) {
     items.forEach((item, index) => {
         const subtotal = item.price * item.quantity;
         totalCost += subtotal;
+        const isChecked = item.checked || false;
 
-        const row = document.createElement('tr');
-        row.className = "hover:bg-gray-50 transition border-b border-gray-100";
-        row.innerHTML = `
-            <td class="p-3 border-r border-gray-200 font-medium text-xs text-gray-500">${item.category}</td>
-            <td class="p-3 border-r border-gray-200 font-bold text-gray-800">${item.name}</td>
-            <td class="p-3 border-r border-gray-200 text-center font-mono font-medium">${item.quantity}</td>
-            <td class="p-3 border-r border-gray-200 text-right font-mono font-semibold">₱${parseFloat(item.price).toFixed(2)}</td>
-            <td class="p-3 border-r border-gray-200 text-right font-mono font-bold text-gray-900">₱${subtotal.toFixed(2)}</td>
-            <td class="p-3 text-center">
-                <button onclick="deleteItem(${index})" class="text-rose-500 hover:text-rose-700 font-bold px-2 py-1 rounded hover:bg-rose-50 transition">Delete</button>
-            </td>
+        const card = document.createElement('div');
+        card.className = `bg-white p-4 rounded-xl border shadow-sm hover:shadow-md transition ${isChecked ? 'bg-emerald-50 border-emerald-300' : 'border-gray-200'}`;
+        card.innerHTML = `
+            <div class="flex items-start gap-3">
+                <input type="checkbox" id="check-${index}" ${isChecked ? 'checked' : ''} onchange="toggleGroceryItemCheck(${index})" class="mt-1 w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer">
+                <div class="flex-1">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h4 class="font-semibold text-gray-800 ${isChecked ? 'line-through text-gray-500' : ''}">${item.name}</h4>
+                            <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">${item.category}</span>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-emerald-700">₱${subtotal.toFixed(2)}</p>
+                            <p class="text-xs text-gray-500">₱${parseFloat(item.price).toFixed(2)} × ${item.quantity}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 mt-2">
+                        <button onclick="updateGroceryQuantity(${index}, -1)" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">-</button>
+                        <span class="w-8 text-center font-medium">${item.quantity}</span>
+                        <button onclick="updateGroceryQuantity(${index}, 1)" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">+</button>
+                        <button onclick="deleteItem(${index})" class="ml-auto text-rose-600 hover:text-rose-800 text-xs font-medium px-2 py-1 rounded hover:bg-rose-50 transition">Delete</button>
+                    </div>
+                </div>
+            </div>
         `;
-        tableBody.appendChild(row);
+        cartContainer.appendChild(card);
     });
 
+    updateCartSummary(items);
+}
+
+function updateCartSummary(items) {
+    const totalCost = items.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);
+    const checkedItems = items.filter(i => i.checked);
+    const checkedCost = checkedItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);
+    const remainingItems = items.filter(i => !i.checked);
+    const remainingCost = remainingItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);
+
     document.getElementById('totalCost').innerText = `₱${totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    document.getElementById('totalItems').innerText = items.length;
+    document.getElementById('checkedItems').innerText = checkedItems.length;
+    document.getElementById('remainingItems').innerText = remainingItems.length;
+    document.getElementById('checkedTotal').innerText = `₱${checkedCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    document.getElementById('remainingTotal').innerText = `₱${remainingCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    
     checkGroceryBudgetConstraints(totalCost);
+}
+
+function toggleGroceryItemCheck(index) {
+    const items = getGroceryData();
+    items[index].checked = !items[index].checked;
+    setGroceryData(items);
+    renderGroceryItems();
+}
+
+function updateGroceryQuantity(index, change) {
+    const items = getGroceryData();
+    const newQuantity = Math.max(1, (items[index].quantity || 1) + change);
+    items[index].quantity = newQuantity;
+    setGroceryData(items);
+    renderGroceryItems();
+}
+
+function clearBoughtItems() {
+    const items = getGroceryData();
+    const boughtItems = items.filter(i => i.checked);
+    
+    if (boughtItems.length === 0) {
+        showNotification('No bought items to clear', 'error');
+        return;
+    }
+    
+    // Remove bought items from list
+    const remainingItems = items.filter(i => !i.checked);
+    setGroceryData(remainingItems);
+    renderGroceryItems();
+    showNotification(`Cleared ${boughtItems.length} bought items`, 'success');
+}
+
+function clearAllGroceryItems() {
+    if (confirm('Are you sure you want to clear all grocery items?')) {
+        setGroceryData([]);
+        renderGroceryItems();
+        showNotification('All grocery items cleared', 'success');
+    }
 }
 
 function addItem() {
@@ -1374,20 +1886,25 @@ function addItem() {
     const category = document.getElementById('itemCategory').value;
 
     if (!name || isNaN(price) || isNaN(quantity) || price <= 0 || quantity <= 0) {
-        alert('Please fill out all fields with valid numbers before appending item lines.');
+        showNotification('Please fill out all fields with valid numbers', 'error');
         return;
     }
 
     const items = getGroceryData();
-    items.push({ name, price, quantity, category });
+    items.push({ name, price, quantity, category, checked: false });
     setGroceryData(items);
 
     // Clear dynamic operational field nodes
     document.getElementById('itemName').value = '';
     document.getElementById('itemPrice').value = '';
-    document.getElementById('itemQuantity').value = '';
+    document.getElementById('itemQuantity').value = '1';
 
+    // Clear search and show all items
+    document.getElementById('grocerySearchInput').value = '';
+    document.getElementById('marketPriceSuggestions').classList.add('hidden');
+    
     renderGroceryItems();
+    showNotification('Item added to list', 'success');
 }
 
 function deleteItem(index) {
@@ -1408,6 +1925,55 @@ function searchItems() {
 
     const filtered = items.filter(item => item.name.toLowerCase().includes(query));
     renderGroceryItems(filtered);
+    
+    // Always update summary with ALL items, not filtered
+    updateCartSummary(items);
+}
+
+// Search with market price integration
+function searchGroceryItemsWithMarket() {
+    const query = document.getElementById('grocerySearchInput').value.toLowerCase().trim();
+    const suggestionsDiv = document.getElementById('marketPriceSuggestions');
+    const suggestionsList = document.getElementById('suggestionsList');
+    
+    if (!query || query.length < 2) {
+        suggestionsDiv.classList.add('hidden');
+        return;
+    }
+    
+    // Search in market price data
+    const matches = MARKET_PRICE_REFERENCE.filter(item => 
+        item.keys.some(key => key.includes(query) || query.includes(key))
+    );
+    
+    if (matches.length > 0) {
+        suggestionsDiv.classList.remove('hidden');
+        suggestionsList.innerHTML = matches.slice(0, 5).map(match => `
+            <div class="flex justify-between items-center p-2 bg-emerald-50 rounded-lg cursor-pointer hover:bg-emerald-100 transition" onclick="selectMarketItem('${match.label}', '${match.price}')">
+                <span class="text-sm text-gray-800">${match.label}</span>
+                <span class="text-sm font-bold text-emerald-700">${match.price}</span>
+            </div>
+        `).join('');
+    } else {
+        suggestionsDiv.classList.add('hidden');
+    }
+    
+    // Also filter existing grocery items
+    searchItems();
+}
+
+// Select market price item and populate form
+function selectMarketItem(name, price) {
+    document.getElementById('itemName').value = name;
+    
+    // Parse price string to get numeric value
+    const priceMatch = price.match(/₱?(\d+(?:\.\d+)?)/);
+    if (priceMatch) {
+        document.getElementById('itemPrice').value = priceMatch[1];
+    }
+    
+    document.getElementById('marketPriceSuggestions').classList.add('hidden');
+    document.getElementById('itemName').focus();
 }
 
 function checkGroceryBudgetConstraints(currentTotal) {
@@ -1505,7 +2071,7 @@ function evaluateDynamicContextualAISuggestions() {
     targetContainer.innerHTML = suggestions.map(s => `<li>${s}</li>`).join('');
 }
 
-function processAISuggestionQuery() {
+async function processAISuggestionQuery() {
     const questionInput = document.getElementById('aiQuestionInput');
     const chatHistory = document.getElementById('aiChatHistory');
     if (!questionInput || !chatHistory) return;
@@ -1514,10 +2080,26 @@ function processAISuggestionQuery() {
     if (!question) return;
 
     appendChatMessage('user', question);
-    const responseText = generateAIResponse(question);
-    appendChatMessage('ai', responseText);
-
     questionInput.value = '';
+    
+    // Show typing indicator
+    const typingId = 'ai-typing-' + Date.now();
+    appendChatMessage('ai', '<span id="' + typingId + '">Typing...</span>');
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+    
+    try {
+        const responseText = await generateAIResponse(question);
+        // Remove typing indicator and add real response
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.parentElement.remove();
+        appendChatMessage('ai', responseText);
+    } catch (error) {
+        console.error('AI response error:', error);
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.parentElement.remove();
+        appendChatMessage('ai', 'Sorry, I had trouble processing that. Please try again or check your OpenAI API key.');
+    }
+
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
@@ -1568,69 +2150,415 @@ function renderAIWelcomeMessage() {
     }
 }
 
-function generateAIResponse(question) {
+// OpenAI API Configuration
+const OPENAI_API_KEY = localStorage.getItem('palengke_openai_key') || '';
+const OPENAI_MODEL = 'gpt-4o-mini'; // Cost-effective model with good performance
+
+async function generateAIResponseWithOpenAI(question) {
+    if (!OPENAI_API_KEY) {
+        return generateAIResponseFallback(question);
+    }
+
+    const budget = parseFloat(document.getElementById('plannerBudget')?.value) || 0;
+    const pax = parseInt(document.getElementById('plannerPax')?.value) || 0;
+    const selectedDiet = document.getElementById('plannerDiet')?.value || 'anything';
+    const groceryItems = getGroceryData();
+    
+    // Build context from app data
+    const mealPlanContext = buildMealPlanContext();
+    const marketPriceContext = buildMarketPriceContext();
+    const recipeContext = buildRecipeContext();
+    
+    const systemPrompt = `You are Palengke AI, a helpful assistant for Filipino families planning meals, managing budgets, and shopping at palengke (wet markets). You speak both English and Tagalog naturally.
+
+CURRENT USER CONTEXT:
+- Weekly Budget: ₱${budget}
+- Family Size: ${pax} people
+- Diet Preference: ${selectedDiet}
+- Grocery List: ${groceryItems.length} items (total: ₱${groceryItems.reduce((acc, i) => acc + (i.price * i.quantity), 0).toFixed(0)})
+
+${mealPlanContext}
+${marketPriceContext}
+${recipeContext}
+
+Your role:
+1. Help with Filipino recipes and cooking instructions
+2. Provide budget-friendly meal suggestions
+3. Give palengke shopping tips and price information
+4. Assist with meal planning and grocery list management
+5. Answer questions in the language the user uses (English or Tagalog)
+
+Be practical, culturally relevant to Filipino cooking and shopping, and always consider budget constraints. Give specific, actionable advice.`;
+
+    try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${OPENAI_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: OPENAI_MODEL,
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: question }
+                ],
+                max_tokens: 500,
+                temperature: 0.7
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`OpenAI API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content;
+    } catch (error) {
+        console.error('OpenAI API error:', error);
+        return generateAIResponseFallback(question);
+    }
+}
+
+function buildMealPlanContext() {
+    const hasPlan = DAYS_OF_WEEK.some(day => {
+        const plan = currentMealPlan[day];
+        return plan && (plan.Breakfast || plan.Lunch || plan.Dinner);
+    });
+    
+    if (!hasPlan) return 'MEAL PLAN: No active meal plan';
+    
+    let context = 'MEAL PLAN:\n';
+    DAYS_OF_WEEK.forEach(day => {
+        const plan = currentMealPlan[day];
+        if (plan && (plan.Breakfast || plan.Lunch || plan.Dinner)) {
+            context += `${day}: `;
+            if (plan.Breakfast) context += `Breakfast: ${plan.Breakfast.name} `;
+            if (plan.Lunch) context += `Lunch: ${plan.Lunch.name} `;
+            if (plan.Dinner) context += `Dinner: ${plan.Dinner.name}`;
+            context += '\n';
+        }
+    });
+    return context;
+}
+
+function buildMarketPriceContext() {
+    if (MARKET_PRICE_REFERENCE.length === 0) return 'MARKET PRICES: Not available';
+    
+    let context = 'CURRENT MARKET PRICES (sample):\n';
+    MARKET_PRICE_REFERENCE.slice(0, 10).forEach(item => {
+        context += `- ${item.label}: ${item.price}\n`;
+    });
+    return context;
+}
+
+function buildRecipeContext() {
+    return `AVAILABLE RECIPES: ${RECIPE_DATABASE.length} Filipino dishes including Adobo, Sinigang, Tinola, etc.`;
+}
+
+function generateAIResponseFallback(question) {
     const normalized = question.toLowerCase();
     const budget = parseFloat(document.getElementById('plannerBudget')?.value) || 0;
     const pax = parseInt(document.getElementById('plannerPax')?.value) || 0;
     const selectedDiet = document.getElementById('plannerDiet')?.value || 'anything';
     const groceryItems = getGroceryData();
 
-    // Greetings and small talk
-    if (/^(hi|hello|hey|yo|kumusta|musta|good\s*(morning|afternoon|evening|day))\b/.test(normalized.trim())) {
-        return 'Kumusta! I can help you plan meals, stretch your budget, and manage your grocery list.\nTry asking:\n• "How do I cook Chicken Adobo?"\n• "Magkano ang tilapia?"\n• "How should I split my kinsena budget?"\n• "What\'s in season this month?"';
+    // Greetings and small talk (expanded Tagalog support)
+    if (/^(hi|hello|hey|yo|kumusta|musta|good\s*(morning|afternoon|evening|day)|magandang\s*(umaga|hapon|gabi|araw))\b/.test(normalized.trim())) {
+        return 'Kumusta! I can help you plan meals, stretch your budget, and manage your grocery list.\nTry asking:\n• "Paano magluto ng Chicken Adobo?"\n• "Magkano ang tilapia?"\n• "Paano i-budget ang kinsena?"\n• "Ano ang in season ngayon?"';
     }
-    if (/salamat|thank/.test(normalized)) {
+    if (/salamat|thank|salamat po|thank you|maraming salamat/.test(normalized)) {
         return 'Walang anuman! Happy to help. Ask me anytime about meals, palengke prices, or budgeting tips.';
     }
-    if (/what can you (do|help)|help me|how do you work|anong kaya mo/.test(normalized)) {
-        return 'Here\'s what I can help with:\n• Recipes — "How do I cook Sinigang?" (I know all ' + RECIPE_DATABASE.length + ' dishes in the app)\n• Meal ideas — "What\'s a cheap dinner for 4?"\n• Your meal plan — "What\'s my plan for Monday?"\n• Palengke prices — "Magkano ang manok?"\n• Budgeting — "How do I budget my kinsena?", "What is the 50/30/20 rule?"\n• Grocery list — "What should I buy?", "What can I swap to save money?"\n• Market tips — "When is the best time to go to the palengke?"\n• Food storage — "How do I keep vegetables fresh?"';
+    if (/what can you (do|help)|help me|how do you work|anong kaya mo|ano ang kaya mo|paano ka tumulong/.test(normalized)) {
+        return 'Here\'s what I can help with:\n• Recipes — "Paano magluto ng Sinigang?" (I know all ' + RECIPE_DATABASE.length + ' dishes in the app)\n• Meal ideas — "Anong murang ulam para sa 4 na tao?"\n• Your meal plan — "Ano ang plano ko para sa Lunes?"\n• Palengke prices — "Magkano ang manok?"\n• Budgeting — "Paano i-budget ang kinsena?", "Ano ang 50/30/20 rule?"\n• Grocery list — "Ano ang dapat bilhin?", "Ano ang pwedeng palitan para makatipid?"\n• Market tips — "Kailan ang best time sa palengke?"\n• Food storage — "Paano panatilihin sariwang gulay?"';
     }
 
-    // How to cook a specific dish
-    if (/how (do|to|can|should).*(cook|make|prepare)|paano.*(lut|gaw)|recipe (for|of|ng)|ingredients (of|for|ng)|steps (for|to)/.test(normalized)) {
+    // How to cook a specific dish (expanded Tagalog)
+    if (/how (do|to|can|should).*(cook|make|prepare)|paano.*(lut|gaw|magluto|magprepare)|recipe (for|of|ng)|ingredients (of|for|ng)|steps (for|to)|pano|paano|lutuin|gawin/.test(normalized)) {
         const recipeAnswer = respondToRecipeHowTo(normalized);
         if (recipeAnswer) return recipeAnswer;
     }
 
-    // Palengke price lookups
-    if (/magkano|presyo|how much (is|are|does)|price of|cost of/.test(normalized)) {
+    // Palengke price lookups (expanded Tagalog + market data integration)
+    if (/magkano|presyo|how much (is|are|does)|price of|cost of|tinda|halaga|sangkat|bayad/.test(normalized)) {
         const priceAnswer = respondToPriceQuery(normalized);
         if (priceAnswer) return priceAnswer;
     }
 
-    // Current meal plan questions
-    if (/\b(my|current|active|this week'?s?) (meal )?plan\b|plan (for|this) (today|tonight|monday|tuesday|wednesday|thursday|friday|saturday|sunday)|what('s| is) for (today|tonight|monday|tuesday|wednesday|thursday|friday|saturday|sunday)|\b(breakfast|lunch|dinner|meal|ulam)\b.*\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b|\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b.*\b(breakfast|lunch|dinner|ulam)\b/.test(normalized)) {
+    // Current meal plan questions (expanded Tagalog)
+    if (/\b(my|current|active|this week'?s?) (meal )?plan\b|plan (for|this) (today|tonight|monday|tuesday|wednesday|thursday|friday|saturday|sunday)|what('s| is) for (today|tonight|monday|tuesday|wednesday|thursday|friday|saturday|sunday)|\b(breakfast|lunch|dinner|meal|ulam)\b.*\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b|\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b.*\b(breakfast|lunch|dinner|ulam)\b|ano ang plano|ano ang ulam|anong ulam|ano ang kakainin/.test(normalized)) {
         return respondToPlanQuery(normalized, budget);
     }
 
-    // Food storage and leftovers
-    if (/leftover|left-over|storage|how (do|to|can) .*(store|keep|preserve)|spoil|panis|freeze|freezer|refrigerat|keep.*fresh|stay.*fresh/.test(normalized)) {
+    // Food storage and leftovers (expanded Tagalog)
+    if (/leftover|left-over|storage|how (do|to|can) .*(store|keep|preserve)|spoil|panis|freeze|freezer|refrigerat|keep.*fresh|stay.*fresh|natira|tira|panatilihin|sariwa|magburok|maglasap/.test(normalized)) {
         return respondToStorageQuery(normalized);
     }
 
-    // Palengke shopping tips and seasonal produce
-    if (/palengke|wet market|tawad|haggl|in season|seasonal|best time.*(shop|market|buy)|supermarket vs|talipapa/.test(normalized)) {
+    // Palengke shopping tips and seasonal produce (expanded Tagalog)
+    if (/palengke|wet market|tawad|haggl|in season|seasonal|best time.*(shop|market|buy)|supermarket vs|talipapa|pamilihan|tawaran|diskwento|sale|promos/.test(normalized)) {
         return respondToPalengkeQuery(normalized);
     }
 
-    // Nutrition and healthy eating
-    if (/nutriti|nutrient|vitamin|masustansya|pinggang pinoy|balanced (diet|meal)|healthy eating|protein (source|intake)|malnutri|baon/.test(normalized)) {
+    // Nutrition and healthy eating (expanded Tagalog)
+    if (/nutriti|nutrient|vitamin|masustansya|pinggang pinoy|balanced (diet|meal)|healthy eating|protein (source|intake)|malnutri|baon|sustansya|malusog|healthy/.test(normalized)) {
         return respondToNutritionQuery(normalized, budget, pax, selectedDiet);
     }
 
-    if (/\b(?:grocery|list|buy|substitute|swap|ingredient|store|shop|shopping)\b/.test(normalized)) {
+    if (/\b(?:grocery|list|buy|substitute|swap|ingredient|store|shop|shopping|bilhin|bili|palitan|sukli|ingredients|sangkap)\b/.test(normalized)) {
         return respondToGroceryQuery(normalized, budget, pax, selectedDiet, groceryItems);
     }
 
-    if (/\b(?:budget|save|saving|ipon|cheap|tipid|expensive|cost|afford|spend|expense|tight|kinsena|payday|sweldo|allowance|utang|debt|emergency fund|envelope|50\/30\/20|price)\b/.test(normalized)) {
+    if (/\b(?:budget|save|saving|ipon|cheap|tipid|expensive|cost|afford|spend|expense|tight|kinsena|payday|sweldo|allowance|utang|debt|emergency fund|envelope|50\/30\/20|price|kuripot|matipid|magastos|budgeting)\b/.test(normalized)) {
         return respondToBudgetQuery(normalized, budget, pax, selectedDiet, groceryItems);
     }
 
-    if (/\b(?:breakfast|lunch|dinner|merienda|ulam|silog|recipe|meal|cook|menu|almusal|hapunan|tanghalian)\b/.test(normalized)) {
+    if (/\b(?:breakfast|lunch|dinner|merienda|ulam|silog|recipe|meal|cook|menu|almusal|hapunan|tanghalian|kanin|ulam|pagkain|luto|magluto)\b/.test(normalized)) {
         return respondToMealQuery(normalized, budget, pax, selectedDiet);
     }
 
-    return 'I can help with Filipino meals, budgeting, palengke prices, and grocery planning. Try:\n• "How do I cook Chicken Adobo?"\n• "Magkano ang bangus?"\n• "How should I budget my kinsena?"\n• "What should I buy this week?"\n• "How do I keep gulay fresh longer?"';
+    return 'I can help with Filipino meals, budgeting, palengke prices, and grocery planning. Try:\n• "Paano magluto ng Chicken Adobo?"\n• "Magkano ang bangus?"\n• "Paano i-budget ang kinsena?"\n• "Ano ang dapat bilhin ngayong linggo?"\n• "Paano panatilihin sariwang gulay?"';
+}
+
+function generateAIResponse(question) {
+    return generateAIResponseWithOpenAI(question);
+}
+
+// ==========================================
+// 6b. INGREDIENT PRICE CALCULATION ENGINE
+// ==========================================
+
+// Parse ingredient string to extract item name and quantity
+function parseIngredient(ingredientStr) {
+    const str = ingredientStr.toLowerCase().trim();
+    
+    // Extract quantity patterns
+    const quantityPatterns = [
+        /(\d+(?:\.\d+)?)\s*kg/i,
+        /(\d+(?:\.\d+)?)\s*kilo/i,
+        /(\d+(?:\.\d+)?)\s*g/i,
+        /(\d+(?:\.\d+)?)\s*gram/i,
+        /(\d+(?:\.\d+)?)\s*cup/i,
+        /(\d+(?:\.\d+)?)\s*tbsp/i,
+        /(\d+(?:\.\d+)?)\s*tbsp/i,
+        /(\d+(?:\.\d+)?)\s*tsps/i,
+        /(\d+(?:\.\d+)?)\s*tsp/i,
+        /(\d+(?:\.\d+)?)\s*ml/i,
+        /(\d+(?:\.\d+)?)\s*l/i,
+        /(\d+(?:\.\d+)?)\s*pc/i,
+        /(\d+(?:\.\d+)?)\s*piece/i,
+        /(\d+(?:\.\d+)?)\s*pieces/i,
+        /(\d+(?:\.\d+)?)\s*cloves/i,
+        /(\d+(?:\.\d+)?)\s*heads/i,
+        /(\d+(?:\.\d+)?)\s*bunch/i,
+        /(\d+(?:\.\d+)?)\s*bundle/i,
+        /(\d+(?:\.\d+)?)\s*whole/i,
+        /(\d+(?:\.\d+)?)\s*can/i,
+        /(\d+(?:\.\d+)?)\s*pack/i,
+        /(\d+(?:\.\d+)?)\s*packs/i,
+    ];
+    
+    let quantity = 1;
+    let unit = 'piece';
+    
+    for (const pattern of quantityPatterns) {
+        const match = str.match(pattern);
+        if (match) {
+            quantity = parseFloat(match[1]);
+            unit = pattern.source.replace(/[\/\\^$*+?.()|[\]{}]/g, '').replace(/\\i/g, '').replace(/\s+/g, ' ').trim();
+            break;
+        }
+    }
+    
+    // Extract item name by removing quantity and common words
+    let itemName = str
+        .replace(quantityPatterns[0], '')
+        .replace(quantityPatterns[1], '')
+        .replace(quantityPatterns[2], '')
+        .replace(quantityPatterns[3], '')
+        .replace(quantityPatterns[4], '')
+        .replace(quantityPatterns[5], '')
+        .replace(quantityPatterns[6], '')
+        .replace(quantityPatterns[7], '')
+        .replace(quantityPatterns[8], '')
+        .replace(quantityPatterns[9], '')
+        .replace(quantityPatterns[10], '')
+        .replace(quantityPatterns[11], '')
+        .replace(quantityPatterns[12], '')
+        .replace(quantityPatterns[13], '')
+        .replace(quantityPatterns[14], '')
+        .replace(quantityPatterns[15], '')
+        .replace(quantityPatterns[16], '')
+        .replace(quantityPatterns[17], '')
+        .replace(quantityPatterns[18], '')
+        .replace(quantityPatterns[19], '')
+        .replace(quantityPatterns[20], '')
+        .replace(quantityPatterns[21], '')
+        .replace(/\d+/g, '')
+        .replace(/of|the|a|an|with|and|or|for|to|in|on|at|by/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    
+    // Map common ingredient variations to standard names
+    const ingredientMap = {
+        'chicken': 'chicken',
+        'pork': 'pork',
+        'beef': 'beef',
+        'fish': 'fish',
+        'bangus': 'bangus',
+        'tilapia': 'tilapia',
+        'galunggong': 'galunggong',
+        'egg': 'egg',
+        'itlog': 'egg',
+        'rice': 'rice',
+        'kanin': 'rice',
+        'bigas': 'rice',
+        'garlic': 'garlic',
+        'bawang': 'garlic',
+        'onion': 'onion',
+        'sibuyas': 'onion',
+        'tomato': 'tomato',
+        'kamatis': 'tomato',
+        'potato': 'potato',
+        'carrot': 'carrot',
+        'tofu': 'tokwa',
+        'tokwa': 'tokwa',
+        'mung beans': 'monggo',
+        'monggo': 'monggo',
+        'munggo': 'monggo',
+        'eggplant': 'talong',
+        'talong': 'talong',
+        'spinach': 'spinach',
+        'kangkong': 'kangkong',
+        'pechay': 'pechay',
+        'squash': 'kalabasa',
+        'kalabasa': 'kalabasa',
+        'papaya': 'papaya',
+        'malunggay': 'malunggay',
+        'soy sauce': 'soy sauce',
+        'vinegar': 'vinegar',
+        'fish sauce': 'fish sauce',
+        'patis': 'fish sauce',
+        'oil': 'oil',
+        'sugar': 'sugar',
+        'salt': 'salt',
+        'pepper': 'pepper',
+        'milk': 'milk',
+        'coconut milk': 'coconut milk',
+        'gata': 'coconut milk',
+    };
+    
+    // Find best match
+    for (const [key, value] of Object.entries(ingredientMap)) {
+        if (itemName.includes(key)) {
+            itemName = value;
+            break;
+        }
+    }
+    
+    return { name: itemName, quantity, unit };
+}
+
+// Get price from market data for an ingredient
+function getMarketPriceForIngredient(ingredient) {
+    const parsed = parseIngredient(ingredient);
+    
+    // Find matching price in market data
+    const marketItem = MARKET_PRICE_REFERENCE.find(item => 
+        item.keys.some(key => parsed.name.includes(key) || key.includes(parsed.name))
+    );
+    
+    if (!marketItem) {
+        // Return estimated price if not found in market data
+        const fallbackPrices = {
+            'chicken': 180,
+            'pork': 320,
+            'beef': 420,
+            'fish': 150,
+            'bangus': 190,
+            'tilapia': 140,
+            'galunggong': 165,
+            'egg': 8.5,
+            'rice': 52,
+            'garlic': 140,
+            'onion': 155,
+            'tomato': 80,
+            'potato': 60,
+            'carrot': 70,
+            'tokwa': 15,
+            'monggo': 90,
+            'talong': 90,
+            'spinach': 25,
+            'kangkong': 15,
+            'pechay': 20,
+            'kalabasa': 50,
+            'papaya': 40,
+            'malunggay': 30,
+            'soy sauce': 35,
+            'vinegar': 30,
+            'fish sauce': 40,
+            'oil': 80,
+            'sugar': 60,
+            'salt': 25,
+            'pepper': 200,
+            'milk': 75,
+            'coconut milk': 85,
+        };
+        
+        const fallbackPrice = fallbackPrices[parsed.name] || 50;
+        return fallbackPrice * parsed.quantity;
+    }
+    
+    // Parse price string to get numeric value
+    const priceStr = marketItem.price;
+    const priceMatch = priceStr.match(/₱?(\d+(?:\.\d+)?)/);
+    if (!priceMatch) return 50 * parsed.quantity;
+    
+    const basePrice = parseFloat(priceMatch[1]);
+    
+    // Adjust for unit
+    const unitMultipliers = {
+        'kg': 1,
+        'kilo': 1,
+        'g': 0.001,
+        'gram': 0.001,
+        'cup': 0.24,
+        'tbsp': 0.015,
+        'tbsp': 0.015,
+        'tsps': 0.005,
+        'tsp': 0.005,
+        'ml': 0.001,
+        'l': 1,
+        'pc': 1,
+        'piece': 1,
+        'pieces': 1,
+        'cloves': 0.02,
+        'heads': 0.1,
+        'bunch': 0.2,
+        'bundle': 0.2,
+        'whole': 1,
+        'can': 1,
+        'pack': 1,
+        'packs': 1,
+    };
+    
+    const multiplier = unitMultipliers[parsed.unit] || 1;
+    return basePrice * parsed.quantity * multiplier;
+}
+
+// Calculate recipe cost based on market prices
+function calculateRecipeCostFromMarket(recipe) {
+    if (!recipe.ingredients || recipe.ingredients.length === 0) {
+        return recipe.estimatedCost || 0;
+    }
+    
+    let totalCost = 0;
+    recipe.ingredients.forEach(ingredient => {
+        totalCost += getMarketPriceForIngredient(ingredient);
+    });
+    
+    return Math.round(totalCost);
 }
 
 // ==========================================
@@ -1814,6 +2742,9 @@ async function loadLiveMarketPrices() {
             statusBadge.textContent = '● Live DA Bantay Presyo (NCR)';
             statusBadge.className = 'bg-emerald-50 text-emerald-800 font-bold text-xs px-3 py-1.5 rounded-full whitespace-nowrap';
         }
+
+        // Update home page price movements
+        updateHomePagePriceMovements(items);
     } catch (error) {
         console.warn('Live price feed unavailable, using fallback prices:', error);
         renderMarketPricesTable(MARKET_PRICE_FALLBACK.map(entry => ({
@@ -1834,6 +2765,110 @@ async function loadLiveMarketPrices() {
 }
 
 document.addEventListener('DOMContentLoaded', loadLiveMarketPrices);
+
+// ==========================================
+// 8. HOME PAGE PRICE MOVEMENTS
+// ==========================================
+
+function updateHomePagePriceMovements(currentItems) {
+    const previousPrices = JSON.parse(localStorage.getItem('palengke_previous_prices')) || {};
+    const priceIncreases = [];
+    const priceDrops = [];
+
+    currentItems.forEach(item => {
+        if (!item.keys || item.keys.length === 0) return;
+        const key = item.keys[0];
+        const currentPrice = parsePriceValue(item.price);
+        
+        if (previousPrices[key] && currentPrice) {
+            const previousPrice = previousPrices[key];
+            const change = currentPrice - previousPrice;
+            const percentChange = ((change / previousPrice) * 100).toFixed(1);
+            
+            if (Math.abs(change) > 0.5) { // Only show significant changes
+                const movement = {
+                    name: item.name,
+                    change: change,
+                    percentChange: percentChange,
+                    unit: item.unit || 'kg'
+                };
+                
+                if (change > 0) {
+                    priceIncreases.push(movement);
+                } else {
+                    priceDrops.push(movement);
+                }
+            }
+        }
+        
+        // Store current price for next comparison
+        if (currentPrice) {
+            previousPrices[key] = currentPrice;
+        }
+    });
+
+    // Save current prices
+    localStorage.setItem('palengke_previous_prices', JSON.stringify(previousPrices));
+
+    // Update home page UI
+    renderPriceMovements(priceIncreases, priceDrops);
+}
+
+function parsePriceValue(priceStr) {
+    if (!priceStr) return null;
+    const match = priceStr.match(/₱?(\d+(?:\.\d+)?)/);
+    return match ? parseFloat(match[1]) : null;
+}
+
+function renderPriceMovements(increases, decreases) {
+    const increaseList = document.querySelector('.bg-rose-50 ul');
+    const decreaseList = document.querySelector('.bg-emerald-50 ul');
+    
+    if (!increaseList || !decreaseList) return;
+
+    // Sort by magnitude of change
+    increases.sort((a, b) => Math.abs(b.change) - Math.abs(a.change));
+    decreases.sort((a, b) => Math.abs(b.change) - Math.abs(a.change));
+
+    // Render top 3 increases
+    if (increases.length > 0) {
+        increaseList.innerHTML = increases.slice(0, 3).map(item => {
+            const emoji = getItemEmoji(item.name);
+            const sign = item.change > 0 ? '+' : '';
+            return `<li>${emoji} ${item.name} (${sign}₱${Math.abs(item.change).toFixed(2)}/${item.unit}, ${item.percentChange}%)</li>`;
+        }).join('');
+    } else {
+        increaseList.innerHTML = '<li class="text-gray-500 italic">No significant price increases this week</li>';
+    }
+
+    // Render top 3 decreases
+    if (decreases.length > 0) {
+        decreaseList.innerHTML = decreases.slice(0, 3).map(item => {
+            const emoji = getItemEmoji(item.name);
+            const sign = item.change < 0 ? '-' : '';
+            return `<li>${emoji} ${item.name} (${sign}₱${Math.abs(item.change).toFixed(2)}/${item.unit}, ${item.percentChange}%)</li>`;
+        }).join('');
+    } else {
+        decreaseList.innerHTML = '<li class="text-gray-500 italic">No significant price drops this week</li>';
+    }
+}
+
+function getItemEmoji(name) {
+    const lower = name.toLowerCase();
+    if (lower.includes('tomato')) return '🍅';
+    if (lower.includes('onion')) return '🧅';
+    if (lower.includes('garlic')) return '🧄';
+    if (lower.includes('chicken') || lower.includes('manok')) return '🍗';
+    if (lower.includes('cabbage')) return '🥬';
+    if (lower.includes('egg') || lower.includes('itlog')) return '🥚';
+    if (lower.includes('fish') || lower.includes('isda')) return '🐟';
+    if (lower.includes('pork') || lower.includes('baboy')) return '🥓';
+    if (lower.includes('beef') || lower.includes('baka')) return '🥩';
+    if (lower.includes('rice') || lower.includes('bigas')) return '🍚';
+    if (lower.includes('carrot')) return '🥕';
+    if (lower.includes('potato')) return '🥔';
+    return '📦';
+}
 
 function respondToPriceQuery(question) {
     const matches = MARKET_PRICE_REFERENCE.filter(entry => entry.keys.some(k => question.includes(k)));

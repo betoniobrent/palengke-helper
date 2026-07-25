@@ -6,44 +6,128 @@
     <title>Palengke Helper+</title>
     <!-- Tailwind CSS Engine CDN Deployment -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Decoupled Visual Presentation Design Component Layer -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-50 min-h-screen text-gray-800">
-
-    <!-- LOGIN / REGISTER AUTHORIZATION CONTEXT PANEL -->
-    <div id="authPage" class="min-h-screen flex items-center justify-center bg-emerald-50 p-4">
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 w-full max-w-md">
-            <h1 class="text-3xl font-bold text-center text-emerald-700 mb-4">🥬 Palengke Helper+</h1>
+    <div id="authPage" style="background: #f0fdf4; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
+        <div style="background: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; width: 100%; max-width: 28rem;">
+            <h1 style="font-size: 1.875rem; font-weight: bold; text-align: center; color: #047857; margin-bottom: 1rem;">🥬 Palengke Helper+</h1>
 
             <!-- LOGIN SUBSYSTEM VIEW -->
             <div id="loginBox">
-                <h2 class="text-xl font-bold mb-3 text-gray-800">Login</h2>
-                <input id="loginEmail" type="email" class="ph-input mb-2" placeholder="Email">
-                <input id="loginPassword" type="password" class="ph-input mb-2" placeholder="Password">
-                <div class="space-y-2 mt-1">
-                    <button onclick="login()" class="w-full bg-emerald-700 text-white p-2 rounded hover:bg-emerald-800 transition font-medium shadow-sm">Login</button>
-                    <button onclick="loginAsGuest()" class="w-full bg-gray-100 text-gray-700 p-2 rounded hover:bg-gray-200 transition font-medium shadow-sm flex items-center justify-center gap-1">
+                <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.75rem; color: #1f2937;">Login</h2>
+
+                <input
+                    id="loginEmail"
+                    type="email"
+                    style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;"
+                    placeholder="Email"
+                >
+                <input
+                    id="loginPassword"
+                    type="password"
+                    style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;"
+                    placeholder="Password"
+                >
+
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem;">
+                    <button
+                        type="button"
+                        onclick="loginWithEmail()"
+                        style="width: 100%; background: #047857; color: white; padding: 0.5rem; border-radius: 0.375rem; font-weight: 500; cursor: pointer;"
+                    >
+                        Login
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="loginWithGoogle()"
+                        style="width: 100%; background: white; color: #1f2937; border: 1px solid #d1d5db; padding: 0.5rem; border-radius: 0.375rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;"
+                    >
+                        <svg width="16" height="16" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Sign in with Google
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="loginAsGuest()"
+                        style="width: 100%; background: #f3f4f6; color: #374151; padding: 0.5rem; border-radius: 0.375rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;"
+                    >
                         👤 Continue as visitor
                     </button>
+
+                    <button
+                        type="button"
+                        onclick="localStorage.removeItem('palengke_session'); location.reload();"
+                        style="width: 100%; background: #fee2e2; color: #991b1b; padding: 0.5rem; border-radius: 0.375rem; font-weight: 500; cursor: pointer; font-size: 0.75rem;"
+                    >
+                        Clear session & reload
+                    </button>
                 </div>
-                
-                <p class="mt-4 text-center text-sm text-gray-600">
-                    No account? <a href="#" onclick="showRegister()" class="text-emerald-700 font-bold hover:underline">Register</a>
+
+                <p style="margin-top: 1rem; text-align: center; font-size: 0.875rem; color: #4b5563;">
+                    No account?
+                    <a href="#" onclick="showRegister()" style="color: #047857; font-weight: bold; text-decoration: underline;">
+                        Register
+                    </a>
                 </p>
             </div>
 
             <!-- REGISTER SUBSYSTEM VIEW -->
-            <div id="registerBox" class="hidden">
-                <h2 class="text-xl font-bold mb-3 text-gray-800">Register</h2>
-               <input id="fullname" type="text" class="ph-input mb-2" placeholder="Full Name">
-                <input id="email" type="email" class="ph-input mb-2" placeholder="Email">
-                <input id="age" type="number" class="ph-input mb-2" placeholder="Age">
-                <input id="address" type="text" class="ph-input mb-2" placeholder="Address">
-                <input id="password" type="password" class="ph-input mb-2" placeholder="Password">  
-                <button onclick="register()" class="w-full bg-emerald-700 text-white p-2 rounded hover:bg-emerald-800 transition">Register</button>
-                <p class="mt-3 text-center">
-                    <a href="#" onclick="showLogin()" class="text-emerald-700 font-bold hover:underline">Back to Login</a>
+            <div id="registerBox" style="display: none;">
+                <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.75rem; color: #1f2937;">Register</h2>
+
+                <input
+                    id="fullname"
+                    type="text"
+                    style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;"
+                    placeholder="Full Name"
+                >
+                <input
+                    id="email"
+                    type="email"
+                    style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;"
+                    placeholder="Email"
+                >
+                <input
+                    id="age"
+                    type="number"
+                    style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;"
+                    placeholder="Age"
+                >
+                <input
+                    id="address"
+                    type="text"
+                    style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;"
+                    placeholder="Address"
+                >
+                <input
+                    id="password"
+                    type="password"
+                    style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;"
+                    placeholder="Password"
+                >
+
+                <button
+                    type="button"
+                    onclick="registerWithEmail()"
+                    style="width: 100%; background: #047857; color: white; padding: 0.5rem; border-radius: 0.375rem; cursor: pointer;"
+                >
+                    Register
+                </button>
+
+                <p style="margin-top: 0.75rem; text-align: center;">
+                    <a href="#" onclick="showLogin()" style="color: #047857; font-weight: bold; text-decoration: underline;">
+                        Back to Login
+                    </a>
                 </p>
             </div>
         </div>
@@ -57,25 +141,35 @@
                 <div class="flex justify-between items-center">
                     <h1 class="font-bold text-xl cursor-pointer" onclick="switchTab('home')">🥬 Palengke Helper+</h1>
                     <button class="md:hidden text-2xl focus:outline-none" onclick="toggleMenu()">☰</button>
-                    <ul id="menu" class="hidden md:flex gap-6 font-medium text-sm">
+                    <ul id="menu" class="hidden md:flex gap-4 lg:gap-6 font-medium text-xs lg:text-sm">
                         <li><button data-tab="home" onclick="switchTab('home')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Home</button></li>
-                        <li><button data-tab="budget" onclick="switchTab('budget')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Budget Tracker</button></li>
+                        <li><button data-tab="budget" onclick="switchTab('budget')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Budget</button></li>
                         <li><button data-tab="meal" onclick="switchTab('meal')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Meal Planner</button></li>
-                        <li><button data-tab="prices" onclick="switchTab('prices')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Market Prices</button></li>
-                        <li><button data-tab="suggestions" onclick="switchTab('suggestions')" class="tab-link hover:text-emerald-200 transition focus:outline-none">AI Suggestions</button></li>
-                        <li><button data-tab="grocery" onclick="switchTab('grocery')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Grocery List Tracker</button></li>
-                        <li><button onclick="logout()" class="hover:text-rose-200 transition font-bold focus:outline-none">Logout</button></li>
+                        <li><button data-tab="prices" onclick="switchTab('prices')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Prices</button></li>
+                        <li><button data-tab="suggestions" onclick="switchTab('suggestions')" class="tab-link hover:text-emerald-200 transition focus:outline-none">AI</button></li>
+                        <li><button data-tab="grocery" onclick="switchTab('grocery')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Grocery</button></li>
+                        <li class="relative">
+                            <button onclick="toggleAccountMenu()" class="hover:text-emerald-200 transition focus:outline-none flex items-center gap-1">
+                                <span>Account</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div id="accountDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                                <button onclick="openAccountSettings()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-emerald-50 text-sm">⚙️ Settings</button>
+                                <button onclick="logout()" class="block w-full text-left px-4 py-2 text-rose-600 hover:bg-rose-50 text-sm font-semibold">🚪 Logout</button>
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 <!-- MOBILE MENU COLLAPSIBLE BLOCK CONTAINER -->
                 <div id="mobileMenu" class="hidden md:hidden mt-4 space-y-2 pb-2">
                     <button data-tab="home" onclick="switchTab('home'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Home</button>
-                    <button data-tab="budget" onclick="switchTab('budget'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Budget Tracker</button>
+                    <button data-tab="budget" onclick="switchTab('budget'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Budget</button>
                     <button data-tab="meal" onclick="switchTab('meal'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Meal Planner</button>
                     <button data-tab="prices" onclick="switchTab('prices'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Market Prices</button>
                     <button data-tab="suggestions" onclick="switchTab('suggestions'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">AI Suggestions</button>
-                    <button data-tab="grocery" onclick="switchTab('grocery'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Grocery List Tracker</button>
-                    <button onclick="logout(); toggleMenu()" class="block w-full text-left py-2 text-rose-300 font-bold">Logout</button>
+                    <button data-tab="grocery" onclick="switchTab('grocery'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Grocery</button>
+                    <button onclick="openAccountSettings(); toggleMenu()" class="block w-full text-left py-2 border-b border-emerald-600">⚙️ Account Settings</button>
+                    <button onclick="logout(); toggleMenu()" class="block w-full text-left py-2 text-rose-300 font-bold">🚪 Logout</button>
                 </div>
             </div>
         </nav>
@@ -95,7 +189,7 @@
         </section>
 
         <!-- MAIN DECOUPLED CONTENT TABBING SECTION LAYER -->
-        <section class="max-w-7xl mx-auto py-8 px-6 min-h-[50vh]">
+        <section class="max-w-7xl mx-auto py-8 px-6 min-h-[50vh] bg-gray-50">
 
             <!-- TAB 0: HOME VIEW PANEL -->
             <div id="view-home" class="tab-content">
@@ -208,16 +302,16 @@
                 </div>
 
                 <!-- ADD NEW MONTHLY BUDGET ACTION FORM PANEL -->
-                <div id="newMonthBudgetForm" class="hidden bg-white p-5 rounded-xl shadow-sm border border-emerald-100 mb-6 max-w-xl">
-                    <h3 class="text-base font-bold text-gray-800 mb-3">Initialize New Month Focus</h3>
+                <div id="newMonthBudgetForm" class="hidden bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-xl shadow-md border border-emerald-200 mb-6 max-w-xl">
+                    <h3 class="text-base font-bold text-emerald-900 mb-3">Initialize New Month Focus</h3>
                     <div class="grid grid-cols-2 gap-3 mb-4">
                         <div class="col-span-2">
-                            <label class="text-[10px] font-bold text-gray-400 uppercase block mb-1">Select Statement Month</label>
-                            <input id="newBudgetDate" type="month" value="2026-07" class="w-full border px-3 py-1.5 text-sm rounded-lg bg-gray-50 text-gray-800 font-medium focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                            <label class="text-[10px] font-bold text-emerald-700 uppercase block mb-1">Select Statement Month</label>
+                            <input id="newBudgetDate" type="month" value="2026-07" class="w-full border px-3 py-1.5 text-sm rounded-lg bg-white text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                         </div>
                     </div>
                     <div class="flex gap-2 justify-end">
-                        <button onclick="toggleForm('newMonthBudgetForm')" class="text-gray-500 hover:text-gray-800 text-xs px-2 font-medium">Cancel</button>
+                        <button onclick="toggleForm('newMonthBudgetForm')" class="text-emerald-700 hover:text-emerald-900 text-xs px-2 font-medium">Cancel</button>
                         <button onclick="addNewMonthlyBudgetHubRecord()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2 rounded-lg shadow-sm transition">
                             Create Month Folder
                         </button>
@@ -225,73 +319,73 @@
                 </div>
 
                 <!-- HISTORICAL ARCHIVE STREAM GRID CONTAINER -->
-                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Saved Monthly Statement Folders</h3>
+                <h3 class="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-3">Saved Monthly Statement Folders</h3>
                 <div id="monthlyBudgetsHubGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                     <!-- Dynamic historical cards append here -->
                 </div>
 
                 <!-- SEPARATOR RUNTIME DEPLOYMENT -->
-                <hr class="border-gray-200 my-8">
+                <hr class="border-emerald-200 my-8">
 
                 <!-- MAIN INTERACTIVE LEDGER REGION BLOCK -->
                 <div id="activeLedgerWorkspaceSection" class="hidden">
-                    <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-xl flex items-center justify-between mb-4 flex-wrap gap-2">
+                    <div class="bg-gradient-to-r from-emerald-500 to-teal-500 p-4 rounded-xl flex items-center justify-between mb-4 flex-wrap gap-2 shadow-lg">
                         <div>
-                            <span class="text-xs text-emerald-800 font-bold uppercase tracking-wider">Currently Inspecting Workspace:</span>
-                            <h2 id="activeWorkspaceMonthTitle" class="text-xl font-black text-emerald-950">Month Context</h2>
+                            <span class="text-xs text-emerald-100 font-bold uppercase tracking-wider">Currently Inspecting Workspace:</span>
+                            <h2 id="activeWorkspaceMonthTitle" class="text-xl font-black text-white">Month Context</h2>
                         </div>
                         <div class="text-right">
-                            <span class="text-[10px] text-emerald-800 font-bold uppercase block">Aggregated Active Allowance Pool</span>
-                            <span id="activeWorkspaceBudgetValue" class="text-xl font-mono font-black text-emerald-900">₱0.00</span>
+                            <span class="text-[10px] text-emerald-100 font-bold uppercase block">Aggregated Active Allowance Pool</span>
+                            <span id="activeWorkspaceBudgetValue" class="text-xl font-mono font-black text-white">₱0.00</span>
                         </div>
                     </div>
 
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-                        <p class="text-sm text-gray-500">Filter workspace details dynamically by specification intervals below.</p>
+                        <p class="text-sm text-gray-600">Filter workspace details dynamically by specification intervals below.</p>
                         <!-- LOCALIZED DYNAMIC SPECIFICATION QUICK FILTERS -->
-                        <div class="flex flex-wrap gap-1.5 bg-white p-1.5 rounded-xl border border-gray-100 shadow-sm">
+                        <div class="flex flex-wrap gap-1.5 bg-gradient-to-br from-gray-50 to-gray-100 p-1.5 rounded-xl border border-gray-200 shadow-sm">
                             <button onclick="applySpecificationFilter('all')" class="bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm" id="filter-spec-all">✨ All</button>
-                            <button onclick="applySpecificationFilter('Monthly')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-Monthly">🗓️ Monthly</button>
-                            <button onclick="applySpecificationFilter('1st Cut (1st-15th)')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-1st">🌓 1st Cut</button>
-                            <button onclick="applySpecificationFilter('2nd Cut (16th-End)')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-2nd">🌓 2nd Cut</button>
-                            <button onclick="applySpecificationFilter('Week 1')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w1">W1</button>
-                            <button onclick="applySpecificationFilter('Week 2')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w2">W2</button>
-                            <button onclick="applySpecificationFilter('Week 3')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w3">W3</button>
-                            <button onclick="applySpecificationFilter('Week 4')" class="bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w4">W4</button>
+                            <button onclick="applySpecificationFilter('Monthly')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-Monthly">🗓️ Monthly</button>
+                            <button onclick="applySpecificationFilter('1st Cut (1st-15th)')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-1st">🌓 1st Cut</button>
+                            <button onclick="applySpecificationFilter('2nd Cut (16th-End)')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-2nd">🌓 2nd Cut</button>
+                            <button onclick="applySpecificationFilter('Week 1')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w1">W1</button>
+                            <button onclick="applySpecificationFilter('Week 2')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w2">W2</button>
+                            <button onclick="applySpecificationFilter('Week 3')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w3">W3</button>
+                            <button onclick="applySpecificationFilter('Week 4')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w4">W4</button>
                         </div>
                     </div>
 
                     <!-- REVENUE COMPILATION BANNER BAR -->
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 flex flex-wrap items-center justify-end gap-6 text-right">
+                    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 p-4 rounded-xl shadow-md border border-emerald-200 mb-6 flex flex-wrap items-center justify-end gap-6 text-right">
                         <div>
-                            <span class="text-xs font-semibold text-gray-400 block">Active Specification Income Pool</span>
+                            <span class="text-xs font-semibold text-emerald-700 block">Active Specification Income Pool</span>
                             <span id="ledgerTotalIncome" class="text-xl font-bold text-emerald-600">₱0.00</span>
                         </div>
-                        <div class="border-l pl-6 border-gray-100">
-                            <span class="text-xs font-semibold text-gray-400 block">Filtered Tracked Expenses</span>
+                        <div class="border-l pl-6 border-emerald-200">
+                            <span class="text-xs font-semibold text-rose-700 block">Filtered Tracked Expenses</span>
                             <span id="ledgerTotalExpenses" class="text-xl font-bold text-rose-500">-₱0.00</span>
                         </div>
-                        <div class="border-l pl-6 border-gray-100">
-                            <span class="text-xs font-semibold text-gray-400 block">Net Margin Balance</span>
+                        <div class="border-l pl-6 border-emerald-200">
+                            <span class="text-xs font-semibold text-gray-700 block">Net Margin Balance</span>
                             <span id="ledgerNetSavings" class="text-xl font-bold text-gray-800">₱0.00</span>
                         </div>
                     </div>
 
                     <!-- REAL-TIME EXPENSE CATEGORY DISTRIBUTION ANALYTICS (WITH LIVE PIE CHART) -->
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 mb-6">
-                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <div class="bg-gradient-to-br from-slate-50 to-gray-100 p-5 rounded-xl shadow-md border border-gray-200 mb-6">
+                        <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider mb-4 flex items-center gap-2">
                             📊 Filtered Expense Allocation Breakdown
                         </h3>
-                        
+
                         <div class="grid md:grid-cols-3 gap-6 items-center">
                             <!-- PIE CHART VISUAL BLOCK -->
-                            <div class="flex flex-col items-center justify-center bg-gray-50 p-4 rounded-xl border border-gray-100/70 h-full min-h-[220px]">
+                            <div class="flex flex-col items-center justify-center bg-white p-4 rounded-xl border border-gray-200 h-full min-h-[220px] shadow-sm">
                                 <div class="relative w-40 h-40">
                                     <svg id="pieChartSvg" viewBox="0 0 32 32" class="w-full h-full transform -rotate-90 rounded-full bg-gray-100 transition-all duration-500">
                                         <!-- Dynamic SVG segments loop here -->
                                     </svg>
-                                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-white rounded-full m-[22%] shadow-sm border border-gray-100">
-                                        <span class="text-[9px] font-bold text-gray-400 uppercase tracking-tight">Total Spent</span>
+                                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-white rounded-full m-[22%] shadow-sm border border-gray-200">
+                                        <span class="text-[9px] font-bold text-gray-500 uppercase tracking-tight">Total Spent</span>
                                         <span id="pieCenterTotal" class="text-xs font-black text-gray-800">₱0.00</span>
                                     </div>
                                 </div>
@@ -299,7 +393,7 @@
 
                             <!-- DYNAMIC LIST LEGEND + PROGRESS BARS -->
                             <div id="categoryBreakdownContainer" class="md:col-span-2 grid sm:grid-cols-2 gap-4">
-                                <p class="text-xs text-gray-400 italic col-span-full">No active expenses logged within this date window.</p>
+                                <p class="text-xs text-gray-500 italic col-span-full">No active expenses logged within this date window.</p>
                             </div>
                         </div>
                     </div>
@@ -307,31 +401,31 @@
                     <!-- SIDE-BY-SIDE LEDGERS WORKSPACE -->
                     <div class="grid md:grid-cols-2 gap-6">
                         <!-- INCOME / ALLOWANCE LEDGER COLUMN -->
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between min-h-[400px]">
+                        <div class="bg-gradient-to-br from-emerald-50 to-green-50 p-6 rounded-xl shadow-md border border-emerald-200 flex flex-col justify-between min-h-[400px]">
                             <div>
-                                <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
-                                    <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                <div class="flex justify-between items-center border-b border-emerald-200 pb-3 mb-4">
+                                    <h3 class="text-lg font-bold text-emerald-900 flex items-center gap-2">
                                         <span class="text-emerald-600">📥</span> Income & Allowance Streams
                                     </h3>
                                     <button onclick="toggleForm('incomeForm')" class="bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg font-bold hover:bg-emerald-800 shadow-sm transition">+ Add</button>
                                 </div>
 
                                 <!-- Dynamic Form Container -->
-                                <div id="incomeForm" class="hidden bg-emerald-50/60 p-4 rounded-xl border border-emerald-100 mb-4 space-y-3">
+                                <div id="incomeForm" class="hidden bg-white p-4 rounded-xl border border-emerald-300 mb-4 space-y-3 shadow-sm">
                                     <div class="grid grid-cols-2 gap-2">
                                         <div>
                                             <label class="text-[10px] font-bold text-emerald-800 uppercase">Source Name</label>
-                                            <input id="incDesc" type="text" placeholder="e.g. Salary, Allowance" class="w-full bg-white text-gray-800 border border-emerald-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                                            <input id="incDesc" type="text" placeholder="e.g. Salary, Allowance" class="w-full bg-emerald-50 text-gray-800 border border-emerald-300 p-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                         </div>
                                         <div>
                                             <label class="text-[10px] font-bold text-emerald-800 uppercase">Amount (₱)</label>
-                                            <input id="incAmount" type="number" placeholder="0" class="w-full bg-white text-gray-800 border border-emerald-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                                            <input id="incAmount" type="number" placeholder="0" class="w-full bg-emerald-50 text-gray-800 border border-emerald-300 p-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-2 gap-2">
                                         <div>
                                             <label class="text-[10px] font-bold text-emerald-800 uppercase">Specification Cadence</label>
-                                            <select id="incSpec" class="w-full bg-white text-gray-800 border border-emerald-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                                            <select id="incSpec" class="w-full bg-emerald-50 text-gray-800 border border-emerald-300 p-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                                 <option value="Monthly">🗓️ Monthly (Full Cycle)</option>
                                                 <option value="1st Cut (1st-15th)">🌓 Kinsena: 1st Cut (1st-15th)</option>
                                                 <option value="2nd Cut (16th-End)">🌓 Kinsena: 2nd Cut (16th-End)</option>
@@ -343,11 +437,11 @@
                                         </div>
                                         <div>
                                             <label class="text-[10px] font-bold text-emerald-800 uppercase">Date Logged</label>
-                                            <input id="incDate" type="date" class="w-full bg-white text-gray-800 border border-emerald-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                                            <input id="incDate" type="date" class="w-full bg-emerald-50 text-gray-800 border border-emerald-300 p-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                         </div>
                                     </div>
                                     <div class="flex gap-2 pt-1 justify-end">
-                                        <button onclick="toggleForm('incomeForm')" class="text-gray-500 hover:text-gray-800 text-xs px-2 font-medium">✕ Cancel</button>
+                                        <button onclick="toggleForm('incomeForm')" class="text-emerald-700 hover:text-emerald-900 text-xs px-2 font-medium">✕ Cancel</button>
                                         <button onclick="addLedgerItem('income')" class="bg-emerald-700 text-white font-bold text-xs px-4 py-1.5 rounded-lg hover:bg-emerald-800 shadow-sm transition">Save Allocation</button>
                                     </div>
                                 </div>
@@ -360,31 +454,31 @@
                         </div>
 
                         <!-- EXPENSES LEDGER COLUMN -->
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between min-h-[400px]">
+                        <div class="bg-gradient-to-br from-rose-50 to-pink-50 p-6 rounded-xl shadow-md border border-rose-200 flex flex-col justify-between min-h-[400px]">
                             <div>
-                                <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
-                                    <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                <div class="flex justify-between items-center border-b border-rose-200 pb-3 mb-4">
+                                    <h3 class="text-lg font-bold text-rose-900 flex items-center gap-2">
                                         <span class="text-rose-500">📤</span> Expenses
                                     </h3>
                                     <button onclick="toggleForm('expenseForm')" class="bg-rose-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold hover:bg-rose-700 shadow-sm transition">+ Add</button>
                                 </div>
 
                                 <!-- Dynamic Form Container -->
-                                <div id="expenseForm" class="hidden bg-rose-50/60 p-4 rounded-xl border border-rose-100 mb-4 space-y-3">
+                                <div id="expenseForm" class="hidden bg-white p-4 rounded-xl border border-rose-300 mb-4 space-y-3 shadow-sm">
                                     <div class="grid grid-cols-2 gap-2">
                                         <div>
                                             <label class="text-[10px] font-bold text-rose-800 uppercase">Description</label>
-                                            <input id="expDesc" type="text" placeholder="e.g. Electric, Rent" class="w-full bg-white text-gray-800 border border-rose-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-rose-500">
+                                            <input id="expDesc" type="text" placeholder="e.g. Electric, Rent" class="w-full bg-rose-50 text-gray-800 border border-rose-300 p-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500">
                                         </div>
                                         <div>
                                             <label class="text-[10px] font-bold text-rose-800 uppercase">Amount (₱)</label>
-                                            <input id="expAmount" type="number" placeholder="0" class="w-full bg-white text-gray-800 border border-rose-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-rose-500">
+                                            <input id="expAmount" type="number" placeholder="0" class="w-full bg-rose-50 text-gray-800 border border-rose-300 p-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500">
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-2 gap-2">
                                         <div>
                                             <label class="text-[10px] font-bold text-rose-800 uppercase">Category Group</label>
-                                            <select id="expCategory" class="w-full bg-white text-gray-800 border border-rose-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-rose-500">
+                                            <select id="expCategory" class="w-full bg-rose-50 text-gray-800 border border-rose-300 p-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500">
                                                 <option>Food & Groceries</option>
                                                 <option>Electricity (Meralco)</option>
                                                 <option>Water Bill</option>
@@ -395,7 +489,7 @@
                                         </div>
                                         <div>
                                             <label class="text-[10px] font-bold text-rose-800 uppercase">Specification Target</label>
-                                            <select id="expSpec" class="w-full bg-white text-gray-800 border border-rose-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-rose-500">
+                                            <select id="expSpec" class="w-full bg-rose-50 text-gray-800 border border-rose-300 p-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500">
                                                 <option value="Monthly">🗓️ Monthly (Full Cycle)</option>
                                                 <option value="1st Cut (1st-15th)">🌓 Kinsena: 1st Cut (1st-15th)</option>
                                                 <option value="2nd Cut (16th-End)">🌓 Kinsena: 2nd Cut (16th-End)</option>
@@ -408,10 +502,10 @@
                                     </div>
                                     <div class="mb-2">
                                         <label class="text-[10px] font-bold text-rose-800 uppercase block">Date Logged</label>
-                                        <input id="expDate" type="date" class="w-full bg-white text-gray-800 border border-rose-200 p-2 text-xs rounded-lg focus:outline-none focus:ring-1 focus:ring-rose-500">
+                                        <input id="expDate" type="date" class="w-full bg-rose-50 text-gray-800 border border-rose-300 p-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500">
                                     </div>
                                     <div class="flex gap-2 pt-1 justify-end">
-                                        <button onclick="toggleForm('expenseForm')" class="text-gray-500 hover:text-gray-800 text-xs px-2 font-medium">✕ Cancel</button>
+                                        <button onclick="toggleForm('expenseForm')" class="text-rose-700 hover:text-rose-900 text-xs px-2 font-medium">✕ Cancel</button>
                                         <button onclick="addLedgerItem('expense')" class="bg-rose-600 text-white font-bold text-xs px-4 py-1.5 rounded-lg hover:bg-rose-700 shadow-sm transition">Save Expense</button>
                                     </div>
                                 </div>
@@ -442,9 +536,9 @@
 
     <!-- AUTO -->
 
-    <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 shadow-md border border-emerald-200">
 
-        <h3 class="text-xl font-semibold text-gray-800 mb-4">
+        <h3 class="text-xl font-semibold text-emerald-900 mb-4">
 
             🤖 Generate Automatically
 
@@ -454,7 +548,7 @@
 
             <div>
 
-                <label class="text-sm text-gray-600">
+                <label class="text-sm text-emerald-800 font-medium">
 
                     Weekly Budget
 
@@ -464,13 +558,14 @@
                     id="plannerBudget"
                     type="number"
                     placeholder="2500"
-                    class="w-full mt-1 rounded-xl border border-gray-300 p-3">
+                    class="w-full mt-1 rounded-xl border border-emerald-300 p-3 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <p id="budgetError" class="text-rose-600 text-xs mt-1 hidden">Budget cannot be empty</p>
 
             </div>
 
             <div>
 
-                <label class="text-sm text-gray-600">
+                <label class="text-sm text-emerald-800 font-medium">
 
                     Family Members (Pax)
 
@@ -480,13 +575,14 @@
                     id="plannerPax"
                     type="number"
                     placeholder="4"
-                    class="w-full mt-1 rounded-xl border border-gray-300 p-3">
+                    class="w-full mt-1 rounded-xl border border-emerald-300 p-3 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <p id="paxError" class="text-rose-600 text-xs mt-1 hidden">Family members cannot be empty</p>
 
             </div>
 
             <div>
 
-                <label class="text-sm text-gray-600">
+                <label class="text-sm text-emerald-800 font-medium">
 
                     Preferred Diet
 
@@ -494,7 +590,7 @@
 
                 <select
                     id="plannerDiet"
-                    class="w-full mt-1 rounded-xl border border-gray-300 p-3">
+                    class="w-full mt-1 rounded-xl border border-emerald-300 p-3 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
 
                     <option value="anything">Lutong Bahay</option>
                     <option value="tipid">Petsa de Peligro</option>
@@ -508,7 +604,7 @@
 
             <button
                 id="generateMealPlanBtn"
-                class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold transition">
+                class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold transition shadow-sm">
 
                 Generate Meal Plan
 
@@ -520,15 +616,15 @@
 
     <!-- MANUAL -->
 
-    <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+    <div class="bg-gradient-to-br from-teal-50 to-green-50 rounded-2xl p-6 shadow-md border border-teal-200">
 
-        <h3 class="text-xl font-semibold text-gray-800 mb-4">
+        <h3 class="text-xl font-semibold text-teal-900 mb-4">
 
             ✍️ Create Your Own
 
         </h3>
 
-        <p class="text-gray-600 mb-5">
+        <p class="text-gray-700 mb-5">
 
             Build your own weekly meal plan by selecting dishes for breakfast,
             lunch and dinner.
@@ -537,7 +633,7 @@
 
         <button
             id="customizeMealBtn"
-            class="w-full bg-white border-2 border-emerald-700 text-emerald-700 hover:bg-emerald-50 py-3 rounded-xl font-semibold transition">
+            class="w-full bg-white border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-50 py-3 rounded-xl font-semibold transition shadow-sm">
 
             Customize Meal Plan
 
@@ -546,29 +642,47 @@
     </div>
 
 </div>
+
+<!-- ====================================== -->
+<!-- SAVED MEAL PLANS -->
+<!-- ====================================== -->
+
+<div id="savedMealPlansWrapper" class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-md border border-emerald-200 p-6 mb-6 max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-5">
+        <h3 class="text-xl font-bold text-emerald-900">💾 Saved Meal Plans</h3>
+        <button id="refreshMealPlansBtn" class="text-emerald-700 hover:text-emerald-900 font-semibold">Refresh</button>
+    </div>
+    <div id="savedMealPlans" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+</div>
+
 <!-- ====================================== -->
 <!-- MEAL SCHEDULE & SAVED PLANS WRAPPER -->
 <!-- ====================================== -->
 
 <div id="mealScheduleWrapper" class="hidden">
-    <div id="mealScheduleActions" class="hidden mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <p class="text-sm text-gray-600">Customize your weekly schedule, then click Complete to view the meal plan summary and save it.</p>
-        <button id="completeMealPlanBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-3 rounded-xl font-semibold shadow">Complete Meal Plan</button>
+    <div class="mb-6 flex items-center gap-4">
+        <button onclick="backToMealPlannerIntro()" class="bg-gradient-to-r from-emerald-100 to-teal-100 hover:from-emerald-200 hover:to-teal-200 text-emerald-800 px-4 py-2 rounded-xl text-sm font-semibold transition flex items-center gap-2 shadow-sm">
+            ← Back to Options
+        </button>
+        <div id="mealScheduleActions" class="hidden flex-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <p class="text-sm text-gray-600">Customize your weekly schedule, then click Complete to view the meal plan summary and save it.</p>
+            <button id="completeMealPlanBtn" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-3 rounded-xl font-semibold shadow-md">Complete Meal Plan</button>
+        </div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
+    <div class="bg-gradient-to-br from-teal-50 to-green-50 rounded-2xl shadow-md border border-teal-200 p-6 mb-6">
 
         <div class="flex items-center justify-between mb-6">
 
             <div>
 
-                <h3 class="text-2xl font-bold text-gray-800">
+                <h3 class="text-2xl font-bold text-teal-900">
 
                     📅 Weekly Meal Schedule
 
                 </h3>
 
-                <p class="text-gray-500">
+                <p class="text-gray-600">
 
                     Click any meal slot to choose a recipe.
 
@@ -578,7 +692,7 @@
 
             <button
                 id="clearMealPlanBtn"
-                class="bg-white border border-rose-300 text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-xl text-sm font-semibold transition">
+                class="bg-white border border-rose-300 text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-xl text-sm font-semibold transition shadow-sm">
 
                 Clear Week
 
@@ -592,20 +706,23 @@
 
     </div>
 
-    <div id="plannerResultsSection" class="hidden bg-emerald-50 rounded-2xl border border-emerald-100 p-6 mb-6">
+    <div id="plannerResultsSection" class="hidden bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200 p-6 mb-6 shadow-md">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
             <div>
-                <button id="backToSavedPlansBtn" class="hidden mb-2 text-emerald-700 hover:text-emerald-800 font-semibold text-sm flex items-center gap-1">
+                <button onclick="backToMealPlannerIntro()" class="mb-2 text-emerald-700 hover:text-emerald-900 font-semibold text-sm flex items-center gap-1">
+                    ← Back to Options
+                </button>
+                <button id="backToSavedPlansBtn" class="hidden mb-2 text-emerald-700 hover:text-emerald-900 font-semibold text-sm flex items-center gap-1">
                     ← Back to Meal Plans
                 </button>
-                <h3 class="text-xl font-bold text-gray-800">🧾 Meal Plan Summary</h3>
+                <h3 class="text-xl font-bold text-emerald-900">🧾 Meal Plan Summary</h3>
                 <p id="plannerSummaryText" class="text-gray-600 text-sm mt-1">Your generated plan appears below. Click a meal name to view ingredients, cost, and recipe.</p>
             </div>
             <div class="text-right flex flex-col items-end gap-3">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2 w-full">
                     <input id="mealPlanNameInput" type="text" placeholder="Meal plan name" class="w-full sm:w-auto min-w-[220px] border border-gray-200 rounded-xl px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
                     <button id="saveMealPlanBtn" class="hidden bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-xl font-semibold whitespace-nowrap">Save Meal Plan</button>
-                    <button id="backToGenerateBtn" class="hidden bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-xl font-semibold">Generate New Plan</button>
+                    <button onclick="backToMealPlannerIntro()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-xl font-semibold">Generate New Plan</button>
                 </div>
                 <div>
                     <p class="text-sm text-gray-500">Estimated Week Cost</p>
@@ -616,37 +733,38 @@
         </div>
         <div id="weeklyScheduleCardsContainer" class="grid gap-4"></div>
     </div>
-
-    </div>
 </div>
-
-<div id="savedMealPlansWrapper" class="hidden bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6 max-w-4xl mx-auto">
-    <div class="flex justify-between items-center mb-5">
-        <h3 class="text-xl font-bold text-gray-800">💾 Saved Meal Plans</h3>
-        <button id="refreshMealPlansBtn" class="text-emerald-700 hover:text-emerald-800 font-semibold">Refresh</button>
-    </div>
-    <div id="savedMealPlans" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 </div>
 </div>
 
             <!-- TAB 3: PALENGKE PRICES MONITOR VIEW PANEL -->
             <div id="view-prices" class="tab-content hidden">
                 <h2 class="text-3xl font-bold mb-6 text-gray-800">Palengke Market Prices</h2>
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 max-w-4xl">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-100 pb-3 mb-4 gap-2">
+                <div class="bg-gradient-to-br from-slate-50 to-gray-100 p-6 rounded-xl shadow-md border border-gray-200 max-w-4xl">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-200 pb-3 mb-4 gap-2">
                         <div>
                             <h3 class="text-2xl font-bold text-gray-800">Bantay Presyo Watchlist</h3>
                             <p id="pricesUpdatedLabel" class="text-sm text-gray-500 mt-0.5">Loading latest DA reference prices…</p>
                         </div>
-                        <span id="pricesStatusBadge" class="bg-emerald-50 text-emerald-800 font-bold text-xs px-3 py-1.5 rounded-full whitespace-nowrap">● DA Bantay Presyo (NCR)</span>
+                        <span id="pricesStatusBadge" class="bg-emerald-100 text-emerald-800 font-bold text-xs px-3 py-1.5 rounded-full whitespace-nowrap">● DA Bantay Presyo (NCR)</span>
                     </div>
-                    <div id="priceCategoryTabs" class="flex flex-wrap gap-2 mb-4"></div>
-                    <div class="overflow-x-auto border border-gray-200 rounded-xl">
+                    <div id="priceCategoryTabs" class="flex flex-wrap gap-2 mb-4">
+                        <button onclick="filterPriceCategory('all')" class="price-tab-btn bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm" data-category="all">🌐 All</button>
+                        <button onclick="filterPriceCategory('rice')" class="price-tab-btn bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition border border-gray-200" data-category="rice">🍚 Rice</button>
+                        <button onclick="filterPriceCategory('meat')" class="price-tab-btn bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition border border-gray-200" data-category="meat">🥩 Meat</button>
+                        <button onclick="filterPriceCategory('fish')" class="price-tab-btn bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition border border-gray-200" data-category="fish">🐟 Fish</button>
+                        <button onclick="filterPriceCategory('vegetables')" class="price-tab-btn bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition border border-gray-200" data-category="vegetables">🥬 Vegetables</button>
+                        <button onclick="filterPriceCategory('fruits')" class="price-tab-btn bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition border border-gray-200" data-category="fruits">🍎 Fruits</button>
+                        <button onclick="filterPriceCategory('spices')" class="price-tab-btn bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition border border-gray-200" data-category="spices">🧂 Spices</button>
+                        <button onclick="filterPriceCategory('other')" class="price-tab-btn bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition border border-gray-200" data-category="other">🥫 Other Food</button>
+                        <button onclick="filterPriceCategory('household')" class="price-tab-btn bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition border border-gray-200" data-category="household">🧹 Household</button>
+                    </div>
+                    <div class="overflow-x-auto border border-gray-200 rounded-xl bg-white">
                         <table class="w-full text-left text-sm border-collapse">
-                            <thead class="bg-gray-50 border-b border-gray-200 font-bold text-gray-700 uppercase tracking-wider text-xs">
+                            <thead class="bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-emerald-200 font-bold text-emerald-800 uppercase tracking-wider text-xs">
                                 <tr>
-                                    <th class="p-3 border-r border-gray-200">Commodity Item Classification</th>
-                                    <th class="p-3 text-right">Reference Price Basis</th>
+                                    <th class="p-3 border-r border-emerald-200">Commodity Item Classification</th>
+                                    <th class="p-3 text-right">Reference Price Basis (₱/kg)</th>
                                 </tr>
                             </thead>
                             <tbody id="marketPricesTableBody" class="divide-y divide-gray-100 text-gray-600">
@@ -734,56 +852,103 @@
             <!-- TAB 5: GROCERY LIST TRACKER -->
             <div id="view-grocery" class="tab-content hidden">
                 <h2 class="text-3xl font-bold mb-6 text-gray-800">Grocery List Tracker</h2>
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    
-                    <div class="mb-4 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-center justify-between">
-                        <span class="text-sm font-bold text-emerald-800">📋 Tracking Target Routine:</span>
-                        <select id="groceryCycle" class="border border-gray-200 p-1.5 rounded-lg text-sm bg-white font-medium text-gray-800">
-                            <option value="weekly" selected>Weekly Budget Interval (Lingguhan)</option>
-                            <option value="biweekly">15-Day Cycle Target (Kinsenas)</option>
-                            <option value="monthly">Full Monthly List (Buwanan)</option>
-                        </select>
-                    </div>
-
-                    <input id="grocerySearchInput" onkeyup="searchItems()" placeholder="🔍 Search purely by item name keywords..." class="border border-gray-200 p-2.5 rounded-lg w-full mb-4 bg-gray-50 text-gray-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-
-                    <div class="flex flex-col lg:flex-row gap-3 mb-4">
-                        <input id="itemName" type="text" placeholder="Item Name" class="border border-gray-200 bg-white text-gray-800 p-2 rounded-lg flex-1 min-w-[180px]">
-                        <input id="itemPrice" type="number" placeholder="Price (₱)" class="border border-gray-200 bg-white text-gray-800 p-2 rounded-lg w-full lg:w-32">
-                        <input id="itemQuantity" type="number" placeholder="Qty" class="border border-gray-200 bg-white text-gray-800 p-2 rounded-lg w-full lg:w-24">
+                
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <!-- Shopping Cart Section -->
+                    <div class="lg:col-span-2 bg-gradient-to-br from-slate-50 to-gray-100 p-6 rounded-xl shadow-md border border-gray-200">
                         
-                        <select id="itemCategory" class="border border-gray-200 p-2 rounded-lg bg-white w-full lg:w-56 text-sm text-gray-800">
-                            <option>Meat & Fish (Karne / Isda)</option>
-                            <option>Vegetables & Fruits (Gulay / Prutas)</option>
-                            <option>Rice, Eggs & Grains (Bigas / Itlog)</option>
-                            <option>Condiments & Spices (Instant / Sahog)</option>
-                            <option>Canned & Packaged Goods</option>
-                            <option>Household Essentials & Toiletries</option>
-                        </select>
-                        <button onclick="addItem()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2 rounded-lg font-semibold transition shadow-sm whitespace-nowrap">Add Item</button>
+                        <div class="mb-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between">
+                            <span class="text-sm font-bold text-emerald-800">📋 Tracking Target Routine:</span>
+                            <select id="groceryCycle" class="border border-emerald-300 p-1.5 rounded-lg text-sm bg-white font-medium text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <option value="weekly" selected>Weekly Budget Interval (Lingguhan)</option>
+                                <option value="biweekly">15-Day Cycle Target (Kinsenas)</option>
+                                <option value="monthly">Full Monthly List (Buwanan)</option>
+                            </select>
+                        </div>
+
+                        <!-- Search with Market Price Integration -->
+                        <div class="relative mb-4">
+                            <input id="grocerySearchInput" onkeyup="searchGroceryItemsWithMarket()" placeholder="🔍 Search items (integrates with market prices)..." class="border border-gray-300 p-3 rounded-xl w-full bg-white text-gray-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none pl-10">
+                            <svg class="absolute left-3 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+
+                        <!-- Market Price Suggestions -->
+                        <div id="marketPriceSuggestions" class="hidden mb-4 bg-white border border-emerald-200 rounded-xl p-3 shadow-sm">
+                            <p class="text-xs font-bold text-emerald-700 mb-2">💰 Market Price Matches:</p>
+                            <div id="suggestionsList" class="space-y-1"></div>
+                        </div>
+
+                        <!-- Add Item Form -->
+                        <div class="bg-white p-4 rounded-xl border border-gray-200 mb-4 shadow-sm">
+                            <div class="flex flex-col lg:flex-row gap-3">
+                                <input id="itemName" type="text" placeholder="Item Name" class="border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg flex-1 min-w-[180px] focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <input id="itemPrice" type="number" placeholder="Price (₱)" class="border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg w-full lg:w-32 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <input id="itemQuantity" type="number" placeholder="Qty" class="border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg w-full lg:w-24 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                
+                                <select id="itemCategory" class="border border-gray-300 p-2.5 rounded-lg bg-gray-50 w-full lg:w-56 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                    <option>Meat & Fish (Karne / Isda)</option>
+                                    <option>Vegetables & Fruits (Gulay / Prutas)</option>
+                                    <option>Rice, Eggs & Grains (Bigas / Itlog)</option>
+                                    <option>Condiments & Spices (Instant / Sahog)</option>
+                                    <option>Canned & Packaged Goods</option>
+                                    <option>Household Essentials & Toiletries</option>
+                                </select>
+                                <button onclick="addItem()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-sm whitespace-nowrap">Add Item</button>
+                            </div>
+                        </div>
+
+                        <!-- Cart Items -->
+                        <div class="space-y-3 max-h-[400px] overflow-y-auto pr-2" id="groceryCartItems">
+                            <!-- Dynamic Cart Items -->
+                        </div>
                     </div>
 
-                    <div class="overflow-x-auto rounded-xl border border-gray-200">
-                        <table class="w-full border-collapse text-left text-sm">
-                            <thead class="bg-gray-50 text-gray-700 uppercase text-xs font-bold tracking-wider border-b border-gray-200">
-                                <tr>
-                                    <th class="p-3 border-r border-gray-200">Category</th>
-                                    <th class="p-3 border-r border-gray-200">Item</th>
-                                    <th class="p-3 border-r border-gray-200 text-center">Qty</th>
-                                    <th class="p-3 border-r border-gray-200 text-right">Price</th>
-                                    <th class="p-3 border-r border-gray-200 text-right">Subtotal</th>
-                                    <th class="p-3 text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="groceryTable" class="divide-y divide-gray-100 text-gray-600">
-                                <!-- Dynamic Row Appends Occur Instantly Here -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <!-- Cart Summary Sidebar -->
+                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl shadow-md border border-emerald-200 h-fit">
+                        <h3 class="text-lg font-bold text-emerald-900 mb-4">� Shopping List Summary</h3>
+                        
+                        <div class="space-y-3 mb-4">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600">Total Items:</span>
+                                <span id="totalItems" class="font-bold text-gray-800">0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600">Already Bought:</span>
+                                <span id="checkedItems" class="font-bold text-emerald-700">0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600">Still to Buy:</span>
+                                <span id="remainingItems" class="font-bold text-amber-700">0</span>
+                            </div>
+                            <hr class="border-emerald-200">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-800 font-semibold">Total Cost:</span>
+                                <span id="totalCost" class="text-2xl font-bold text-emerald-700">₱0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600">Bought Total:</span>
+                                <span id="checkedTotal" class="font-bold text-emerald-600">₱0</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600">Remaining Total:</span>
+                                <span id="remainingTotal" class="font-bold text-amber-600">₱0</span>
+                            </div>
+                        </div>
 
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-4 gap-2">
-                        <h4 class="text-xl font-bold text-gray-800">Total Grocery Cost: <span id="totalCost" class="text-emerald-700">₱0</span></h4>
-                        <p id="budgetWarning" class="text-rose-600 font-bold animate-pulse text-sm"></p>
+                        <div id="budgetWarning" class="bg-rose-50 border border-rose-200 p-3 rounded-lg mb-4 hidden">
+                            <p class="text-rose-700 text-sm font-semibold"></p>
+                        </div>
+
+                        <div class="space-y-2">
+                            <button onclick="clearBoughtItems()" class="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 py-2 rounded-xl font-medium transition">
+                                Clear Bought Items
+                            </button>
+                            <button onclick="clearAllGroceryItems()" class="w-full bg-white border border-rose-300 hover:bg-rose-50 text-rose-600 py-2 rounded-xl font-medium transition">
+                                Clear All Items
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -795,6 +960,63 @@
             <p class="text-sm opacity-80">© 2026 Palengke Helper+ · Smart budgeting and meal planning for Filipino families</p>
         </footer>
     </div>
+
+    <!-- ====================================== -->
+    <!-- ACCOUNT SETTINGS MODAL -->
+    <!-- ====================================== -->
+    <div id="accountSettingsModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-gray-800">⚙️ Account Settings</h2>
+                <button onclick="closeAccountSettings()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+            </div>
+            <div class="p-6 space-y-6">
+                <!-- Account Info -->
+                <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+                    <h3 class="font-semibold text-emerald-800 mb-2">Account Information</h3>
+                    <p class="text-sm text-gray-600">Email: <span id="settingsEmail" class="font-medium">-</span></p>
+                    <p class="text-sm text-gray-600">Role: <span id="settingsRole" class="font-medium">-</span></p>
+                </div>
+
+                <!-- AI Configuration -->
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-3">🤖 AI Configuration</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-sm text-gray-600 mb-1 block">OpenAI API Key (for Palengke AI)</label>
+                            <input type="password" id="openaiApiKey" placeholder="sk-..." class="w-full border border-gray-200 p-2.5 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <p class="text-xs text-gray-500 mt-1">Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" class="text-emerald-600 hover:underline">platform.openai.com</a>. Leave empty to use rule-based responses.</p>
+                        </div>
+                        <button onclick="saveOpenAIKey()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-2.5 rounded-xl text-sm font-medium transition">
+                            Save API Key
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Data Management -->
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-3">Data Management</h3>
+                    <div class="space-y-2">
+                        <button onclick="exportAllData()" class="w-full bg-white border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 text-gray-700 py-3 rounded-xl text-sm font-medium transition flex items-center justify-center gap-2">
+                            <span>📤</span> Export All Data
+                        </button>
+                        <button onclick="clearAllData()" class="w-full bg-white border border-gray-200 hover:border-rose-500 hover:bg-rose-50 text-rose-600 py-3 rounded-xl text-sm font-medium transition flex items-center justify-center gap-2">
+                            <span>🗑️</span> Clear All Local Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="border-t border-gray-100 pt-4">
+                    <h3 class="font-semibold text-rose-600 mb-3">Danger Zone</h3>
+                    <button onclick="deleteAccount()" class="w-full bg-rose-600 hover:bg-rose-700 text-white py-3 rounded-xl text-sm font-medium transition">
+                        Delete Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ====================================== -->
 <!-- RECIPE SELECTOR -->
 <!-- ====================================== -->
@@ -855,6 +1077,9 @@ class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 p-6 overflow-y-auto max-h-[70vh]
 <div id="customRecipeModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-xl w-11/12 max-w-2xl overflow-hidden">
         <div class="p-6 border-b flex justify-between items-center">
+            <button onclick="document.getElementById('customRecipeModal').classList.add('hidden')" class="text-gray-500 hover:text-gray-800 flex items-center gap-1">
+                ← Back
+            </button>
             <h2 class="text-2xl font-bold">✍️ Create Custom Recipe</h2>
             <button id="closeCustomRecipeModal" class="text-2xl">✕</button>
         </div>
@@ -895,25 +1120,31 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
     <!-- Modular Operational Architecture Decoupled Initialization -->
     
     <script src="data/recipes.js"></script>
-<!-- Supabase library and client -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase.js"></script>
-
-<!-- Existing app logic -->
-<script src="app.js"></script>
+    <script src="supabase.js"></script>
+    <script src="app.js"></script>
     <script>
         function switchTab(tabId) {
+            console.log('switchTab called with:', tabId);
             const views = document.querySelectorAll('.tab-content');
+            console.log('Found tab-content elements:', views.length);
             views.forEach(v => v.classList.add('hidden'));
 
             const hero = document.getElementById('homeHero');
             if (hero) hero.classList.toggle('hidden', tabId !== 'home');
-            
+
             const target = document.getElementById('view-' + tabId);
+            console.log('Target element:', target);
             if (target) {
                 target.classList.remove('hidden');
+                console.log('Removed hidden from target');
+                console.log('Target display style:', window.getComputedStyle(target).display);
+                console.log('Target visibility:', window.getComputedStyle(target).visibility);
+                console.log('Target offsetHeight:', target.offsetHeight);
+                console.log('Target offsetWidth:', target.offsetWidth);
+            } else {
+                console.error('Target element not found for view-' + tabId);
             }
-            
+
             if (tabId === 'suggestions') {
                 if (typeof renderAIWelcomeMessage === 'function') {
                     renderAIWelcomeMessage();
@@ -938,8 +1169,120 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
                 if (mealWrapper) mealWrapper.classList.toggle('hidden', !planActive);
                 if (intro) intro.classList.toggle('hidden', planActive);
                 if (plannerResult) plannerResult.classList.add('hidden');
-                if (savedWrapper) savedWrapper.classList.add('hidden');
+                if (savedWrapper) savedWrapper.classList.remove('hidden');
             }
+        }
+
+        function toggleAccountMenu() {
+            const dropdown = document.getElementById('accountDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        function openAccountSettings() {
+            const modal = document.getElementById('accountSettingsModal');
+            modal.classList.remove('hidden');
+
+            // Populate account info
+            const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
+            document.getElementById('settingsEmail').textContent = session.email || 'guest@local';
+            document.getElementById('settingsRole').textContent = session.role || 'guest';
+
+            // Load OpenAI API key
+            const apiKey = localStorage.getItem('palengke_openai_key') || '';
+            document.getElementById('openaiApiKey').value = apiKey;
+
+            // Close dropdown if open
+            const dropdown = document.getElementById('accountDropdown');
+            dropdown.classList.add('hidden');
+        }
+
+        function closeAccountSettings() {
+            const modal = document.getElementById('accountSettingsModal');
+            modal.classList.add('hidden');
+        }
+
+        function saveOpenAIKey() {
+            const apiKey = document.getElementById('openaiApiKey').value.trim();
+            if (apiKey) {
+                localStorage.setItem('palengke_openai_key', apiKey);
+                alert('OpenAI API key saved successfully!');
+            } else {
+                localStorage.removeItem('palengke_openai_key');
+                alert('OpenAI API key removed. Using rule-based responses.');
+            }
+        }
+
+        function exportAllData() {
+            const data = {
+                budget: JSON.parse(localStorage.getItem('palengke_budget') || '[]'),
+                grocery: JSON.parse(localStorage.getItem('palengke_grocery') || '[]'),
+                mealPlans: JSON.parse(localStorage.getItem('palengke_mealplans') || '[]'),
+                customRecipes: JSON.parse(localStorage.getItem('palengke_customrecipes') || '[]'),
+                session: JSON.parse(localStorage.getItem('palengke_session') || '{}')
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'palengke-backup-' + new Date().toISOString().split('T')[0] + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showNotification('Data exported successfully!', 'success');
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all local data? This cannot be undone.')) {
+                localStorage.removeItem('palengke_budget');
+                localStorage.removeItem('palengke_grocery');
+                localStorage.removeItem('palengke_mealplans');
+                localStorage.removeItem('palengke_customrecipes');
+                showNotification('All local data cleared.', 'success');
+                setTimeout(() => location.reload(), 1500);
+            }
+        }
+
+        function deleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
+                if (session.role === 'member' && session.supabaseUserId) {
+                    // For Supabase users, you would need to implement account deletion via Supabase
+                    showNotification('Account deletion requires backend integration. Please contact support.', 'error');
+                } else {
+                    clearAllData();
+                }
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('accountDropdown');
+            const accountButton = event.target.closest('button[onclick="toggleAccountMenu()"]');
+            if (!accountButton && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Filter price categories
+        function filterPriceCategory(category) {
+            // Update button styles
+            const buttons = document.querySelectorAll('.price-tab-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.category === category) {
+                    btn.classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-200');
+                    btn.classList.add('bg-emerald-700', 'text-white', 'shadow-sm');
+                } else {
+                    btn.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-200');
+                    btn.classList.remove('bg-emerald-700', 'text-white', 'shadow-sm');
+                }
+            });
+
+            // Filter the table rows (this would need to be implemented with actual price data)
+            const tableBody = document.getElementById('marketPricesTableBody');
+            // For now, this is a placeholder - the actual filtering logic would need
+            // to be implemented based on the price data structure
+            console.log('Filtering by category:', category);
         }
     </script>
 </body>
