@@ -955,6 +955,33 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 });
 
+async function ensureUserProfile(user) {
+    if (!user || !user.id) return;
+    try {
+        const { data, error } = await supabaseClient
+            .from('profiles')
+            .select('id')
+            .eq('id', user.id)
+            .single();
+
+        if (error && error.code !== 'PGRST116') throw error;
+
+        if (!data) {
+            const { error: insertError } = await supabaseClient.from('profiles').upsert({
+                id: user.id,
+                email: user.email,
+                full_name: user.user_metadata?.full_name || user.user_metadata?.name || '',
+                role: user.app_metadata?.role || 'user',
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'id' });
+
+            if (insertError) console.error('Profile insert error:', insertError);
+        }
+    } catch (err) {
+        console.error('ensureUserProfile error:', err);
+    }
+}
+
 function loginAsGuest() {
     console.log('loginAsGuest called');
     localStorage.setItem('palengke_session', JSON.stringify({
@@ -966,15 +993,11 @@ function loginAsGuest() {
 }
 
 async function logout() {
-    const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
-
-    // Sign out from Supabase if logged in as member
-    if (session.role === 'member' && session.supabaseUserId) {
-        try {
-            await supabaseClient.auth.signOut();
-        } catch (err) {
-            console.error('Supabase signout error:', err);
-        }
+    // Always try to sign out from Supabase and then clear cached session
+    try {
+        await supabaseClient.auth.signOut();
+    } catch (err) {
+        console.error('Supabase signout error:', err);
     }
 
     localStorage.removeItem('palengke_session');
@@ -1028,6 +1051,7 @@ async function registerWithEmail() {
             showLogin();
         } else if (data.session) {
             // Auto-login if email confirmation is disabled
+            await ensureUserProfile(data.user);
             localStorage.setItem('palengke_session', JSON.stringify({
                 user: email,
                 role: 'member',
@@ -1064,6 +1088,7 @@ async function loginWithEmail() {
             return;
         }
 
+        await ensureUserProfile(data.user);
         localStorage.setItem('palengke_session', JSON.stringify({
             user: email,
             role: 'member',
@@ -1109,19 +1134,28 @@ async function loginWithGoogle() {
 async function handleOAuthCallback() {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const accessToken = hashParams.get('access_token');
+    const refreshToken = hashParams.get('refresh_token');
     const error = hashParams.get('error');
+    const errorDescription = hashParams.get('error_description');
 
     if (error) {
-        showNotification('OAuth error: ' + error, 'error');
+        showNotification('OAuth error: ' + (errorDescription || error), 'error');
         return;
     }
 
-    if (accessToken) {
+    if (accessToken && refreshToken) {
         try {
-            const { data, error } = await supabaseClient.auth.getSession();
+            const { data, error } = await supabaseClient.auth.setSession({
+                access_token: accessToken,
+                refresh_token: refreshToken
+            });
+
+            if (error) throw error;
+
             if (data.session) {
+                await ensureUserProfile(data.session.user);
                 localStorage.setItem('palengke_session', JSON.stringify({
-                    user: data.session.user.email,
+                    user: data.session.user.email || data.session.user.user_metadata?.full_name,
                     role: 'member',
                     supabaseUserId: data.session.user.id,
                     accessToken: data.session.access_token,
@@ -1132,8 +1166,8 @@ async function handleOAuthCallback() {
                 location.reload();
             }
         } catch (err) {
-            showNotification('Error handling OAuth callback', 'error');
-            console.error(err);
+            showNotification('Error handling OAuth callback: ' + (err.message || 'unknown'), 'error');
+            console.error('OAuth callback error:', err);
         }
     }
 }

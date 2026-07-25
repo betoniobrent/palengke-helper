@@ -14,6 +14,21 @@ try {
             SUPABASE_URL,
             SUPABASE_PUBLIC_KEY
         );
+
+        // Keep local custom session in sync with Supabase auth state
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                localStorage.setItem('palengke_session', JSON.stringify({
+                    user: session.user.email || session.user.user_metadata?.full_name,
+                    role: 'member',
+                    supabaseUserId: session.user.id,
+                    accessToken: session.access_token,
+                    refreshToken: session.refresh_token
+                }));
+            } else if (event === 'SIGNED_OUT') {
+                localStorage.removeItem('palengke_session');
+            }
+        });
     } else {
         console.error('Supabase library not loaded');
         supabaseClient = null;
