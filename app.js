@@ -2695,35 +2695,34 @@ function guessPriceEmoji(item) {
 }
 
 function formatPriceValue(item) {
-    if (item.price === null || item.price === undefined || Number.isNaN(Number(item.price))) {
-        return 'n/a';
+    const min = Number(item.price_min ?? item.price ?? 0);
+    const max = Number(item.price_max ?? item.price ?? 0);
+    const avg = Number(item.price_avg ?? ((min + max) / 2) ?? 0);
+    const unit = item.unit || 'unit';
+
+    if (!min && !max && !avg) return 'n/a';
+
+    // If range is meaningful, show avg with min-max spread
+    if (min && max && min !== max) {
+        return `₱${avg.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${min.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}-${max.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})/${unit}`;
     }
-    return `₱${Number(item.price).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/${item.unit || 'unit'}`;
+
+    const value = avg || min || max;
+    return `₱${value.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/${unit}`;
 }
 
-// Maps the DA report's granular categories into broad tab groups.
-const CATEGORY_GROUP_MAP = {
-    'Local Commercial Rice': 'Rice',
-    'Imported Commercial Rice': 'Rice',
-    'Corn Products': 'Rice',
-    'Beef Meat Products': 'Meats',
-    'Pork Meat Products': 'Meats',
-    'Poultry Products': 'Meats',
-    'Other Livestock Meat Products': 'Meats',
-    'Fish Products': 'Fish & Seafood',
-    'Lowland Vegetables': 'Vegetables',
-    'Highland Vegetables': 'Vegetables',
-    'Legumes': 'Vegetables',
-    'Spices': 'Vegetables',
-    'Fruits': 'Fruits',
-    'Other Basic Commodities': 'Basic Commodities',
-    'Household & Basic Necessities': 'Household & Necessities'
+// Display labels for Supabase market_prices.category values.
+const CATEGORY_TAB_LABELS = {
+    'rice': '🍚 Rice',
+    'meat': '🥩 Meat',
+    'fish': '🐟 Fish',
+    'vegetables': '🥬 Vegetables',
+    'fruits': '🍎 Fruits',
+    'spices': '🧂 Spices',
+    'other food': '🥫 Other Food',
+    'household': '🧹 Household'
 };
-const CATEGORY_GROUP_ORDER = ['Rice', 'Meats', 'Fish & Seafood', 'Vegetables', 'Fruits', 'Basic Commodities', 'Household & Necessities', 'Other'];
-
-function groupNameFor(item) {
-    return CATEGORY_GROUP_MAP[item.category] || 'Other';
-}
+const CATEGORY_TAB_ORDER = ['rice', 'meat', 'fish', 'vegetables', 'fruits', 'spices', 'other food', 'household'];
 
 let ALL_PRICE_ITEMS = [];
 let ACTIVE_PRICE_GROUP = 'All';
@@ -2732,15 +2731,16 @@ function renderPriceCategoryTabs(items) {
     const container = document.getElementById('priceCategoryTabs');
     if (!container) return;
 
-    const present = new Set(items.map(groupNameFor));
-    const groups = ['All', ...CATEGORY_GROUP_ORDER.filter(g => present.has(g))];
+    const present = new Set(items.map(item => item.category).filter(Boolean));
+    const groups = ['All', ...CATEGORY_TAB_ORDER.filter(c => present.has(c))];
 
     container.innerHTML = groups.map(g => {
         const active = g === ACTIVE_PRICE_GROUP;
+        const label = g === 'All' ? '🌐 All' : (CATEGORY_TAB_LABELS[g] || g);
         const cls = active
             ? 'bg-emerald-600 text-white'
             : 'bg-gray-100 text-gray-600 hover:bg-gray-200';
-        return `<button onclick="selectPriceCategory('${g}')" class="${cls} text-xs font-semibold px-3 py-1.5 rounded-full transition">${g}</button>`;
+        return `<button onclick="selectPriceCategory('${g}')" class="${cls} text-xs font-semibold px-3 py-1.5 rounded-full transition">${label}</button>`;
     }).join('');
 }
 
@@ -2756,10 +2756,10 @@ function renderFilteredPriceRows() {
 
     const items = ACTIVE_PRICE_GROUP === 'All'
         ? ALL_PRICE_ITEMS
-        : ALL_PRICE_ITEMS.filter(item => groupNameFor(item) === ACTIVE_PRICE_GROUP);
+        : ALL_PRICE_ITEMS.filter(item => item.category === ACTIVE_PRICE_GROUP);
 
     if (!items || items.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="2" class="p-3 text-center text-gray-400">No price data available right now.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-gray-400">No price data available right now.</td></tr>';
         return;
     }
 
@@ -2767,6 +2767,7 @@ function renderFilteredPriceRows() {
         <tr class="hover:bg-gray-50 transition">
             <td class="p-3 border-r border-gray-200 font-medium">${guessPriceEmoji(item)} ${item.name}</td>
             <td class="p-3 text-right font-mono font-bold text-gray-800">${formatPriceValue(item)}</td>
+            <td class="p-3 text-right text-xs text-gray-500">${item.notes ? escapeHtml(item.notes) : '-'}</td>
         </tr>
     `).join('');
 }
@@ -2782,9 +2783,9 @@ function renderMarketPricesTable(items) {
 
 function buildMarketPriceReferenceFromFeed(items) {
     return items
-        .filter(item => Array.isArray(item.keys) && item.keys.length > 0)
+        .filter(item => item.name)
         .map(item => ({
-            keys: item.keys,
+            keys: [item.name.toLowerCase(), ...(item.item_name ? [item.item_name.toLowerCase()] : [])],
             label: item.name,
             price: formatPriceValue(item)
         }));
@@ -2795,10 +2796,31 @@ async function loadLiveMarketPrices() {
     const statusBadge = document.getElementById('pricesStatusBadge');
 
     try {
-        const response = await fetch(PRICE_FEED_URL, { cache: 'no-store' });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const items = await response.json();
-        if (!Array.isArray(items) || items.length === 0) throw new Error('Empty price feed');
+        // Fetch only published market prices from Supabase, ordered by latest date
+        const { data: rows, error } = await supabaseClient
+            .from('market_prices')
+            .select('*')
+            .eq('published', true)
+            .order('source_date', { ascending: false });
+
+        if (error) throw error;
+        if (!Array.isArray(rows) || rows.length === 0) throw new Error('Empty price feed');
+
+        // Map to internal format
+        const items = rows.map(row => ({
+            id: row.id,
+            name: row.item_name,
+            item_name: row.item_name,
+            category: row.category,
+            unit: row.unit,
+            price_min: row.price_min,
+            price_max: row.price_max,
+            price_avg: row.price_avg,
+            price: row.price_avg,
+            notes: row.notes,
+            source_date: row.source_date,
+            reportDate: row.source_date
+        }));
 
         renderMarketPricesTable(items);
 
@@ -2807,10 +2829,10 @@ async function loadLiveMarketPrices() {
             MARKET_PRICE_REFERENCE = liveReference;
         }
 
-        const reportDate = items.find(i => i.reportDate)?.reportDate;
+        const latestDate = items[0]?.source_date;
         if (updatedLabel) {
-            updatedLabel.textContent = reportDate
-                ? `Official DA Bantay Presyo rates — NCR, as of ${new Date(reportDate).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}.`
+            updatedLabel.textContent = latestDate
+                ? `Official DA Bantay Presyo rates — NCR, as of ${new Date(latestDate).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}.`
                 : 'Official DA Bantay Presyo reference rates.';
         }
         if (statusBadge) {
@@ -2825,6 +2847,9 @@ async function loadLiveMarketPrices() {
         renderMarketPricesTable(MARKET_PRICE_FALLBACK.map(entry => ({
             id: entry.keys[0],
             name: entry.label,
+            price_min: null,
+            price_max: null,
+            price_avg: null,
             price: null,
             unit: '',
             category: null
@@ -2890,9 +2915,17 @@ function updateHomePagePriceMovements(currentItems) {
 }
 
 function parsePriceValue(priceStr) {
-    if (!priceStr) return null;
+    if (typeof priceStr === 'number') return priceStr;
+    if (!priceStr || typeof priceStr !== 'string') return null;
     const match = priceStr.match(/₱?(\d+(?:\.\d+)?)/);
     return match ? parseFloat(match[1]) : null;
+}
+
+function escapeHtml(text) {
+    if (text === null || text === undefined) return '';
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
 }
 
 function renderPriceMovements(increases, decreases) {
