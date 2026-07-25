@@ -227,3 +227,133 @@ CREATE TRIGGER update_user_grocery_lists_updated_at
 --     "checked": false
 --   }
 -- ]
+
+-- ==========================================
+-- 4. PROFILES TABLE
+-- Extra data per user linked to auth.users
+-- ==========================================
+
+CREATE TABLE profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    full_name TEXT,
+    age INTEGER,
+    address TEXT,
+    phone TEXT,
+    avatar_url TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX idx_profiles_id ON profiles(id);
+
+-- ==========================================
+-- 5. MARKET PRICES TABLE
+-- Stores published and draft market prices from DA / manual overrides
+-- ==========================================
+
+CREATE TABLE market_prices (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    source_date DATE NOT NULL,           -- Date the price data is for (e.g. DA Bantay Presyo date)
+    item_name TEXT NOT NULL,             -- e.g. "Bangus", "Bigas (NFA)", "Itlog (medium)"
+    category TEXT NOT NULL CHECK (category IN (
+        'rice', 'meat', 'fish', 'vegetables', 'fruits', 'spices', 'other food', 'household'
+    )),
+    unit TEXT NOT NULL,                  -- e.g. "kg", "pc", "tray", "litro"
+    price_min DECIMAL(10, 2),            -- Lowest observed price
+    price_max DECIMAL(10, 2),            -- Highest observed price
+    price_avg DECIMAL(10, 2) GENERATED ALWAYS AS (
+        CASE
+            WHEN price_min IS NOT NULL AND price_max IS NOT NULL THEN (price_min + price_max) / 2
+            WHEN price_min IS NOT NULL THEN price_min
+            WHEN price_max IS NOT NULL THEN price_max
+            ELSE NULL
+        END
+    ) STORED,
+    region TEXT DEFAULT 'NCR',           -- Optional: region the price applies to
+    notes TEXT,                          -- Manual override notes, e.g. "Palengke price higher than DA"
+    published BOOLEAN DEFAULT false,     -- false = admin draft, true = visible to users
+    published_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL
+);
+
+CREATE INDEX idx_market_prices_published ON market_prices(published);
+CREATE INDEX idx_market_prices_category ON market_prices(category);
+CREATE INDEX idx_market_prices_source_date ON market_prices(source_date DESC);
+CREATE INDEX idx_market_prices_item_name ON market_prices(item_name);
+
+-- View for users: only published latest prices per item/category
+CREATE OR REPLACE VIEW latest_market_prices AS
+SELECT DISTINCT ON (item_name, category)
+    id,
+    source_date,
+    item_name,
+    category,
+    unit,
+    price_min,
+    price_max,
+    price_avg,
+    region,
+    notes,
+    published_at,
+    created_at
+FROM market_prices
+WHERE published = true
+ORDER BY item_name, category, source_date DESC, published_at DESC;
+
+-- ==========================================
+-- ROW LEVEL SECURITY (RLS) POLICIES FOR NEW TABLES
+-- ==========================================
+
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE market_prices ENABLE ROW LEVEL SECURITY;
+
+-- Profiles: users can only manage their own profile
+CREATE POLICY "Users can view own profile"
+    ON profiles FOR SELECT
+    USING (auth.uid() = id);
+
+CREATE POLICY "Users can insert own profile"
+    ON profiles FOR INSERT
+    WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Users can update own profile"
+    ON profiles FOR UPDATE
+    USING (auth.uid() = id);
+
+-- Market prices: anyone can read published prices
+CREATE POLICY "Published prices are public"
+    ON market_prices FOR SELECT
+    USING (published = true);
+
+-- Market prices: only authenticated admin users can create/update/delete
+-- Admins are identified by app_metadata role = 'admin' set via Supabase Dashboard or edge function
+CREATE POLICY "Only admins can insert market prices"
+    ON market_prices FOR INSERT
+    WITH CHECK (
+        auth.jwt() ->> 'role' = 'admin'
+    );
+
+CREATE POLICY "Only admins can update market prices"
+    ON market_prices FOR UPDATE
+    USING (
+        auth.jwt() ->> 'role' = 'admin'
+    );
+
+CREATE POLICY "Only admins can delete market prices"
+    ON market_prices FOR DELETE
+    USING (
+        auth.jwt() ->> 'role' = 'admin'
+    );
+
+-- Create triggers for new tables
+CREATE TRIGGER update_profiles_updated_at
+    BEFORE UPDATE ON profiles
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_market_prices_updated_at
+    BEFORE UPDATE ON market_prices
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
