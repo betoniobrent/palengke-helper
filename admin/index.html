@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palengke Helper+ Admin - Market Prices</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen text-gray-800">
+    <div class="max-w-6xl mx-auto p-6">
+        <header class="mb-8 flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-emerald-700">Palengke Helper+ Admin</h1>
+                <p class="text-gray-500">Upload DA Bantay Presyo PDF and publish market prices.</p>
+            </div>
+            <button id="logoutBtn" class="hidden bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition">Logout</button>
+        </header>
+
+        <!-- Login Panel -->
+        <div id="loginPanel" class="max-w-md mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <h2 class="text-xl font-semibold mb-4">Admin Login</h2>
+            <input id="adminEmail" type="email" placeholder="admin@example.com" class="w-full border border-gray-200 rounded-lg px-4 py-3 mb-3 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            <input id="adminPassword" type="password" placeholder="Password" class="w-full border border-gray-200 rounded-lg px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            <button id="adminLoginBtn" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold transition">Login</button>
+            <p id="loginError" class="text-red-500 text-sm mt-3 hidden"></p>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="hidden space-y-6">
+            <!-- Step 1: Upload -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold mb-4">1. Upload DA Bantay Presyo PDF</h2>
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:bg-gray-50 transition">
+                    <input type="file" id="pdfInput" accept=".pdf" class="hidden">
+                    <label for="pdfInput" class="cursor-pointer block">
+                        <p class="text-gray-600 mb-2">Click to upload PDF or drag and drop here</p>
+                        <p class="text-xs text-gray-400">Official DA Bantay Presyo PDF</p>
+                    </label>
+                </div>
+                <div id="uploadProgress" class="hidden mt-4">
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-emerald-600 h-2 rounded-full" style="width: 0%" id="progressBar"></div>
+                    </div>
+                    <p id="uploadStatus" class="text-sm text-gray-500 mt-2">Processing PDF...</p>
+                </div>
+            </div>
+
+            <!-- Step 2: Review & Normalize -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold">2. Review & Normalize Data</h2>
+                    <div class="flex gap-2">
+                        <input type="date" id="priceDate" class="border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                        <button id="addManualRowBtn" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2 rounded-lg text-sm font-medium transition">+ Add Row</button>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mb-3">Edit item names, categories, units, and prices before publishing. Rows marked for deletion will not be published.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 text-gray-600 text-left">
+                            <tr>
+                                <th class="p-3 rounded-tl-lg">Item Name</th>
+                                <th class="p-3">Category</th>
+                                <th class="p-3">Unit</th>
+                                <th class="p-3">Min Price</th>
+                                <th class="p-3">Max Price</th>
+                                <th class="p-3">Notes</th>
+                                <th class="p-3 rounded-tr-lg">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="parsedDataTable" class="divide-y divide-gray-100">
+                            <tr>
+                                <td colspan="7" class="p-8 text-center text-gray-400">Upload a PDF to see parsed data, or add rows manually.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Step 3: Publish -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold mb-4">3. Publish to Production</h2>
+                <p class="text-sm text-gray-600 mb-4">This will unpublish the previous set and make the current data visible to all users.</p>
+                <button id="publishBtn" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>Publish Market Prices</button>
+                <p id="publishStatus" class="text-sm mt-3 hidden"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
