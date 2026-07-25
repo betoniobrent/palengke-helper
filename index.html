@@ -842,6 +842,32 @@
                             <p class="text-xs text-gray-400">Press <span class="font-semibold">Enter</span> to send · <span class="font-semibold">Shift+Enter</span> for a new line.</p>
                         </div>
                     </div>
+
+                    <!-- BO SAR METHOD #2 AI WIDGET -->
+                    <div class="bg-white rounded-3xl shadow-sm border border-indigo-100 overflow-hidden flex flex-col">
+                        <div class="px-6 py-4 border-b border-indigo-100 flex items-center justify-between bg-indigo-50/50">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-xl font-semibold text-indigo-900">Bo Sar AI</h3>
+                                    <span id="boSarStatus" class="text-xs px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-600">configure endpoint</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-0.5">Powered by OpenAI Assistants API via Replit backend.</p>
+                            </div>
+                            <button onclick="clearBoSarChat()" class="text-gray-500 hover:text-gray-800 text-sm whitespace-nowrap">Clear chat</button>
+                        </div>
+
+                        <div class="bg-gray-50 h-[320px] overflow-y-auto flex flex-col gap-4 p-4" id="boSarChatHistory">
+                            <div class="self-start bg-white border border-gray-200 rounded-3xl p-4 text-sm text-gray-500 max-w-[90%]">Hi! I'm Bo Sar. Ask me about meal planning, palengke shopping, and tipid tips.</div>
+                        </div>
+
+                        <div class="border-t border-gray-100 p-4 flex flex-col gap-3">
+                            <div class="flex items-end gap-2">
+                                <textarea id="boSarInput" rows="1" class="flex-1 border border-gray-200 rounded-2xl px-4 py-3 text-sm text-gray-800 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ask Bo Sar..."></textarea>
+                                <button id="boSarSendBtn" onclick="processBoSarQuery()" class="bg-indigo-700 hover:bg-indigo-800 text-white px-5 py-3 rounded-2xl font-semibold transition whitespace-nowrap">Send</button>
+                            </div>
+                            <p class="text-xs text-gray-400">Set the Replit backend URL in Account Settings to enable.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -983,8 +1009,13 @@
                             <input type="password" id="openaiApiKey" placeholder="sk-..." class="w-full border border-gray-200 p-2.5 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                             <p class="text-xs text-gray-500 mt-1">Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" class="text-emerald-600 hover:underline">platform.openai.com</a>. Leave empty to use rule-based responses.</p>
                         </div>
-                        <button onclick="saveOpenAIKey()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-2.5 rounded-xl text-sm font-medium transition">
-                            Save API Key
+                        <div>
+                            <label class="text-sm text-gray-600 mb-1 block">Bo Sar Replit Backend URL</label>
+                            <input type="url" id="boSarEndpoint" placeholder="https://your-repl.replit.app" class="w-full border border-gray-200 p-2.5 rounded-lg text-sm bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <p class="text-xs text-gray-500 mt-1">Enter the URL of your Replit backend for Bo Sar AI.</p>
+                        </div>
+                        <button onclick="saveAIConfig()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-2.5 rounded-xl text-sm font-medium transition">
+                            Save AI Config
                         </button>
                     </div>
                 </div>
@@ -1187,6 +1218,10 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
             const apiKey = localStorage.getItem('palengke_openai_key') || '';
             document.getElementById('openaiApiKey').value = apiKey;
 
+            // Load Bo Sar endpoint
+            const boSarEndpoint = localStorage.getItem('palengke_bosar_endpoint') || '';
+            document.getElementById('boSarEndpoint').value = boSarEndpoint;
+
             // Close dropdown if open
             const dropdown = document.getElementById('accountDropdown');
             dropdown.classList.add('hidden');
@@ -1197,18 +1232,27 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
             modal.classList.add('hidden');
         }
 
-        function saveOpenAIKey() {
+        function saveAIConfig() {
             const apiKey = document.getElementById('openaiApiKey').value.trim();
+            const boSarEndpoint = document.getElementById('boSarEndpoint').value.trim();
+
             if (apiKey) {
                 localStorage.setItem('palengke_openai_key', apiKey);
-                alert('OpenAI API key saved successfully!');
             } else {
                 localStorage.removeItem('palengke_openai_key');
-                alert('OpenAI API key removed.');
             }
+
+            if (boSarEndpoint) {
+                localStorage.setItem('palengke_bosar_endpoint', boSarEndpoint);
+            } else {
+                localStorage.removeItem('palengke_bosar_endpoint');
+            }
+
+            alert('AI configuration saved!');
 
             // Update AI status and input state if functions are available
             if (typeof updateAIStatusIndicator === 'function') updateAIStatusIndicator();
+            if (typeof updateBoSarStatus === 'function') updateBoSarStatus();
             if (typeof updateAIChatInputState === 'function') updateAIChatInputState();
         }
 

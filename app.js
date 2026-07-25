@@ -935,6 +935,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
+    const boSarInput = document.getElementById('boSarInput');
+    if (boSarInput) {
+        boSarInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                processBoSarQuery();
+            }
+        });
+    }
+
     // Editable stat cards on the AI Suggestions tab — kept in sync with the Meal Planner inputs
     const suggestionBudgetInput = document.getElementById('suggestionBudgetValue');
     if (suggestionBudgetInput) {
@@ -2272,6 +2282,7 @@ function renderAIWelcomeMessage() {
     }
     updateAIChatInputState();
     updateAIStatusIndicator();
+    updateBoSarStatus();
 }
 
 function updateAIChatInputState() {
@@ -2326,9 +2337,111 @@ function updateAIStatusIndicator() {
     }
 }
 
+// Bo Sar Method #2 AI (Replit backend + OpenAI Assistants API)
+function getBoSarEndpoint() {
+    return localStorage.getItem('palengke_bosar_endpoint') || '';
+}
+
+function updateBoSarStatus() {
+    const status = document.getElementById('boSarStatus');
+    if (!status) return;
+
+    const endpoint = getBoSarEndpoint();
+    if (!navigator.onLine) {
+        status.textContent = 'offline';
+        status.className = 'text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-600';
+    } else if (!endpoint) {
+        status.textContent = 'configure endpoint';
+        status.className = 'text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-600';
+    } else {
+        status.textContent = 'ready';
+        status.className = 'text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600';
+    }
+}
+
+function appendBoSarMessage(sender, text) {
+    const chatHistory = document.getElementById('boSarChatHistory');
+    if (!chatHistory) return;
+
+    if (chatHistory.children.length === 1 && chatHistory.children[0].textContent.includes("I'm Bo Sar")) {
+        chatHistory.innerHTML = '';
+    }
+
+    const message = document.createElement('div');
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    if (sender === 'user') {
+        message.className = 'self-end bg-slate-100 border border-slate-200 p-4 rounded-3xl text-sm text-gray-800 max-w-[90%]';
+        message.innerHTML = `<div class="flex items-center justify-between gap-3"><strong class="text-xs text-gray-500">You</strong><span class="text-[10px] text-gray-400">${time}</span></div><p class="mt-2">${formatChatText(text)}</p>`;
+    } else {
+        message.className = 'self-start bg-indigo-50 border border-indigo-100 p-4 rounded-3xl text-sm text-gray-800 max-w-[90%]';
+        message.innerHTML = `<div class="flex items-center justify-between gap-3"><strong class="text-xs text-indigo-700">Bo Sar</strong><span class="text-[10px] text-gray-400">${time}</span></div><p class="mt-2">${formatChatText(text)}</p>`;
+    }
+    chatHistory.appendChild(message);
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+}
+
+function clearBoSarChat() {
+    const chatHistory = document.getElementById('boSarChatHistory');
+    if (!chatHistory) return;
+    chatHistory.innerHTML = '<div class="self-start bg-white border border-gray-200 rounded-3xl p-4 text-sm text-gray-500 max-w-[90%]">Hi! I\'m Bo Sar. Ask me about meal planning, palengke shopping, and tipid tips.</div>';
+    localStorage.removeItem('palengke_bosar_thread');
+}
+
+async function processBoSarQuery() {
+    const input = document.getElementById('boSarInput');
+    if (!input) return;
+
+    const question = input.value.trim();
+    if (!question) return;
+
+    const endpoint = getBoSarEndpoint();
+    if (!endpoint) {
+        appendBoSarMessage('ai', 'Please set your Bo Sar Replit backend URL in Account Settings to use Bo Sar AI.');
+        return;
+    }
+
+    if (!navigator.onLine) {
+        appendBoSarMessage('ai', 'Bo Sar AI is unavailable while you are offline. Please connect to the internet.');
+        return;
+    }
+
+    appendBoSarMessage('user', question);
+    input.value = '';
+
+    const threadId = localStorage.getItem('palengke_bosar_thread') || '';
+    const typingId = 'bosar-typing-' + Date.now();
+    appendBoSarMessage('ai', '<span id="' + typingId + '">Typing...</span>');
+
+    try {
+        const response = await fetch(endpoint.replace(/\/$/, '') + '/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: question, thread_id: threadId })
+        });
+
+        const data = await response.json();
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.parentElement.remove();
+
+        if (!response.ok || data.error) {
+            appendBoSarMessage('ai', 'Sorry, Bo Sar could not respond: ' + (data.error || 'unknown error'));
+            return;
+        }
+
+        if (data.thread_id) localStorage.setItem('palengke_bosar_thread', data.thread_id);
+        appendBoSarMessage('ai', data.reply || 'No response from Bo Sar.');
+    } catch (error) {
+        console.error('Bo Sar query error:', error);
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.parentElement.remove();
+        appendBoSarMessage('ai', 'Sorry, I could not connect to the Bo Sar backend. Please check the Replit URL and try again.');
+    }
+}
+
 window.addEventListener('online', () => {
     updateAIStatusIndicator();
     updateAIChatInputState();
+    updateBoSarStatus();
 });
 window.addEventListener('offline', () => {
     updateAIStatusIndicator();
