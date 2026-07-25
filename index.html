@@ -882,14 +882,14 @@
                                 <input id="itemName" type="text" placeholder="Item Name" class="border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg flex-1 min-w-[180px] focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <input id="itemPrice" type="number" placeholder="Price (₱)" class="border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg w-full lg:w-32 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <input id="itemQuantity" type="number" placeholder="Qty" class="border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg w-full lg:w-24 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                                
-                                <select id="itemCategory" class="border border-gray-300 p-2.5 rounded-lg bg-gray-50 w-full lg:w-56 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                                    <option>Meat & Fish (Karne / Isda)</option>
-                                    <option>Vegetables & Fruits (Gulay / Prutas)</option>
-                                    <option>Rice, Eggs & Grains (Bigas / Itlog)</option>
-                                    <option>Condiments & Spices (Instant / Sahog)</option>
-                                    <option>Canned & Packaged Goods</option>
-                                    <option>Household Essentials & Toiletries</option>
+                                <input id="itemUnit" type="text" placeholder="Unit (kg, pc, tray)" class="border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg w-full lg:w-36 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <select id="itemCategory" class="border border-gray-300 p-2.5 rounded-lg bg-gray-50 w-full lg:w-48 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                    <option value="meat">Meat & Fish (Karne / Isda)</option>
+                                    <option value="vegetables">Vegetables & Fruits (Gulay / Prutas)</option>
+                                    <option value="rice">Rice, Eggs & Grains (Bigas / Itlog)</option>
+                                    <option value="spices">Condiments & Spices (Instant / Sahog)</option>
+                                    <option value="other food">Canned & Packaged Goods</option>
+                                    <option value="household">Household Essentials & Toiletries</option>
                                 </select>
                                 <button onclick="addItem()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-sm whitespace-nowrap">Add Item</button>
                             </div>

@@ -820,6 +820,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         // Initialize app functions if they exist
         try {
+            if (typeof loadGroceryListFromSupabase === 'function') await loadGroceryListFromSupabase();
             if (typeof initializeBudgetHubEngine === 'function') initializeBudgetHubEngine();
             if (typeof renderGroceryItems === 'function') renderGroceryItems();
             if (typeof renderSavedMealPlans === 'function') renderSavedMealPlans();
@@ -1796,6 +1797,53 @@ function setGroceryData(data) {
     localStorage.setItem('groceryItems', JSON.stringify(data));
 }
 
+async function saveGroceryListToSupabase() {
+    try {
+        const { data: sessionData } = await supabaseClient.auth.getSession();
+        const user = sessionData?.session?.user;
+        if (!user) return;
+
+        const items = getGroceryData();
+        const totalCost = items.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);
+
+        const { error } = await supabaseClient
+            .from('user_grocery_lists')
+            .upsert({
+                user_id: user.id,
+                list_name: 'Default List',
+                items: items,
+                total_cost: totalCost
+            }, { onConflict: 'user_id,list_name' });
+
+        if (error) console.error('Supabase grocery save error:', error);
+    } catch (err) {
+        console.error('saveGroceryListToSupabase error:', err);
+    }
+}
+
+async function loadGroceryListFromSupabase() {
+    try {
+        const { data: sessionData } = await supabaseClient.auth.getSession();
+        const user = sessionData?.session?.user;
+        if (!user) return;
+
+        const { data, error } = await supabaseClient
+            .from('user_grocery_lists')
+            .select('items')
+            .eq('user_id', user.id)
+            .eq('list_name', 'Default List')
+            .single();
+
+        if (error) throw error;
+        if (data && Array.isArray(data.items)) {
+            setGroceryData(data.items);
+            renderGroceryItems();
+        }
+    } catch (err) {
+        console.warn('Supabase grocery load error:', err);
+    }
+}
+
 function renderGroceryItems(filteredItems = null) {
     const cartContainer = document.getElementById('groceryCartItems');
     if (!cartContainer) return;
@@ -1822,7 +1870,7 @@ function renderGroceryItems(filteredItems = null) {
                         </div>
                         <div class="text-right">
                             <p class="font-bold text-emerald-700">₱${subtotal.toFixed(2)}</p>
-                            <p class="text-xs text-gray-500">₱${parseFloat(item.price).toFixed(2)} × ${item.quantity}</p>
+                            <p class="text-xs text-gray-500">₱${parseFloat(item.price).toFixed(2)}/${item.unit || 'pc'} × ${item.quantity}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2 mt-2">
@@ -1862,6 +1910,7 @@ function toggleGroceryItemCheck(index) {
     items[index].checked = !items[index].checked;
     setGroceryData(items);
     renderGroceryItems();
+    saveGroceryListToSupabase();
 }
 
 function updateGroceryQuantity(index, change) {
@@ -1870,6 +1919,7 @@ function updateGroceryQuantity(index, change) {
     items[index].quantity = newQuantity;
     setGroceryData(items);
     renderGroceryItems();
+    saveGroceryListToSupabase();
 }
 
 function clearBoughtItems() {
@@ -1885,6 +1935,7 @@ function clearBoughtItems() {
     const remainingItems = items.filter(i => !i.checked);
     setGroceryData(remainingItems);
     renderGroceryItems();
+    saveGroceryListToSupabase();
     showNotification(`Cleared ${boughtItems.length} bought items`, 'success');
 }
 
@@ -1892,6 +1943,7 @@ function clearAllGroceryItems() {
     if (confirm('Are you sure you want to clear all grocery items?')) {
         setGroceryData([]);
         renderGroceryItems();
+        saveGroceryListToSupabase();
         showNotification('All grocery items cleared', 'success');
     }
 }
@@ -1900,6 +1952,7 @@ function addItem() {
     const name = document.getElementById('itemName').value.trim();
     const price = parseFloat(document.getElementById('itemPrice').value);
     const quantity = parseInt(document.getElementById('itemQuantity').value);
+    const unit = document.getElementById('itemUnit').value.trim() || 'pc';
     const category = document.getElementById('itemCategory').value;
 
     if (!name || isNaN(price) || isNaN(quantity) || price <= 0 || quantity <= 0) {
@@ -1908,19 +1961,21 @@ function addItem() {
     }
 
     const items = getGroceryData();
-    items.push({ name, price, quantity, category, checked: false });
+    items.push({ name, price, quantity, unit, category, checked: false });
     setGroceryData(items);
 
     // Clear dynamic operational field nodes
     document.getElementById('itemName').value = '';
     document.getElementById('itemPrice').value = '';
     document.getElementById('itemQuantity').value = '1';
+    document.getElementById('itemUnit').value = '';
 
     // Clear search and show all items
     document.getElementById('grocerySearchInput').value = '';
     document.getElementById('marketPriceSuggestions').classList.add('hidden');
     
     renderGroceryItems();
+    saveGroceryListToSupabase();
     showNotification('Item added to list', 'success');
 }
 
@@ -1929,6 +1984,7 @@ function deleteItem(index) {
     items.splice(index, 1);
     setGroceryData(items);
     renderGroceryItems();
+    saveGroceryListToSupabase();
 }
 
 function searchItems() {
@@ -1947,48 +2003,52 @@ function searchItems() {
     updateCartSummary(items);
 }
 
-// Search with market price integration
+// Search with market price integration (reads from Supabase ALL_PRICE_ITEMS)
 function searchGroceryItemsWithMarket() {
     const query = document.getElementById('grocerySearchInput').value.toLowerCase().trim();
     const suggestionsDiv = document.getElementById('marketPriceSuggestions');
     const suggestionsList = document.getElementById('suggestionsList');
-    
+
     if (!query || query.length < 2) {
         suggestionsDiv.classList.add('hidden');
         return;
     }
-    
-    // Search in market price data
-    const matches = MARKET_PRICE_REFERENCE.filter(item => 
-        item.keys.some(key => key.includes(query) || query.includes(key))
+
+    // Search in live Supabase market price data
+    const matches = (ALL_PRICE_ITEMS || []).filter(item =>
+        item.item_name?.toLowerCase().includes(query) ||
+        query.includes(item.item_name?.toLowerCase())
     );
-    
+
     if (matches.length > 0) {
         suggestionsDiv.classList.remove('hidden');
         suggestionsList.innerHTML = matches.slice(0, 5).map(match => `
-            <div class="flex justify-between items-center p-2 bg-emerald-50 rounded-lg cursor-pointer hover:bg-emerald-100 transition" onclick="selectMarketItem('${match.label}', '${match.price}')">
-                <span class="text-sm text-gray-800">${match.label}</span>
-                <span class="text-sm font-bold text-emerald-700">${match.price}</span>
+            <div class="flex justify-between items-center p-2 bg-emerald-50 rounded-lg cursor-pointer hover:bg-emerald-100 transition" onclick="selectMarketItem('${escapeHtml(match.item_name)}', ${match.price_avg || match.price_min || 0}, '${escapeHtml(match.category || '')}', '${escapeHtml(match.unit || '')}')">
+                <div>
+                    <span class="text-sm text-gray-800 font-medium">${escapeHtml(match.item_name)}</span>
+                    <span class="text-xs text-gray-500 ml-1">${escapeHtml(match.category || '')} · ${escapeHtml(match.unit || '')}</span>
+                </div>
+                <span class="text-sm font-bold text-emerald-700">₱${Number(match.price_avg || match.price_min || 0).toFixed(2)}</span>
             </div>
         `).join('');
     } else {
         suggestionsDiv.classList.add('hidden');
     }
-    
+
     // Also filter existing grocery items
     searchItems();
 }
 
 // Select market price item and populate form
-function selectMarketItem(name, price) {
+function selectMarketItem(name, price, category, unit) {
     document.getElementById('itemName').value = name;
-    
-    // Parse price string to get numeric value
-    const priceMatch = price.match(/₱?(\d+(?:\.\d+)?)/);
-    if (priceMatch) {
-        document.getElementById('itemPrice').value = priceMatch[1];
+    document.getElementById('itemPrice').value = price.toFixed(2);
+
+    const categoryEl = document.getElementById('itemCategory');
+    if (categoryEl && category) {
+        categoryEl.value = category;
     }
-    
+
     document.getElementById('marketPriceSuggestions').classList.add('hidden');
     document.getElementById('itemName').focus();
 }
