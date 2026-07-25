@@ -2395,12 +2395,20 @@ function buildMealPlanContext() {
 }
 
 function buildMarketPriceContext() {
-    if (MARKET_PRICE_REFERENCE.length === 0) return 'MARKET PRICES: Not available';
-    
-    let context = 'CURRENT MARKET PRICES (sample):\n';
-    MARKET_PRICE_REFERENCE.slice(0, 10).forEach(item => {
-        context += `- ${item.label}: ${item.price}\n`;
-    });
+    const liveItems = (ALL_PRICE_ITEMS || []).length > 0 ? ALL_PRICE_ITEMS : MARKET_PRICE_REFERENCE;
+    if (liveItems.length === 0) return 'MARKET PRICES: Not available';
+
+    let context = 'CURRENT MARKET PRICES (latest published from Supabase):\n';
+    if (ALL_PRICE_ITEMS && ALL_PRICE_ITEMS.length > 0) {
+        ALL_PRICE_ITEMS.slice(0, 20).forEach(item => {
+            const avg = item.price_avg || item.price_min || item.price_max || 0;
+            context += `- ${item.item_name}: ₱${parseFloat(avg).toFixed(2)}/${item.unit || 'unit'}\n`;
+        });
+    } else {
+        MARKET_PRICE_REFERENCE.slice(0, 10).forEach(item => {
+            context += `- ${item.label}: ${item.price}\n`;
+        });
+    }
     return context;
 }
 
@@ -3038,13 +3046,55 @@ function getItemEmoji(name) {
     return '📦';
 }
 
-function respondToPriceQuery(question) {
-    const matches = MARKET_PRICE_REFERENCE.filter(entry => entry.keys.some(k => question.includes(k)));
-    if (matches.length === 0) {
-        return 'Here are common palengke reference prices:\n• Well-milled rice — ₱48–55/kg\n• Whole chicken — ₱170–190/kg\n• Pork kasim — ₱300–330/kg\n• Tilapia — ₱130–150/kg\n• Eggs — ₱8–9/pc\n• Red onions — ₱140–170/kg\nPrices vary per market and season — check the Market Prices tab for the watchlist.';
+function parseAIQuantityQuery(question) {
+    // Try to find a pattern like "2 kg chicken", "1.5 kg of pork", "3 pieces eggs"
+    const regex = /(\d+(?:\.\d+)?)\s*(kg|kilo|g|gram|pc|piece|pieces|tray|cup|tbsp|tsp|ml|l|litro|liter|bunch|bundle|heads|cloves)\s*(?:of\s*)?(.+)/i;
+    const match = question.match(regex);
+    if (match) {
+        return {
+            quantity: parseFloat(match[1]),
+            unit: match[2].toLowerCase(),
+            name: match[3].trim().toLowerCase().replace(/[?.!]+$/, '')
+        };
     }
-    const lines = matches.map(m => `• ${m.label} — ${m.price}`);
-    return `Estimated palengke prices:\n${lines.join('\n')}\nPrices vary per market and season — tawad politely and compare 2–3 stalls before buying.`;
+    return null;
+}
+
+function respondToPriceQuery(question) {
+    const parsed = parseAIQuantityQuery(question);
+    let query = parsed ? parsed.name : question;
+
+    // 1. Search live Supabase market prices first
+    let liveMatches = (ALL_PRICE_ITEMS || []).filter(item =>
+        item.item_name?.toLowerCase().includes(query) ||
+        query.includes(item.item_name?.toLowerCase())
+    );
+
+    // 2. Fallback to static reference
+    if (liveMatches.length === 0) {
+        const refMatches = MARKET_PRICE_REFERENCE.filter(entry =>
+            entry.keys.some(k => query.includes(k) || k.includes(query))
+        );
+        if (refMatches.length === 0) {
+            return 'Here are common palengke reference prices:\n• Well-milled rice — ₱48–55/kg\n• Whole chicken — ₱170–190/kg\n• Pork kasim — ₱300–330/kg\n• Tilapia — ₱130–150/kg\n• Eggs — ₱8–9/pc\n• Red onions — ₱140–170/kg\nPrices vary per market and season — check the Market Prices tab for the watchlist.';
+        }
+        const lines = refMatches.map(m => `• ${m.label} — ${m.price}`);
+        return `Estimated palengke prices:\n${lines.join('\n')}\nPrices vary per market and season — tawad politely and compare 2–3 stalls before buying.`;
+    }
+
+    const item = liveMatches[0];
+    const avg = parseFloat(item.price_avg || item.price_min || 0);
+    const min = parseFloat(item.price_min || avg);
+    const max = parseFloat(item.price_max || avg);
+    const unit = item.unit || 'unit';
+
+    if (parsed && parsed.quantity) {
+        // Compute cost for the requested quantity
+        const cost = getMarketPriceForIngredient(`${parsed.quantity} ${parsed.unit} ${parsed.name}`);
+        return `Live price for ${item.item_name}: ₱${avg.toFixed(2)} per ${unit} (range ₱${min.toFixed(2)}–₱${max.toFixed(2)}).\nEstimated cost for ${parsed.quantity} ${parsed.unit}: ₱${cost.toFixed(2)}\nPrices vary per market and season — tawad politely and compare 2–3 stalls before buying.`;
+    }
+
+    return `Live price for ${item.item_name}: ₱${avg.toFixed(2)} per ${unit} (range ₱${min.toFixed(2)}–₱${max.toFixed(2)}).\nPrices vary per market and season — check the Market Prices tab for more.`;
 }
 
 function respondToRecipeHowTo(question) {
