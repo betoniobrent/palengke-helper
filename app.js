@@ -1544,10 +1544,31 @@ function calculatePlanMetrics() {
     const costPerMeal = rawBudget / 21;
     const costPerPaxDay = rawBudget / (7 * rawPax);
 
+    // Calculate total estimated cost of current meal plan using live market prices
+    let totalEstimatedCost = 0;
+    if (currentMealPlan && typeof currentMealPlan === 'object') {
+        Object.values(currentMealPlan).forEach(dayPlan => {
+            if (!dayPlan) return;
+            ['Breakfast', 'Lunch', 'Dinner'].forEach(mealType => {
+                const meal = dayPlan[mealType];
+                if (meal) {
+                    totalEstimatedCost += calculateRecipeCostFromMarket(meal, rawPax);
+                }
+            });
+        });
+    }
+    const remainingBudget = rawBudget - totalEstimatedCost;
+
     const calcPerMealEl = document.getElementById('calcPerMeal');
     const calcPerPaxEl = document.getElementById('calcPerPax');
     if (calcPerMealEl) calcPerMealEl.innerText = `₱${costPerMeal.toFixed(2)}`;
     if (calcPerPaxEl) calcPerPaxEl.innerText = `₱${costPerPaxDay.toFixed(2)} / day`;
+
+    // Update totals if elements exist
+    const totalCostEl = document.getElementById('planTotalEstimatedCost');
+    const remainingEl = document.getElementById('planRemainingBudget');
+    if (totalCostEl) totalCostEl.innerText = `₱${totalEstimatedCost.toFixed(2)}`;
+    if (remainingEl) remainingEl.innerText = `₱${remainingBudget.toFixed(2)}`;
 }
 
 function generateFilipinoMealPlan() {
@@ -1660,9 +1681,9 @@ function generateFilipinoMealPlan() {
         if (options.length === 0) return getSafeRecipe([], RECIPE_DATABASE, type);
 
         const withMatchScore = options.map(recipe => {
-            // Use market-based pricing for accurate cost calculation
-            const marketBasedCost = calculateRecipeCostFromMarket(recipe);
-            const perServingCost = marketBasedCost / Math.max(recipe.servings, 1);
+            // Use market-based pricing for accurate cost calculation, scaled for target pax
+            const marketBasedCost = calculateRecipeCostFromMarket(recipe, targetPaxCount);
+            const perServingCost = marketBasedCost / Math.max(targetPaxCount, 1);
             const costDistance = Math.abs(perServingCost - budgetPerServing);
             const servingDistance = Math.abs(recipe.servings - targetPaxCount);
             return {
@@ -1708,14 +1729,10 @@ function generateFilipinoMealPlan() {
             Dinner: dMeal
         };
 
-        // Use market-based pricing for accurate cost calculation
-        const bMarketCost = calculateRecipeCostFromMarket(bMeal);
-        const lMarketCost = calculateRecipeCostFromMarket(lMeal);
-        const dMarketCost = calculateRecipeCostFromMarket(dMeal);
-
-        const bCost = (bMarketCost / Math.max(bMeal.servings, 1)) * targetPaxCount;
-        const lCost = (lMarketCost / Math.max(lMeal.servings, 1)) * targetPaxCount;
-        const dCost = (dMarketCost / Math.max(dMeal.servings, 1)) * targetPaxCount;
+        // Use market-based pricing scaled for target pax
+        const bCost = calculateRecipeCostFromMarket(bMeal, targetPaxCount);
+        const lCost = calculateRecipeCostFromMarket(lMeal, targetPaxCount);
+        const dCost = calculateRecipeCostFromMarket(dMeal, targetPaxCount);
         const dayCost = bCost + lCost + dCost;
         totalPlanCostAccumulator += dayCost;
 
@@ -2535,105 +2552,88 @@ function parseIngredient(ingredientStr) {
     return { name: itemName, quantity, unit };
 }
 
+function findSupabasePriceForIngredient(parsed) {
+    if (!ALL_PRICE_ITEMS || ALL_PRICE_ITEMS.length === 0) return null;
+
+    const item = ALL_PRICE_ITEMS.find(p =>
+        parsed.name.includes(p.item_name?.toLowerCase()) ||
+        p.item_name?.toLowerCase().includes(parsed.name)
+    );
+
+    return item ? item.price_avg : null;
+}
+
+function findReferencePriceForIngredient(parsed) {
+    const marketItem = MARKET_PRICE_REFERENCE.find(item =>
+        item.keys.some(key => parsed.name.includes(key) || key.includes(parsed.name))
+    );
+    if (!marketItem || !marketItem.price) return null;
+    return parsePriceValue(marketItem.price);
+}
+
 // Get price from market data for an ingredient
 function getMarketPriceForIngredient(ingredient) {
     const parsed = parseIngredient(ingredient);
-    
-    // Find matching price in market data
-    const marketItem = MARKET_PRICE_REFERENCE.find(item => 
-        item.keys.some(key => parsed.name.includes(key) || key.includes(parsed.name))
-    );
-    
-    if (!marketItem) {
-        // Return estimated price if not found in market data
-        const fallbackPrices = {
-            'chicken': 180,
-            'pork': 320,
-            'beef': 420,
-            'fish': 150,
-            'bangus': 190,
-            'tilapia': 140,
-            'galunggong': 165,
-            'egg': 8.5,
-            'rice': 52,
-            'garlic': 140,
-            'onion': 155,
-            'tomato': 80,
-            'potato': 60,
-            'carrot': 70,
-            'tokwa': 15,
-            'monggo': 90,
-            'talong': 90,
-            'spinach': 25,
-            'kangkong': 15,
-            'pechay': 20,
-            'kalabasa': 50,
-            'papaya': 40,
-            'malunggay': 30,
-            'soy sauce': 35,
-            'vinegar': 30,
-            'fish sauce': 40,
-            'oil': 80,
-            'sugar': 60,
-            'salt': 25,
-            'pepper': 200,
-            'milk': 75,
-            'coconut milk': 85,
-        };
-        
-        const fallbackPrice = fallbackPrices[parsed.name] || 50;
-        return fallbackPrice * parsed.quantity;
+    if (!parsed) return 0;
+
+    // 1. Try Supabase live market prices first
+    let unitPrice = findSupabasePriceForIngredient(parsed);
+    let source = 'supabase';
+
+    // 2. Fallback to MARKET_PRICE_REFERENCE
+    if (!unitPrice) {
+        unitPrice = findReferencePriceForIngredient(parsed);
+        source = 'reference';
     }
-    
-    // Parse price string to get numeric value
-    const priceStr = marketItem.price;
-    const priceMatch = priceStr.match(/₱?(\d+(?:\.\d+)?)/);
-    if (!priceMatch) return 50 * parsed.quantity;
-    
-    const basePrice = parseFloat(priceMatch[1]);
-    
+
+    // 3. Hardcoded fallback estimates
+    if (!unitPrice) {
+        const fallbackPrices = {
+            'chicken': 180, 'pork': 320, 'beef': 420, 'fish': 150,
+            'bangus': 190, 'tilapia': 140, 'galunggong': 165, 'egg': 8.5,
+            'rice': 52, 'garlic': 140, 'onion': 155, 'tomato': 80,
+            'potato': 60, 'carrot': 70, 'tokwa': 15, 'monggo': 90,
+            'talong': 90, 'spinach': 25, 'kangkong': 15, 'pechay': 20,
+            'kalabasa': 50, 'papaya': 40, 'malunggay': 30, 'soy sauce': 35,
+            'vinegar': 30, 'fish sauce': 40, 'oil': 80, 'sugar': 60,
+            'salt': 25, 'pepper': 200, 'milk': 75, 'coconut milk': 85
+        };
+        unitPrice = fallbackPrices[parsed.name] || 50;
+        source = 'fallback';
+    }
+
     // Adjust for unit
     const unitMultipliers = {
-        'kg': 1,
-        'kilo': 1,
-        'g': 0.001,
-        'gram': 0.001,
-        'cup': 0.24,
-        'tbsp': 0.015,
-        'tbsp': 0.015,
-        'tsps': 0.005,
-        'tsp': 0.005,
-        'ml': 0.001,
-        'l': 1,
-        'pc': 1,
-        'piece': 1,
-        'pieces': 1,
-        'cloves': 0.02,
-        'heads': 0.1,
-        'bunch': 0.2,
-        'bundle': 0.2,
-        'whole': 1,
-        'can': 1,
-        'pack': 1,
-        'packs': 1,
+        'kg': 1, 'kilo': 1, 'g': 0.001, 'gram': 0.001,
+        'cup': 0.24, 'tbsp': 0.015, 'tsps': 0.005, 'tsp': 0.005,
+        'ml': 0.001, 'l': 1, 'pc': 1, 'piece': 1, 'pieces': 1,
+        'cloves': 0.02, 'heads': 0.1, 'bunch': 0.2, 'bundle': 0.2,
+        'whole': 1, 'can': 1, 'pack': 1, 'packs': 1, 'tray': 1,
+        'litro': 1, 'liter': 1
     };
-    
+
     const multiplier = unitMultipliers[parsed.unit] || 1;
-    return basePrice * parsed.quantity * multiplier;
+    return unitPrice * parsed.quantity * multiplier;
 }
 
-// Calculate recipe cost based on market prices
-function calculateRecipeCostFromMarket(recipe) {
+// Calculate recipe cost based on market prices, scaled for target pax
+function calculateRecipeCostFromMarket(recipe, pax = 0) {
     if (!recipe.ingredients || recipe.ingredients.length === 0) {
+        if (pax) {
+            return (recipe.estimatedCost / Math.max(recipe.servings, 1)) * pax;
+        }
         return recipe.estimatedCost || 0;
     }
-    
-    let totalCost = 0;
+
+    let baseCost = 0;
     recipe.ingredients.forEach(ingredient => {
-        totalCost += getMarketPriceForIngredient(ingredient);
+        baseCost += getMarketPriceForIngredient(ingredient);
     });
-    
-    return Math.round(totalCost);
+
+    if (pax > 0) {
+        return (baseCost / Math.max(recipe.servings, 1)) * pax;
+    }
+    return Math.round(baseCost);
 }
 
 // ==========================================
