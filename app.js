@@ -2079,6 +2079,17 @@ async function processAISuggestionQuery() {
     const question = questionInput.value.trim();
     if (!question) return;
 
+    // Check AI readiness
+    if (!navigator.onLine) {
+        appendChatMessage('ai', 'Palengke AI is unavailable while you are offline. Please connect to the internet to chat.');
+        return;
+    }
+
+    if (!getOpenAIApiKey()) {
+        appendChatMessage('ai', 'Please add your OpenAI API key in Account Settings to use Palengke AI.');
+        return;
+    }
+
     appendChatMessage('user', question);
     questionInput.value = '';
     
@@ -2097,7 +2108,7 @@ async function processAISuggestionQuery() {
         console.error('AI response error:', error);
         const typingEl = document.getElementById(typingId);
         if (typingEl) typingEl.parentElement.remove();
-        appendChatMessage('ai', 'Sorry, I had trouble processing that. Please try again or check your OpenAI API key.');
+        appendChatMessage('ai', 'Sorry, I could not connect to the AI service. Please check your OpenAI API key or try again later.');
     }
 
     chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -2148,15 +2159,79 @@ function renderAIWelcomeMessage() {
         welcomeMessage.innerHTML = `<div class="flex items-center justify-between gap-3"><strong class="text-xs text-emerald-700">Palengke AI</strong><span class="text-[10px] text-gray-400">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span></div><p class="mt-2">Welcome! Ask me about meals, budgeting, or groceries and I’ll suggest Filipino dishes and smart shopping tips.</p>`;
         chatHistory.appendChild(welcomeMessage);
     }
+    updateAIChatInputState();
+    updateAIStatusIndicator();
+}
+
+function updateAIChatInputState() {
+    const input = document.getElementById('aiQuestionInput');
+    const btn = document.getElementById('aiAskBtn');
+    if (!input || !btn) return;
+
+    if (!navigator.onLine) {
+        input.disabled = true;
+        input.placeholder = 'Palengke AI is offline. Connect to the internet to chat.';
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+    } else if (!getOpenAIApiKey()) {
+        input.disabled = false;
+        input.placeholder = 'Add OpenAI API key in Account Settings to chat...';
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+    } else {
+        input.disabled = false;
+        input.placeholder = 'Ask about meals, budgeting, or groceries...';
+        btn.disabled = false;
+        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+    }
 }
 
 // OpenAI API Configuration
-const OPENAI_API_KEY = localStorage.getItem('palengke_openai_key') || '';
 const OPENAI_MODEL = 'gpt-4o-mini'; // Cost-effective model with good performance
 
+function getOpenAIApiKey() {
+    return localStorage.getItem('palengke_openai_key') || '';
+}
+
+function isAIReady() {
+    return navigator.onLine && getOpenAIApiKey();
+}
+
+function updateAIStatusIndicator() {
+    const indicator = document.getElementById('aiStatusIndicator');
+    if (!indicator) return;
+
+    const apiKey = getOpenAIApiKey();
+
+    if (!navigator.onLine) {
+        indicator.textContent = 'offline';
+        indicator.className = 'text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-600';
+    } else if (!apiKey) {
+        indicator.textContent = 'no API key';
+        indicator.className = 'text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-600';
+    } else {
+        indicator.textContent = 'online';
+        indicator.className = 'text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600';
+    }
+}
+
+window.addEventListener('online', () => {
+    updateAIStatusIndicator();
+    updateAIChatInputState();
+});
+window.addEventListener('offline', () => {
+    updateAIStatusIndicator();
+    updateAIChatInputState();
+});
+
 async function generateAIResponseWithOpenAI(question) {
-    if (!OPENAI_API_KEY) {
-        return generateAIResponseFallback(question);
+    if (!navigator.onLine) {
+        return 'Palengke AI is unavailable while you are offline. Please connect to the internet to use the AI chat.';
+    }
+
+    const apiKey = getOpenAIApiKey();
+    if (!apiKey) {
+        return 'Please add your OpenAI API key in Account Settings to use Palengke AI. You can get a key from platform.openai.com';
     }
 
     const budget = parseFloat(document.getElementById('plannerBudget')?.value) || 0;
@@ -2195,7 +2270,7 @@ Be practical, culturally relevant to Filipino cooking and shopping, and always c
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPENAI_API_KEY}`
+                'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
                 model: OPENAI_MODEL,
@@ -2216,7 +2291,7 @@ Be practical, culturally relevant to Filipino cooking and shopping, and always c
         return data.choices[0].message.content;
     } catch (error) {
         console.error('OpenAI API error:', error);
-        return generateAIResponseFallback(question);
+        return 'Sorry, I could not connect to the AI service. Please check your OpenAI API key or try again later.';
     }
 }
 

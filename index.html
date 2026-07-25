@@ -820,7 +820,10 @@
                         <!-- CHAT HEADER -->
                         <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                             <div>
-                                <h3 class="text-xl font-semibold text-gray-800">Ask the AI</h3>
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-xl font-semibold text-gray-800">Ask the AI</h3>
+                                    <span id="aiStatusIndicator" class="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">checking...</span>
+                                </div>
                                 <p class="text-xs text-gray-500 mt-0.5">Answers are based on your current budget, family size, and meal plan.</p>
                             </div>
                             <button onclick="clearAIChatHistory()" class="text-gray-500 hover:text-gray-800 text-sm whitespace-nowrap">Clear chat</button>
@@ -1208,8 +1211,12 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
                 alert('OpenAI API key saved successfully!');
             } else {
                 localStorage.removeItem('palengke_openai_key');
-                alert('OpenAI API key removed. Using rule-based responses.');
+                alert('OpenAI API key removed.');
             }
+
+            // Update AI status and input state if functions are available
+            if (typeof updateAIStatusIndicator === 'function') updateAIStatusIndicator();
+            if (typeof updateAIChatInputState === 'function') updateAIChatInputState();
         }
 
         function exportAllData() {
