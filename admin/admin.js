@@ -372,6 +372,10 @@ async function publishPrices() {
     }
 
     try {
+        // Refresh the session so the admin JWT is current before the admin-only RPC
+        const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
+        if (sessionError || !sessionData.session) throw new Error('Admin session expired. Please log in again.');
+
         const newRows = validRows.map(r => ({
             source_date: date,
             item_name: r.item_name.trim(),
