@@ -2167,6 +2167,11 @@ function selectMarketItem(name, price, category, unit) {
         categoryEl.value = category;
     }
 
+    const unitEl = document.getElementById('itemUnit');
+    if (unitEl && unit) {
+        unitEl.value = unit;
+    }
+
     document.getElementById('marketPriceSuggestions').classList.add('hidden');
     document.getElementById('itemName').focus();
 }
