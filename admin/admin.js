@@ -36,6 +36,16 @@ async function loginAdmin() {
         return;
     }
 
+    // Ensure the profiles row is marked admin so RLS can authorize writes
+    const { error: profileError } = await supabaseClient
+        .from('profiles')
+        .upsert({
+            id: data.user.id,
+            role: 'admin',
+            updated_at: new Date().toISOString()
+        }, { onConflict: 'id' });
+    if (profileError) console.error('Profile upsert error:', profileError);
+
     currentSession = data.session;
     showDashboard();
 }

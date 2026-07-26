@@ -329,23 +329,23 @@ CREATE POLICY "Published prices are public"
     USING (published = true);
 
 -- Market prices: only authenticated admin users can create/update/delete
--- Admins are identified by app_metadata role = 'admin' set via Supabase Dashboard or edge function
+-- Admins are identified by profiles.role = 'admin'
 CREATE POLICY "Only admins can insert market prices"
     ON market_prices FOR INSERT
     WITH CHECK (
-        auth.jwt() -> 'app_metadata' ->> 'role' = 'admin'
+        auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
     );
 
 CREATE POLICY "Only admins can update market prices"
     ON market_prices FOR UPDATE
     USING (
-        auth.jwt() -> 'app_metadata' ->> 'role' = 'admin'
+        auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
     );
 
 CREATE POLICY "Only admins can delete market prices"
     ON market_prices FOR DELETE
     USING (
-        auth.jwt() -> 'app_metadata' ->> 'role' = 'admin'
+        auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
     );
 
 -- Create triggers for new tables
