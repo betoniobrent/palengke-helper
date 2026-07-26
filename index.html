@@ -872,7 +872,7 @@
                     <!-- Shopping Cart Section -->
                     <div class="lg:col-span-2 bg-gradient-to-br from-slate-50 to-gray-100 p-6 rounded-xl shadow-md border border-gray-200">
                         
-                        <div class="mb-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between">
+                        <div class="mb-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             <span class="text-sm font-bold text-emerald-800">📋 Tracking Target Routine:</span>
                             <select id="groceryCycle" class="border border-emerald-300 p-1.5 rounded-lg text-sm bg-white font-medium text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <option value="weekly" selected>Weekly Budget Interval (Lingguhan)</option>
@@ -897,12 +897,12 @@
 
                         <!-- Add Item Form -->
                         <div class="bg-white p-4 rounded-xl border border-gray-200 mb-4 shadow-sm">
-                            <div class="flex flex-col lg:flex-row gap-3">
-                                <input id="itemName" type="text" placeholder="Item Name" class="border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg flex-1 min-w-[180px] focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                                <input id="itemPrice" type="number" placeholder="Price (₱)" class="border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg w-full lg:w-32 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                                <input id="itemQuantity" type="number" placeholder="Qty" class="border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg w-full lg:w-24 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                                <input id="itemUnit" type="text" placeholder="Unit (kg, pc, tray)" class="border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg w-full lg:w-36 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                                <select id="itemCategory" class="border border-gray-300 p-2.5 rounded-lg bg-gray-50 w-full lg:w-48 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                                <input id="itemName" type="text" placeholder="Item Name" class='border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-emerald-500'>
+                                <input id="itemPrice" type="number" placeholder="Price (₱)" class='border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-emerald-500'>
+                                <input id="itemQuantity" type="number" placeholder="Qty" class='border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-emerald-500'>
+                                <input id="itemUnit" type="text" placeholder="Unit (kg, pc, tray)" class='border border-gray-300 bg-gray-50 text-gray-800 p-2.5 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-emerald-500'>
+                                <select id="itemCategory" class='border border-gray-300 p-2.5 rounded-lg bg-gray-50 w-full text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500'>
                                     <option value="meat">Meat & Fish (Karne / Isda)</option>
                                     <option value="vegetables">Vegetables & Fruits (Gulay / Prutas)</option>
                                     <option value="rice">Rice, Eggs & Grains (Bigas / Itlog)</option>
@@ -910,12 +910,12 @@
                                     <option value="other food">Canned & Packaged Goods</option>
                                     <option value="household">Household Essentials & Toiletries</option>
                                 </select>
-                                <button onclick="addItem()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-sm whitespace-nowrap">Add Item</button>
+                                <button onclick="addItem()" class='bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-2.5 rounded-lg font-semibold transition shadow-sm whitespace-nowrap w-full'>Add Item</button>
                             </div>
                         </div>
 
                         <!-- Cart Items -->
-                        <div class="space-y-3 max-h-[400px] overflow-y-auto pr-2" id="groceryCartItems">
+                        <div class='space-y-3 max-h-[55vh] lg:max-h-[400px] overflow-y-auto pr-2' id='groceryCartItems'>
                             <!-- Dynamic Cart Items -->
                         </div>
                     </div>

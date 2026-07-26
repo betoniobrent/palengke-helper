@@ -1912,8 +1912,8 @@ function renderGroceryItems(filteredItems = null) {
         card.innerHTML = `
             <div class="flex items-start gap-3">
                 <input type="checkbox" id="check-${index}" ${isChecked ? 'checked' : ''} onchange="toggleGroceryItemCheck(${index})" class="mt-1 w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer">
-                <div class="flex-1">
-                    <div class="flex justify-between items-start mb-2">
+                <div class='flex-1'>
+                    <div class='flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2'>
                         <div>
                             <h4 class="font-semibold text-gray-800 ${isChecked ? 'line-through text-gray-500' : ''}">${item.name}</h4>
                             <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">${item.category}</span>
@@ -1923,11 +1923,11 @@ function renderGroceryItems(filteredItems = null) {
                             <p class="text-xs text-gray-500">₱${parseFloat(item.price).toFixed(2)}/${item.unit || 'pc'} × ${item.quantity}</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 mt-2">
-                        <button onclick="updateGroceryQuantity(${index}, -1)" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">-</button>
+                    <div class='flex flex-wrap items-center gap-2 mt-2'>
+                        <button onclick="updateGroceryQuantity(${index}, -1)" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">-</button>
                         <span class="w-8 text-center font-medium">${item.quantity}</span>
-                        <button onclick="updateGroceryQuantity(${index}, 1)" class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">+</button>
-                        <button onclick="deleteItem(${index})" class="ml-auto text-rose-600 hover:text-rose-800 text-xs font-medium px-2 py-1 rounded hover:bg-rose-50 transition">Delete</button>
+                        <button onclick="updateGroceryQuantity(${index}, 1)" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">+</button>
+                        <button onclick='deleteItem(${index})' class='ml-auto text-rose-600 hover:text-rose-800 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-rose-50 transition'>Delete</button>
                     </div>
                 </div>
             </div>
