@@ -105,62 +105,132 @@ async function handlePdfUpload(e) {
     }
 }
 
-// Generic parser for DA Bantay Presyo-like text
-// Customize regex patterns below to match your PDF layout.
+// Parser for the DA Bantay Presyo Daily Price Index PDF layout.
+// Detects section headers, reads each commodity line with a trailing single price,
+// and skips header/footer lines, page numbers, and n/a entries.
 function parseBantayPresyoText(text) {
     const rows = [];
-    const lines = text.split('\n');
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l);
 
-    const categories = [
-        { key: 'rice', names: ['rice', 'bigas', 'nfa rice', 'well-milled rice', 'regular-milled rice'] },
-        { key: 'meat', names: ['meat', 'beef', 'pork', 'chicken', 'pork liempo', 'beef brisket', 'whole chicken'] },
-        { key: 'fish', names: ['fish', 'bangus', 'tilapia', 'galunggong', 'tuna', 'maya-maya', 'salmon'] },
-        { key: 'vegetables', names: ['vegetables', 'gulay', 'ampalaya', 'talong', 'okra', 'sitaw', 'kangkong', 'sayote', 'carrots'] },
-        { key: 'fruits', names: ['fruits', 'prutas', 'banana', 'mango', 'apple', 'pineapple', 'papaya', 'kalamansi'] },
-        { key: 'spices', names: ['spices', 'condiments', 'bawang', 'sibuyas', 'paminta', 'vinegar', 'soy sauce', 'patis'] },
-        { key: 'household', names: ['household', 'lpg', 'kerosene', 'charcoal', 'bath soap', 'detergent'] }
+    const skipPatterns = [
+        /^Page \d+ of \d+/i,
+        /^Department of Agriculture/i,
+        /^DAILY PRICE INDEX/i,
+        /^National Capital Region/i,
+        /^Prevailing Retail Price of Agri-fishery Commodities/i,
+        /^COMMODITY SPECIFICATION/i,
+        /^PREVAILING\b/i,
+        /^RETAIL PRICE PER/i,
+        /^UNIT\b/i,
+        /\b(January|February|March|April|May|June|July|August|September|October|November|December)\b.*\b20\d{2}\b/i
     ];
 
-    const unitRegex = /(kg|kilo|kilogram|pc|piece|pieces|tray|litro|liter|can|bottle|pack|sack|g)/i;
-    const priceRegex = /(?:Php?|₱|\$)?\s*(\d+(?:\.\d{1,2})?)\s*(?:-|\s+to\s+)\s*(?:Php?|₱|\$)?\s*(\d+(?:\.\d{1,2})?)/i;
+    const categoryMap = {
+        'IMPORTED COMMERCIAL RICE': 'rice',
+        'LOCAL COMMERCIAL RICE': 'rice',
+        'NFA RICE': 'rice',
+        'CORN PRODUCTS': 'other food',
+        'LEGUMES': 'other food',
+        'FISH PRODUCTS': 'fish',
+        'BEEF MEAT PRODUCTS': 'meat',
+        'PORK MEAT PRODUCTS': 'meat',
+        'POULTRY MEAT PRODUCTS': 'meat',
+        'OTHER LIVESTOCK MEAT PRODUCTS': 'meat',
+        'VEGETABLES': 'vegetables',
+        'FRUITS': 'fruits',
+        'SPICES': 'spices',
+        'CONDIMENTS': 'spices',
+        'HOUSEHOLD': 'household'
+    };
+
+    const unitRegex = /\b(kg|kilo|kilogram|pc|piece|pieces|tray|litro|liter|bottle|can|pack|sack)\b/i;
+    const trailingPriceRegex = /(\d+(?:\.\d{1,2})?)\s*$/;
+
+    function shouldSkip(line) {
+        return skipPatterns.some(p => p.test(line));
+    }
+
+    function isHeaderFragment(line) {
+        const letters = line.replace(/[^A-Za-z\s]/g, '').trim();
+        return letters.length > 2 && letters === letters.toUpperCase();
+    }
+
+    function normalizeHeader(line) {
+        return line.replace(/[^A-Za-z\s]/g, ' ').toUpperCase().replace(/\s+/g, ' ').trim();
+    }
+
+    function extractUnit(line) {
+        const m = line.match(unitRegex);
+        if (!m) return 'kg';
+        let u = m[1].toLowerCase();
+        if (u === 'kilo' || u === 'kilogram') u = 'kg';
+        if (u === 'piece' || u === 'pieces') u = 'pc';
+        if (u === 'liter') u = 'litro';
+        return u;
+    }
+
+    let currentCategory = 'other food';
+    let pendingHeader = '';
+    let pendingName = '';
 
     for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (!line || line.length < 5) continue;
+        let line = lines[i];
 
-        const priceMatch = line.match(priceRegex);
-        if (!priceMatch) continue;
-
-        const min = parseFloat(priceMatch[1]);
-        const max = parseFloat(priceMatch[2]);
-        if (isNaN(min) || isNaN(max)) continue;
-
-        let itemName = line.substring(0, priceMatch.index).trim();
-        itemName = itemName.replace(/\s+/g, ' ').replace(/[,;]$/, '');
-        if (!itemName) continue;
-
-        const lower = itemName.toLowerCase();
-        const unitMatch = lower.match(unitRegex);
-        let unit = unitMatch ? unitMatch[1].toLowerCase() : 'kg';
-        if (unit === 'kilo' || unit === 'kilogram') unit = 'kg';
-        if (unit === 'piece' || unit === 'pieces') unit = 'pc';
-        if (unit === 'liter') unit = 'litro';
-
-        let category = 'other food';
-        for (const cat of categories) {
-            if (cat.names.some(n => lower.includes(n))) {
-                category = cat.key;
-                break;
-            }
+        // Skip obvious headers/footers immediately
+        if (shouldSkip(line)) {
+            pendingHeader = '';
+            continue;
         }
+
+        // Accumulate and map uppercase section headers (handles multi-line headers)
+        if (isHeaderFragment(line)) {
+            pendingHeader = (pendingHeader + ' ' + line).trim();
+            continue;
+        }
+
+        if (pendingHeader) {
+            const headerKey = normalizeHeader(pendingHeader);
+            if (categoryMap[headerKey]) {
+                currentCategory = categoryMap[headerKey];
+            }
+            pendingHeader = '';
+        }
+
+        // Skip n/a-only lines while consuming a pending name fragment
+        if (/\bn\/a\b$/i.test(line)) {
+            pendingName = '';
+            continue;
+        }
+
+        const priceMatch = line.match(trailingPriceRegex);
+        if (!priceMatch) {
+            // This is likely a continuation of an item name (e.g., wrapped line)
+            pendingName = (pendingName + ' ' + line).trim();
+            continue;
+        }
+
+        const price = parseFloat(priceMatch[1]);
+        if (isNaN(price)) {
+            pendingName = '';
+            continue;
+        }
+
+        const itemPart = line.substring(0, priceMatch.index).trim();
+        const itemName = (pendingName + ' ' + itemPart).trim().replace(/\s+/g, ' ').replace(/[,;]$/, '');
+        pendingName = '';
+
+        if (!itemName || itemName.length < 2) continue;
+
+        // Ignore leftover page/date fragments that slipped through
+        if (/^Page \d+\b/i.test(itemName) || /^\(.*\d{4}\)/.test(itemName)) continue;
 
         rows.push({
             id: crypto.randomUUID(),
             item_name: itemName,
-            category: category,
-            unit: unit,
-            price_min: min,
-            price_max: max,
+            category: currentCategory,
+            unit: extractUnit(itemName),
+            price_min: price,
+            price_max: price,
             notes: ''
         });
     }
