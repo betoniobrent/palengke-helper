@@ -3032,6 +3032,7 @@ const CATEGORY_TAB_LABELS = {
     'household': '🧹 Household'
 };
 const CATEGORY_TAB_ORDER = ['rice', 'meat', 'fish', 'vegetables', 'fruits', 'spices', 'other food', 'household'];
+const CATEGORY_GROUP_ORDER = CATEGORY_TAB_ORDER;
 
 let ALL_PRICE_ITEMS = [];
 let ACTIVE_PRICE_GROUP = 'All';
