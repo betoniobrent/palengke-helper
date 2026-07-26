@@ -85,8 +85,31 @@ async function handlePdfUpload(e) {
         for (let i = 1; i <= pdf.numPages; i++) {
             const page = await pdf.getPage(i);
             const textContent = await page.getTextContent();
-            const pageText = textContent.items.map(item => item.str).join(' ');
-            fullText += pageText + '\n';
+
+            // pdf.js returns individual text fragments. Reassemble them into
+            // horizontal lines by grouping on the Y coordinate, so trailing
+            // prices and wrapped item names parse correctly.
+            const textItems = textContent.items
+                .filter(item => typeof item.str === 'string')
+                .map(item => ({
+                    str: item.str,
+                    x: item.transform[4],
+                    y: Math.round(item.transform[5])
+                }));
+
+            const linesByY = new Map();
+            textItems.forEach(item => {
+                if (!linesByY.has(item.y)) linesByY.set(item.y, []);
+                linesByY.get(item.y).push(item);
+            });
+
+            const sortedYs = Array.from(linesByY.keys()).sort((a, b) => b - a);
+            const pageLines = sortedYs.map(y => {
+                const lineItems = linesByY.get(y).sort((a, b) => a.x - b.x);
+                return lineItems.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim();
+            }).filter(line => line);
+
+            fullText += pageLines.join('\n') + '\n';
         }
 
         progressBar.style.width = '80%';
