@@ -2297,7 +2297,7 @@ function updateAIChatInputState() {
         btn.classList.add('opacity-50', 'cursor-not-allowed');
     } else if (!getOpenAIApiKey()) {
         input.disabled = false;
-        input.placeholder = 'Add OpenAI API key in Account Settings to chat...';
+        input.placeholder = 'Free mode — ask about meals, budgeting, or groceries...';
         btn.disabled = false;
         btn.classList.remove('opacity-50', 'cursor-not-allowed');
     } else {
@@ -2329,8 +2329,8 @@ function updateAIStatusIndicator() {
         indicator.textContent = 'offline';
         indicator.className = 'text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-600';
     } else if (!apiKey) {
-        indicator.textContent = 'no API key';
-        indicator.className = 'text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-600';
+        indicator.textContent = 'free mode';
+        indicator.className = 'text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600';
     } else {
         indicator.textContent = 'online';
         indicator.className = 'text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600';
@@ -2351,8 +2351,8 @@ function updateBoSarStatus() {
         status.textContent = 'offline';
         status.className = 'text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-600';
     } else if (!endpoint) {
-        status.textContent = 'configure endpoint';
-        status.className = 'text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-600';
+        status.textContent = 'free mode';
+        status.className = 'text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600';
     } else {
         status.textContent = 'ready';
         status.className = 'text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600';
@@ -2396,7 +2396,23 @@ async function processBoSarQuery() {
 
     const endpoint = getBoSarEndpoint();
     if (!endpoint) {
-        appendBoSarMessage('ai', 'Please set your Bo Sar Replit backend URL in Account Settings to use Bo Sar AI.');
+        if (!navigator.onLine) {
+            appendBoSarMessage('ai', 'Bo Sar AI is unavailable while you are offline. Please connect to the internet.');
+            return;
+        }
+
+        appendBoSarMessage('user', question);
+        input.value = '';
+
+        const typingId = 'bosar-typing-' + Date.now();
+        appendBoSarMessage('ai', '<span id="' + typingId + '">Typing...</span>');
+
+        setTimeout(() => {
+            const reply = generateAIResponseFallback(question);
+            const typingEl = document.getElementById(typingId);
+            if (typingEl) typingEl.parentElement.remove();
+            appendBoSarMessage('ai', reply);
+        }, 500);
         return;
     }
 
@@ -2629,7 +2645,11 @@ function generateAIResponseFallback(question) {
 }
 
 function generateAIResponse(question) {
-    return generateAIResponseWithOpenAI(question);
+    const apiKey = getOpenAIApiKey();
+    if (apiKey) {
+        return generateAIResponseWithOpenAI(question);
+    }
+    return generateAIResponseFallback(question);
 }
 
 // ==========================================
