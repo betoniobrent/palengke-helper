@@ -83,50 +83,44 @@
 
             <!-- REGISTER SUBSYSTEM VIEW -->
             <div id="registerBox" style="display: none;">
-                <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.75rem; color: #1f2937;">Register</h2>
+                <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Create your account</h2>
 
-                <input
-                    id="fullname"
-                    type="text"
-                    style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;"
-                    placeholder="Full Name"
-                >
-                <input
-                    id="email"
-                    type="email"
-                    style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;"
-                    placeholder="Email"
-                >
-                <input
-                    id="age"
-                    type="number"
-                    style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;"
-                    placeholder="Age"
-                >
-                <input
-                    id="address"
-                    type="text"
-                    style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;"
-                    placeholder="Address"
-                >
-                <input
-                    id="password"
-                    type="password"
-                    style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; margin-bottom: 0.5rem;"
-                    placeholder="Password"
-                >
+                <div class="space-y-4">
+                    <div>
+                        <label for="fullname" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <input id="fullname" type="text" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Juan Dela Cruz">
+                    </div>
 
-                <button
-                    type="button"
-                    onclick="registerWithEmail()"
-                    style="width: 100%; background: #047857; color: white; padding: 0.5rem; border-radius: 0.375rem; cursor: pointer;"
-                >
-                    Register
-                </button>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+                        <input id="email" type="email" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="you@example.com">
+                    </div>
 
-                <p style="margin-top: 0.75rem; text-align: center;">
-                    <a href="#" onclick="showLogin()" style="color: #047857; font-weight: bold; text-decoration: underline;">
-                        Back to Login
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="age" class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                            <input id="age" type="number" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="25">
+                        </div>
+                        <div>
+                            <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                            <input id="address" type="text" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="City / Barangay">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <input id="password" type="password" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Create a strong password">
+                    </div>
+
+                    <button type="button" onclick="registerWithEmail()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-xl transition shadow-sm">
+                        Register
+                    </button>
+                </div>
+
+                <p class="mt-6 text-center text-sm text-gray-600">
+                    Already have an account?
+                    <a href="#" onclick="showLogin()" class="text-emerald-600 font-semibold hover:underline">
+                        Sign in
                     </a>
                 </p>
             </div>
