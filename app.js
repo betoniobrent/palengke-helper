@@ -3173,7 +3173,11 @@ async function loadLiveMarketPrices() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadLiveMarketPrices);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadLiveMarketPrices);
+} else {
+    loadLiveMarketPrices();
+}
 
 // ==========================================
 // 8. HOME PAGE PRICE MOVEMENTS
