@@ -17,6 +17,9 @@ async function loginAdmin() {
     const password = document.getElementById('adminPassword').value.trim();
     const errorEl = document.getElementById('loginError');
 
+    // Clear any leftover session so signInWithPassword returns a fresh JWT
+    await supabaseClient.auth.signOut({ scope: 'local' }).catch(() => {});
+
     const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error) {
         errorEl.textContent = error.message;
