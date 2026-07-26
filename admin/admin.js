@@ -1,9 +1,5 @@
 // Palengke Helper+ Admin - Market Prices Management
-// IMPORTANT: Replace with your Supabase credentials before deploying.
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// The shared Supabase client (supabaseClient) is loaded from ../supabase.js.
 let parsedRows = [];
 let currentSession = null;
 

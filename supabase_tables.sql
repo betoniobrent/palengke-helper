@@ -240,6 +240,7 @@ CREATE TABLE profiles (
     address TEXT,
     phone TEXT,
     avatar_url TEXT,
+    role TEXT DEFAULT 'user',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -332,19 +333,19 @@ CREATE POLICY "Published prices are public"
 CREATE POLICY "Only admins can insert market prices"
     ON market_prices FOR INSERT
     WITH CHECK (
-        auth.jwt() ->> 'role' = 'admin'
+        auth.jwt() -> 'app_metadata' ->> 'role' = 'admin'
     );
 
 CREATE POLICY "Only admins can update market prices"
     ON market_prices FOR UPDATE
     USING (
-        auth.jwt() ->> 'role' = 'admin'
+        auth.jwt() -> 'app_metadata' ->> 'role' = 'admin'
     );
 
 CREATE POLICY "Only admins can delete market prices"
     ON market_prices FOR DELETE
     USING (
-        auth.jwt() ->> 'role' = 'admin'
+        auth.jwt() -> 'app_metadata' ->> 'role' = 'admin'
     );
 
 -- Create triggers for new tables
