@@ -3,6 +3,9 @@
 let parsedRows = [];
 let currentSession = null;
 
+// Replace with the URL of your deployed Cloudflare Worker (workers/da-proxy.js)
+const DA_PROXY_URL = 'https://YOUR_DA_PROXY_WORKER.workers.dev';
+
 // ================== AUTH ==================
 
 document.getElementById('adminLoginBtn').addEventListener('click', loginAdmin);
@@ -341,6 +344,57 @@ document.getElementById('addManualRowBtn').addEventListener('click', () => {
     });
     renderParsedTable();
 });
+
+document.getElementById('daFetchBtn').addEventListener('click', fetchDAPrices);
+
+async function fetchDAPrices() {
+    const statusEl = document.getElementById('daFetchStatus');
+    const commodity = document.getElementById('daCommodity').value;
+    const market = document.getElementById('daMarket').value;
+    const region = document.getElementById('daRegion').value.trim();
+
+    if (DA_PROXY_URL.includes('YOUR_DA_PROXY')) {
+        statusEl.textContent = 'Set DA_PROXY_URL in admin.js to your deployed Cloudflare Worker URL first.';
+        statusEl.className = 'text-sm mt-2 text-red-500';
+        statusEl.classList.remove('hidden');
+        return;
+    }
+
+    statusEl.textContent = 'Fetching prices from DA Bantay Presyo...';
+    statusEl.className = 'text-sm mt-2 text-emerald-600';
+    statusEl.classList.remove('hidden');
+
+    try {
+        const url = `${DA_PROXY_URL}?region=${encodeURIComponent(region)}&commodity=${encodeURIComponent(commodity)}&market=${encodeURIComponent(market)}`;
+        const res = await fetch(url, { method: 'GET' });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+        if (!data.rows || data.rows.length === 0) throw new Error('No prices returned for this market/commodity');
+
+        const date = data.date || new Date().toISOString().split('T')[0];
+        document.getElementById('priceDate').value = date;
+
+        data.rows.forEach(r => {
+            parsedRows.push({
+                id: crypto.randomUUID(),
+                item_name: r.item_name,
+                category: r.category,
+                unit: r.unit,
+                price_min: r.price_min,
+                price_max: r.price_max,
+                notes: r.notes
+            });
+        });
+
+        renderParsedTable();
+        statusEl.textContent = `Loaded ${data.rows.length} prices from ${data.market} (${data.date}).`;
+        statusEl.className = 'text-sm mt-2 text-emerald-600';
+    } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'Error fetching DA prices: ' + err.message;
+        statusEl.className = 'text-sm mt-2 text-red-500';
+    }
+}
 
 // ================== PUBLISH ==================
 

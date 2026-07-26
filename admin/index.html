@@ -47,6 +47,43 @@
                 </div>
             </div>
 
+            <!-- Step 1b: Fetch from DA Website -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold mb-4">1b. Or Fetch from DA Bantay Presyo Website</h2>
+                <p class="text-sm text-gray-600 mb-4">Load public prices directly from the DA Bantay Presyo website for Region IV-A (CALABARZON).</p>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+                    <select id="daCommodity" class="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white">
+                        <option value="6" selected>Highland Vegetables</option>
+                        <option value="7">Lowland Vegetables</option>
+                        <option value="4">Fish</option>
+                        <option value="8">Meat and Poultry</option>
+                        <option value="5">Fruits</option>
+                        <option value="1">Rice</option>
+                        <option value="9">Spices</option>
+                        <option value="3">Legumes</option>
+                        <option value="2">Corn</option>
+                        <option value="10">Other Commodities</option>
+                    </select>
+                    <select id="daMarket" class="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white">
+                        <option value="SAN PABLO CITY PUBLIC MARKET" selected>San Pablo City Public Market</option>
+                        <option value="TANZA PUBLIC MARKET">Tanza Public Market</option>
+                        <option value="BINAN CITY PUBLIC MARKET">Binan City Public Market</option>
+                        <option value="TANAY PUBLIC MARKET">Tanay Public Market</option>
+                        <option value="LIPA CITY PUBLIC MARKET">Lipa City Public Market</option>
+                        <option value="LUCENA CITY PUBLIC MARKET">Lucena City Public Market</option>
+                        <option value="IMUS PUBLIC MARKET">Imus Public Market</option>
+                        <option value="JULIAN PASTOR MEMORIAL MARKET">Julian Pastor Memorial Market</option>
+                        <option value="CITY MALL OF ANTIPOLO">City Mall of Antipolo</option>
+                        <option value="TIAONG PUBLIC MARKET">Tiaong Public Market</option>
+                        <option value="TAYABAS PUBLIC MARKET">Tayabas Public Market</option>
+                        <option value="SARIAYA PUBLIC MARKET">Sariaya Public Market</option>
+                    </select>
+                    <input id="daRegion" type="text" value="040000000" class="border border-gray-200 rounded-lg px-3 py-2 text-sm" title="Region IV-A CALABARZON">
+                    <button id="daFetchBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition">Fetch DA Prices</button>
+                </div>
+                <p id="daFetchStatus" class="text-sm hidden"></p>
+            </div>
+
             <!-- Step 2: Review & Normalize -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex items-center justify-between mb-4">
@@ -90,6 +127,6 @@
     </div>
 
     <script src="../supabase.js?v=2"></script>
-    <script src="admin.js?v=2"></script>
+    <script src="admin.js?v=3"></script>
 </body>
 </html>
