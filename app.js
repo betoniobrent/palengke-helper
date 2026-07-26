@@ -981,6 +981,8 @@ async function ensureUserProfile(user) {
                 id: user.id,
                 email: user.email,
                 full_name: user.user_metadata?.full_name || user.user_metadata?.name || '',
+                age: user.user_metadata?.age || null,
+                address: user.user_metadata?.address || '',
                 role: user.app_metadata?.role || 'user',
                 updated_at: new Date().toISOString()
             }, { onConflict: 'id' });
@@ -1033,6 +1035,8 @@ async function registerWithEmail() {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
     const fullname = document.getElementById('fullname').value.trim();
+    const age = document.getElementById('age')?.value ? parseInt(document.getElementById('age').value) : null;
+    const address = document.getElementById('address')?.value?.trim() || '';
 
     if (!email || !password) {
         showNotification('Please enter both email and password.', 'error');
@@ -1045,7 +1049,9 @@ async function registerWithEmail() {
             password: password,
             options: {
                 data: {
-                    full_name: fullname
+                    full_name: fullname,
+                    age: age,
+                    address: address
                 }
             }
         });
@@ -1113,13 +1119,13 @@ async function loginWithEmail() {
     }
 }
 
-// Google OAuth login
+// Google OAuth login/registration
 async function loginWithGoogle() {
     try {
         const { data, error } = await supabaseClient.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: window.location.origin,
+                redirectTo: window.location.href.split('#')[0],
                 queryParams: {
                     access_type: 'offline',
                     prompt: 'consent',

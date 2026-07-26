@@ -1210,7 +1210,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
 
             // Populate account info
             const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
-            document.getElementById('settingsEmail').textContent = session.email || 'guest@local';
+            document.getElementById('settingsEmail').textContent = session.user || session.email || 'guest@local';
             document.getElementById('settingsRole').textContent = session.role || 'guest';
 
             // Load OpenAI API key
