@@ -372,7 +372,6 @@ async function publishPrices() {
     }
 
     try {
-        // Insert new rows as drafts (published = false)
         const newRows = validRows.map(r => ({
             source_date: date,
             item_name: r.item_name.trim(),
@@ -380,35 +379,15 @@ async function publishPrices() {
             unit: r.unit,
             price_min: r.price_min,
             price_max: r.price_max,
-            notes: r.notes,
-            published: false,
-            created_by: currentSession.user.id
+            notes: r.notes
         }));
 
-        const { data: inserted, error: insertError } = await supabaseClient
-            .from('market_prices')
-            .insert(newRows)
-            .select('id');
-
-        if (insertError) throw insertError;
-
-        // Unpublish all previously published prices, then publish the new batch
-        const { error: unpublishError } = await supabaseClient
-            .from('market_prices')
-            .update({ published: false })
-            .eq('published', true);
-
-        if (unpublishError) throw unpublishError;
-
-        const newIds = inserted.map(i => i.id);
-        const { error: publishError } = await supabaseClient
-            .from('market_prices')
-            .update({ published: true, published_at: new Date().toISOString() })
-            .in('id', newIds);
+        const { data: count, error: publishError } = await supabaseClient
+            .rpc('publish_market_prices', { rows: newRows });
 
         if (publishError) throw publishError;
 
-        statusEl.textContent = `Success! Published ${newRows.length} prices for ${date}.`;
+        statusEl.textContent = `Success! Published ${count} prices for ${date}.`;
         statusEl.className = 'text-sm mt-3 text-emerald-600';
         statusEl.classList.remove('hidden');
         publishBtn.textContent = 'Published';
