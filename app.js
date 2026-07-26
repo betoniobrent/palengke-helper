@@ -1016,18 +1016,80 @@ async function logout() {
     location.reload();
 }
 
+function hideAuthBoxes() {
+    ['loginBox', 'registerBox', 'forgotPasswordBox', 'resetPasswordBox'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+}
+
 function showRegister() {
-    const loginBox = document.getElementById('loginBox');
+    hideAuthBoxes();
     const registerBox = document.getElementById('registerBox');
-    if (loginBox) loginBox.style.display = 'none';
     if (registerBox) registerBox.style.display = 'block';
 }
 
+function showForgotPassword() {
+    hideAuthBoxes();
+    const forgotPasswordBox = document.getElementById('forgotPasswordBox');
+    if (forgotPasswordBox) forgotPasswordBox.style.display = 'block';
+}
+
+function showResetPassword() {
+    hideAuthBoxes();
+    const resetPasswordBox = document.getElementById('resetPasswordBox');
+    if (resetPasswordBox) resetPasswordBox.style.display = 'block';
+}
+
 function showLogin() {
+    hideAuthBoxes();
     const loginBox = document.getElementById('loginBox');
-    const registerBox = document.getElementById('registerBox');
-    if (registerBox) registerBox.style.display = 'none';
     if (loginBox) loginBox.style.display = 'block';
+}
+
+async function sendPasswordReset() {
+    const email = document.getElementById('forgotEmail').value.trim();
+    if (!email) {
+        showNotification('Please enter your email address.', 'error');
+        return;
+    }
+    try {
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.href.split('#')[0]
+        });
+        if (error) {
+            showNotification('Error sending reset link: ' + error.message, 'error');
+            return;
+        }
+        showNotification('Password reset link sent. Check your email.', 'success');
+        document.getElementById('forgotEmail').value = '';
+    } catch (err) {
+        showNotification('An unexpected error occurred.', 'error');
+        console.error(err);
+    }
+}
+
+async function updatePassword() {
+    const newPassword = document.getElementById('newPassword').value.trim();
+    if (!newPassword || newPassword.length < 6) {
+        showNotification('Password must be at least 6 characters.', 'error');
+        return;
+    }
+    try {
+        const { error } = await supabaseClient.auth.updateUser({ password: newPassword });
+        if (error) {
+            showNotification('Error updating password: ' + error.message, 'error');
+            return;
+        }
+        showNotification('Password updated successfully. Please log in.', 'success');
+        setTimeout(() => {
+            localStorage.removeItem('palengke_session');
+            location.reload();
+        }, 1500);
+    } catch (err) {
+        showNotification('An unexpected error occurred.', 'error');
+        console.error(err);
+    }
 }
 
 // Supabase-based registration using email & password
@@ -1188,8 +1250,14 @@ async function handleOAuthCallback() {
     }
 }
 
-// Check for OAuth callback on page load
+// Check for OAuth callback or password recovery on page load
 window.addEventListener('load', () => {
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const type = hashParams.get('type');
+    if (type === 'recovery') {
+        showResetPassword();
+        return;
+    }
     if (window.location.hash && window.location.hash.includes('access_token')) {
         handleOAuthCallback();
     }
