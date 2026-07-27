@@ -12,6 +12,7 @@ app = Flask(__name__)
 CORS(app, origins=["*"])
 
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-pro")
 genai.configure(api_key=GOOGLE_API_KEY)
 
 ASSISTANT_INSTRUCTIONS = """You are Bo Sar, a wise and practical Filipino market-shopping and meal-planning assistant embedded in Palengke Helper+.
@@ -55,7 +56,7 @@ def chat():
     threads[thread_id].append({"role": "user", "parts": [user_content]})
 
     try:
-        model = genai.GenerativeModel("gemini-1.5-flash-latest")
+        model = genai.GenerativeModel(MODEL_NAME)
         # Use previous turns as history, then send the latest user message
         history = threads[thread_id][:-1][-10:]
         chat_session = model.start_chat(history=history)
