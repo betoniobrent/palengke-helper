@@ -395,50 +395,19 @@ function renderRecipeSelector(){
         </div>
     `;
 
-    filteredRecipes.forEach(recipe=>{
-
-        container.innerHTML+=`
-
-        <div
-        class="bg-white border rounded-xl overflow-hidden hover:shadow cursor-pointer"
-
-        data-recipe-id="${recipe.id}"
-        onclick="selectRecipe(${recipe.id})">
-
-            <img
-
-            src="${recipe.image}"
-
-            class="h-40 w-full object-cover">
-
-            <div class="p-4">
-
-                <h4 class="font-bold">
-
-                    ${recipe.name}
-
-                </h4>
-
-                <p class="text-sm text-gray-500">
-
-                    ₱${recipe.estimatedCost}
-
-                </p>
-
-                <p class="text-sm text-gray-500">
-
-                    ${recipe.servings} Pax
-
-                </p>
-
-                <p class="text-xs text-gray-400 mt-2">${recipe.mealType.join(', ')}</p>
-
+    filteredRecipes.forEach(recipe => {
+        container.innerHTML += `
+            <div
+                class="bg-white border rounded-xl p-5 hover:shadow cursor-pointer transition"
+                data-recipe-id="${recipe.id}"
+                onclick="selectRecipe(${recipe.id})">
+                <h4 class="font-bold text-lg text-gray-800 mb-1">${recipe.name}</h4>
+                <p class="text-emerald-600 font-semibold mb-2">₱${recipe.estimatedCost}</p>
+                <p class="text-sm text-gray-500 mb-1">${recipe.servings} pax · ${recipe.difficulty} · ${recipe.prepTime} prep / ${recipe.cookTime} cook</p>
+                <p class="text-xs text-gray-400 mt-1">${(recipe.ingredients || []).slice(0, 4).join(', ')}${(recipe.ingredients || []).length > 4 ? '...' : ''}</p>
+                <p class="text-xs text-emerald-600 mt-2 font-medium uppercase tracking-wide">${recipe.mealType.join(' · ')}</p>
             </div>
-
-        </div>
-
         `;
-
     });
 }
 
@@ -724,11 +693,15 @@ function showRecipeDetails(recipe){
     if (!modal || !content) return;
 
     content.innerHTML = `
-        <div class="grid md:grid-cols-[1.2fr_1fr] gap-6">
-            <div>
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 mb-6">
                 <h3 class="text-2xl font-bold text-gray-800 mb-2">${recipe.name}</h3>
-                <p class="text-sm text-gray-500 mb-4">Serves ${recipe.servings} pax · ₱${recipe.estimatedCost} · ${recipe.difficulty} · Prep ${recipe.prepTime} · Cook ${recipe.cookTime}</p>
-                <div class="mb-4">
+                <p class="text-emerald-700 font-semibold text-lg mb-1">₱${recipe.estimatedCost}</p>
+                <p class="text-sm text-gray-600 mb-3">${recipe.servings} pax · ${recipe.difficulty} · ${recipe.prepTime} prep · ${recipe.cookTime} cook</p>
+                <p class="text-sm text-gray-600">Base estimate for ${recipe.servings} pax is ₱${recipe.estimatedCost} (₱${(recipe.estimatedCost / recipe.servings).toFixed(2)} per pax).</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
                     <h4 class="font-semibold text-gray-800 mb-2">Ingredients</h4>
                     <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
                         ${recipe.ingredients.map(item => `<li>${item}</li>`).join('')}
@@ -739,14 +712,6 @@ function showRecipeDetails(recipe){
                     <ol class="list-decimal list-inside text-sm text-gray-700 space-y-2">
                         ${recipe.instructions.map(item => `<li>${item}</li>`).join('')}
                     </ol>
-                </div>
-            </div>
-            <div class="space-y-4">
-                <img src="${recipe.image}" alt="${recipe.name}" class="w-full rounded-2xl h-64 object-cover border border-gray-200">
-                <div class="bg-gray-100 rounded-2xl p-4">
-                    <h4 class="font-semibold text-gray-800 mb-2">Price Details</h4>
-                    <p class="text-sm text-gray-700">Base estimate for ${recipe.servings} pax is ₱${recipe.estimatedCost}.</p>
-                    <p class="text-sm text-gray-700 mt-2">Per pax estimate: ₱${(recipe.estimatedCost / recipe.servings).toFixed(2)}</p>
                 </div>
             </div>
         </div>
