@@ -3160,11 +3160,11 @@ async function loadLiveMarketPrices() {
         const latestDate = items[0]?.source_date;
         if (updatedLabel) {
             updatedLabel.textContent = latestDate
-                ? `Official DA Bantay Presyo rates — NCR, as of ${new Date(latestDate).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}.`
+                ? `Official DA Bantay Presyo rates — Region 4-A (CALABARZON), as of ${new Date(latestDate).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}.`
                 : 'Official DA Bantay Presyo reference rates.';
         }
         if (statusBadge) {
-            statusBadge.textContent = '● Live DA Bantay Presyo (NCR)';
+            statusBadge.textContent = '● Live DA Bantay Presyo (Region 4-A)';
             statusBadge.className = 'bg-emerald-50 text-emerald-800 font-bold text-xs px-3 py-1.5 rounded-full whitespace-nowrap';
         }
 

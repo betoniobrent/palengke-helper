@@ -270,7 +270,7 @@ CREATE TABLE market_prices (
             ELSE NULL
         END
     ) STORED,
-    region TEXT DEFAULT 'NCR',           -- Optional: region the price applies to
+    region TEXT DEFAULT 'Region 4-A',    -- Optional: region the price applies to
     notes TEXT,                          -- Manual override notes, e.g. "Palengke price higher than DA"
     published BOOLEAN DEFAULT false,     -- false = admin draft, true = visible to users
     published_at TIMESTAMP WITH TIME ZONE,
