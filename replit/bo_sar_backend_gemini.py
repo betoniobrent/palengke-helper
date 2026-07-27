@@ -56,10 +56,11 @@ def chat():
 
     try:
         model = genai.GenerativeModel("gemini-1.5-flash")
-        # Keep recent turns to stay within context limits
-        contents = threads[thread_id][-10:]
-        response = model.generate_content(contents=contents)
-        reply = response.text
+        # Use previous turns as history, then send the latest user message
+        history = threads[thread_id][:-1][-10:]
+        chat_session = model.start_chat(history=history)
+        response = chat_session.send_message(threads[thread_id][-1]["parts"][0])
+        reply = response.text if response and response.candidates else "Sorry, I couldn't generate a safe response. Try rephrasing."
         threads[thread_id].append({"role": "model", "parts": [reply]})
         return jsonify({"reply": reply, "thread_id": thread_id})
     except Exception as e:
