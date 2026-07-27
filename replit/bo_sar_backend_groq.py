@@ -11,7 +11,7 @@ app = Flask(__name__)
 CORS(app, origins=["*"])
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-MODEL_NAME = os.environ.get("GROQ_MODEL", "gemma2-9b-it")
+MODEL_NAME = os.environ.get("GROQ_MODEL", "llama-3.1-8b-instant")
 
 ASSISTANT_INSTRUCTIONS = """You are Bo Sar, a wise and practical Filipino market-shopping and meal-planning assistant embedded in Palengke Helper+.
 
@@ -43,20 +43,21 @@ def chat():
     if thread_id not in threads:
         threads[thread_id] = [{"role": "system", "content": ASSISTANT_INSTRUCTIONS}]
 
-    full_message = message
-    if context:
-        full_message = f"Context:\n{context}\n\nQuestion:\n{message}"
-
-    threads[thread_id].append({"role": "user", "content": full_message})
+    threads[thread_id].append({"role": "user", "content": message})
 
     try:
         # Keep conversation from growing too large while preserving the system prompt
         history = threads[thread_id]
         recent = history if len(history) <= 6 else [history[0]] + history[-5:]
+
+        # Prepend the latest context only to the current user message
+        if context and recent[-1]["role"] == "user":
+            recent[-1]["content"] = f"Context:\n{context}\n\nQuestion:\n{recent[-1]['content']}"
+
         response = client.chat.completions.create(
             model=MODEL_NAME,
             messages=recent,
-            max_tokens=400,
+            max_tokens=500,
             temperature=0.7
         )
         reply = response.choices[0].message.content
