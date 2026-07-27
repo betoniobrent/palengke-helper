@@ -43,6 +43,7 @@ def chat():
     data = request.get_json() or {}
     message = data.get("message", "").strip()
     thread_id = data.get("thread_id")
+    context = data.get("context", "").strip()
 
     if not message:
         return jsonify({"error": "message is required"}), 400
@@ -56,10 +57,14 @@ def chat():
         else:
             thread = client.beta.threads.retrieve(thread_id)
 
+        full_message = message
+        if context:
+            full_message = f"Context:\n{context}\n\nQuestion:\n{message}"
+
         client.beta.threads.messages.create(
             thread_id=thread_id,
             role="user",
-            content=message,
+            content=full_message,
         )
 
         run = client.beta.threads.runs.create(

@@ -10,6 +10,12 @@
 let currentActiveMonthId = null;
 let activeSpecificationFilter = 'all';
 
+// Palengke AI backend thread ID (preserves conversation)
+let palengkeAIThreadId = localStorage.getItem('palengke_ai_thread') || '';
+
+// Set this to your deployed Bo Sar backend URL (Replit, Render, etc.)
+const BO_SAR_BACKEND_URL = 'https://YOUR_BO_SAR_BACKEND_URL';
+
 // Notification System
 function showNotification(message, type = 'info') {
     // Remove existing notification if any
@@ -2279,28 +2285,20 @@ async function processAISuggestionQuery() {
     const question = questionInput.value.trim();
     if (!question) return;
 
-    // Check AI readiness
     if (!navigator.onLine) {
         appendChatMessage('ai', 'Palengke AI is unavailable while you are offline. Please connect to the internet to chat.');
         return;
     }
 
-    if (!getOpenAIApiKey()) {
-        appendChatMessage('ai', 'Please add your OpenAI API key in Account Settings to use Palengke AI.');
-        return;
-    }
-
     appendChatMessage('user', question);
     questionInput.value = '';
-    
-    // Show typing indicator
+
     const typingId = 'ai-typing-' + Date.now();
     appendChatMessage('ai', '<span id="' + typingId + '">Typing...</span>');
     chatHistory.scrollTop = chatHistory.scrollHeight;
-    
+
     try {
         const responseText = await generateAIResponse(question);
-        // Remove typing indicator and add real response
         const typingEl = document.getElementById(typingId);
         if (typingEl) typingEl.parentElement.remove();
         appendChatMessage('ai', responseText);
@@ -2308,7 +2306,7 @@ async function processAISuggestionQuery() {
         console.error('AI response error:', error);
         const typingEl = document.getElementById(typingId);
         if (typingEl) typingEl.parentElement.remove();
-        appendChatMessage('ai', 'Sorry, I could not connect to the AI service. Please check your OpenAI API key or try again later.');
+        appendChatMessage('ai', 'Sorry, I could not connect to Palengke AI. Please try again later.');
     }
 
     chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -2374,14 +2372,9 @@ function updateAIChatInputState() {
         input.placeholder = 'Palengke AI is offline. Connect to the internet to chat.';
         btn.disabled = true;
         btn.classList.add('opacity-50', 'cursor-not-allowed');
-    } else if (!getOpenAIApiKey()) {
-        input.disabled = false;
-        input.placeholder = 'Free mode — ask about meals, budgeting, or groceries...';
-        btn.disabled = false;
-        btn.classList.remove('opacity-50', 'cursor-not-allowed');
     } else {
         input.disabled = false;
-        input.placeholder = 'Ask about meals, budgeting, or groceries...';
+        input.placeholder = 'Ask about meals, budgeting, palengke, or groceries...';
         btn.disabled = false;
         btn.classList.remove('opacity-50', 'cursor-not-allowed');
     }
@@ -2402,16 +2395,11 @@ function updateAIStatusIndicator() {
     const indicator = document.getElementById('aiStatusIndicator');
     if (!indicator) return;
 
-    const apiKey = getOpenAIApiKey();
-
     if (!navigator.onLine) {
         indicator.textContent = 'offline';
         indicator.className = 'text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-600';
-    } else if (!apiKey) {
-        indicator.textContent = 'free mode';
-        indicator.className = 'text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600';
     } else {
-        indicator.textContent = 'online';
+        indicator.textContent = 'ready';
         indicator.className = 'text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600';
     }
 }
@@ -2724,11 +2712,35 @@ function generateAIResponseFallback(question) {
 }
 
 function generateAIResponse(question) {
-    const apiKey = getOpenAIApiKey();
-    if (apiKey) {
-        return generateAIResponseWithOpenAI(question);
+    return generateAIResponseWithBackend(question);
+}
+
+async function generateAIResponseWithBackend(question) {
+    if (!navigator.onLine) {
+        return 'Palengke AI is unavailable while you are offline. Please connect to the internet to chat.';
     }
-    return generateAIResponseFallback(question);
+    if (BO_SAR_BACKEND_URL.includes('YOUR_BO_SAR_BACKEND_URL')) {
+        return 'Palengke AI backend is not configured. The developer needs to set BO_SAR_BACKEND_URL in app.js.';
+    }
+
+    const context = [buildMealPlanContext(), buildMarketPriceContext(), buildRecipeContext()].join('\n\n');
+    try {
+        const response = await fetch(BO_SAR_BACKEND_URL.replace(/\/$/, '') + '/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: question, thread_id: palengkeAIThreadId, context: context })
+        });
+        const data = await response.json();
+        if (!response.ok || data.error) throw new Error(data.error || `HTTP ${response.status}`);
+        if (data.thread_id) {
+            palengkeAIThreadId = data.thread_id;
+            localStorage.setItem('palengke_ai_thread', palengkeAIThreadId);
+        }
+        return data.reply || 'No response from Palengke AI.';
+    } catch (error) {
+        console.error('Palengke AI backend error:', error);
+        return 'Sorry, I could not connect to Palengke AI. Please try again later.';
+    }
 }
 
 // ==========================================
@@ -3656,3 +3668,22 @@ document.getElementById('exportCsvBtn').addEventListener('click', function() {
     downloadAnchor.click();
     document.body.removeChild(downloadAnchor);
 });
+
+// PWA install helpers and service worker registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker registered:', reg.scope))
+            .catch(err => console.error('Service Worker registration failed:', err));
+    });
+}
+
+function openPwaInstallModal() {
+    const modal = document.getElementById('pwaInstallModal');
+    if (modal) modal.classList.remove('hidden');
+}
+
+function closePwaInstallModal() {
+    const modal = document.getElementById('pwaInstallModal');
+    if (modal) modal.classList.add('hidden');
+}
