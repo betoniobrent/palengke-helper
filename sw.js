@@ -1,4 +1,4 @@
-const CACHE_NAME = 'palengke-helper-v1';
+const CACHE_NAME = 'palengke-helper-v2';
 
 const STATIC_ASSETS = [
   '/',
@@ -7,6 +7,7 @@ const STATIC_ASSETS = [
   '/app.js',
   '/supabase.js',
   '/data/recipes.js',
+  '/data/prices.json',
   '/manifest.json',
   '/icon.svg'
 ];
@@ -28,7 +29,7 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(cached => {
+    caches.match(event.request, {ignoreSearch: true}).then(cached => {
       return cached || fetch(event.request).catch(() => {
         if (event.request.mode === 'navigate') {
           return caches.match('/index.html');
