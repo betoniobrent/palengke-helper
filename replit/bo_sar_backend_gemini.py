@@ -55,7 +55,7 @@ def chat():
     threads[thread_id].append({"role": "user", "parts": [user_content]})
 
     try:
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-1.5-flash-latest")
         # Use previous turns as history, then send the latest user message
         history = threads[thread_id][:-1][-10:]
         chat_session = model.start_chat(history=history)
