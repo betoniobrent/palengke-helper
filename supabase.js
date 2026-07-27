@@ -4,7 +4,7 @@
  */
 
 const SUPABASE_URL = 'https://hurqvygjmaamrynuptuo.supabase.co';
-const SUPABASE_PUBLIC_KEY = 'sb_publishable_5uEs9q8sYfr8fR9OBZGxXA_c6nQ2QGD';
+const SUPABASE_PUBLIC_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1cnF2eWdqbWFhbXJ5bnVwdHVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2MTIyNjcsImV4cCI6MjEwMDE4ODI2N30.PfC0t1-FGAlu_TUwXTRvGWcy5D6SlPoqWpqvtkKZMAg';
 
 let supabaseClient;
 
