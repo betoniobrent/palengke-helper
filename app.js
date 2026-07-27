@@ -14,7 +14,7 @@ let activeSpecificationFilter = 'all';
 let palengkeAIThreadId = localStorage.getItem('palengke_ai_thread') || '';
 
 // Set this to your deployed Bo Sar backend URL (Replit, Render, etc.)
-const BO_SAR_BACKEND_URL = 'https://YOUR_BO_SAR_BACKEND_URL';
+const BO_SAR_BACKEND_URL = 'https://palengke-helper-gemini.onrender.com';
 
 // Notification System
 function showNotification(message, type = 'info') {
