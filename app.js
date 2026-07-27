@@ -1908,6 +1908,17 @@ function setGroceryData(data) {
     localStorage.setItem('groceryItems', JSON.stringify(data));
 }
 
+function getItemUnitPrice(item) {
+    const basePrice = parseFloat(item.basePrice !== undefined ? item.basePrice : item.price) || 0;
+    const piecesPerKg = parseFloat(item.piecesPerKg) || 0;
+    const unit = (item.unit || '').toString().toLowerCase();
+    const isPiece = unit === 'pc' || unit === 'piece' || unit === 'pcs';
+    if (isPiece && piecesPerKg > 0 && basePrice > 0) {
+        return basePrice / piecesPerKg;
+    }
+    return basePrice;
+}
+
 async function saveGroceryListToSupabase() {
     try {
         const { data: sessionData } = await supabaseClient.auth.getSession();
@@ -1915,7 +1926,7 @@ async function saveGroceryListToSupabase() {
         if (!user) return;
 
         const items = getGroceryData();
-        const totalCost = items.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
+        const totalCost = items.reduce((acc, i) => acc + ((getItemUnitPrice(i)) * (parseFloat(i.quantity) || 0)), 0);
 
         const { error } = await supabaseClient
             .from('user_grocery_lists')
@@ -1964,7 +1975,7 @@ function renderGroceryItems(filteredItems = null) {
     let totalCost = 0;
 
     items.forEach((item, index) => {
-        const subtotal = item.price * item.quantity;
+        const subtotal = getItemUnitPrice(item) * item.quantity;
         totalCost += subtotal;
         const isChecked = item.checked || false;
 
@@ -1981,7 +1992,7 @@ function renderGroceryItems(filteredItems = null) {
                         </div>
                         <div class="text-right">
                             <p class="font-bold text-emerald-700">₱${subtotal.toFixed(2)}</p>
-                            <p class="text-xs text-gray-500">₱${parseFloat(item.price).toFixed(2)}/${item.unit || 'pc'} × ${item.quantity}</p>
+                            <p class="text-xs text-gray-500">₱${getItemUnitPrice(item).toFixed(2)}/${item.unit || 'pc'} × ${item.quantity}</p>
                         </div>
                     </div>
                     <div class='flex flex-wrap items-center gap-2 mt-2'>
@@ -2000,11 +2011,11 @@ function renderGroceryItems(filteredItems = null) {
 }
 
 function updateCartSummary(items) {
-    const totalCost = items.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
+    const totalCost = items.reduce((acc, i) => acc + ((getItemUnitPrice(i)) * (parseFloat(i.quantity) || 0)), 0);
     const checkedItems = items.filter(i => i.checked);
-    const checkedCost = checkedItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
+    const checkedCost = checkedItems.reduce((acc, i) => acc + ((getItemUnitPrice(i)) * (parseFloat(i.quantity) || 0)), 0);
     const remainingItems = items.filter(i => !i.checked);
-    const remainingCost = remainingItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
+    const remainingCost = remainingItems.reduce((acc, i) => acc + ((getItemUnitPrice(i)) * (parseFloat(i.quantity) || 0)), 0);
 
     document.getElementById('totalCost').innerText = `₱${totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
     document.getElementById('totalItems').innerText = items.length;
@@ -2078,7 +2089,8 @@ function clearAllGroceryItems() {
 }
 
 function addItem() {
-    const name = document.getElementById('itemName').value.trim();
+    const nameEl = document.getElementById('itemName');
+    const name = nameEl.value.trim();
     const price = parseFloat(document.getElementById('itemPrice').value);
     const quantity = parseFloat(document.getElementById('itemQuantity').value);
     const unit = document.getElementById('itemUnit').value.trim() || 'pc';
@@ -2089,12 +2101,17 @@ function addItem() {
         return;
     }
 
+    const basePrice = parseFloat(nameEl.dataset.basePrice) || price;
+    const piecesPerKg = parseFloat(nameEl.dataset.piecesPerKg) || null;
+
     const items = getGroceryData();
-    items.push({ name, price, quantity, unit, category, checked: false });
+    items.push({ name, price, quantity, unit, category, checked: false, basePrice, piecesPerKg });
     setGroceryData(items);
 
     // Clear dynamic operational field nodes
-    document.getElementById('itemName').value = '';
+    nameEl.value = '';
+    delete nameEl.dataset.basePrice;
+    delete nameEl.dataset.piecesPerKg;
     document.getElementById('itemPrice').value = '';
     document.getElementById('itemQuantity').value = '1';
     document.getElementById('itemUnit').value = '';
@@ -2169,8 +2186,24 @@ function searchGroceryItemsWithMarket() {
 }
 
 // Select market price item and populate form
+function parsePiecesPerKg(name) {
+    if (!name) return 0;
+    const rangeMatch = name.match(/(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*(?:pcs?|pieces?)\s*(?:\/|\\)?\s*(?:per\s*)?kg/i);
+    if (rangeMatch) {
+        return (parseFloat(rangeMatch[1]) + parseFloat(rangeMatch[2])) / 2;
+    }
+    const singleMatch = name.match(/(\d+(?:\.\d+)?)\s*(?:pcs?|pieces?)\s*(?:\/|\\)?\s*(?:per\s*)?kg/i);
+    if (singleMatch) {
+        return parseFloat(singleMatch[1]);
+    }
+    return 0;
+}
+
 function selectMarketItem(name, price, category, unit) {
     document.getElementById('itemName').value = name;
+    document.getElementById('itemName').dataset.basePrice = price.toFixed(4);
+    const piecesPerKg = parsePiecesPerKg(name);
+    document.getElementById('itemName').dataset.piecesPerKg = piecesPerKg || '';
     document.getElementById('itemPrice').value = price.toFixed(2);
 
     const categoryEl = document.getElementById('itemCategory');
@@ -2185,6 +2218,23 @@ function selectMarketItem(name, price, category, unit) {
 
     document.getElementById('marketPriceSuggestions').classList.add('hidden');
     document.getElementById('itemName').focus();
+}
+
+function recalculateGroceryAddPrice() {
+    const nameEl = document.getElementById('itemName');
+    const priceEl = document.getElementById('itemPrice');
+    const unitEl = document.getElementById('itemUnit');
+    if (!nameEl || !priceEl || !unitEl) return;
+    const basePrice = parseFloat(nameEl.dataset.basePrice) || 0;
+    const piecesPerKg = parseFloat(nameEl.dataset.piecesPerKg) || 0;
+    const unit = (unitEl.value || '').toString().toLowerCase();
+    const isPiece = unit === 'pc' || unit === 'piece' || unit === 'pcs';
+    if (basePrice <= 0) return;
+    if (isPiece && piecesPerKg > 0) {
+        priceEl.value = (basePrice / piecesPerKg).toFixed(2);
+    } else {
+        priceEl.value = basePrice.toFixed(2);
+    }
 }
 
 function checkGroceryBudgetConstraints(currentTotal) {
@@ -2234,7 +2284,7 @@ function evaluateDynamicContextualAISuggestions() {
     planStatusNode.innerText = hasPlan ? 'Active meal plan detected' : 'No active plan';
 
     const groceryItems = getGroceryData();
-    const totalGroceryCost = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
+    const totalGroceryCost = groceryItems.reduce((acc, i) => acc + ((getItemUnitPrice(i)) * (parseFloat(i.quantity) || 0)), 0);
 
     let suggestions = [];
 
@@ -3536,7 +3586,7 @@ function respondToBudgetQuery(question, budget, pax, diet, groceryItems) {
 
     const perMeal = budget > 0 ? budget / 21 : 0;
     const budgetCategory = perMeal > 0 ? (perMeal < 80 ? 'tight' : perMeal < 140 ? 'moderate' : 'comfortable') : 'unset';
-    const groceryTotal = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
+    const groceryTotal = groceryItems.reduce((acc, i) => acc + ((getItemUnitPrice(i)) * (parseFloat(i.quantity) || 0)), 0);
     const planStatus = hasActiveMealPlan() ? 'You have a plan; compare it against your grocery list to decide where to swap or simplify.' : 'No plan loaded yet; generating one will help me give more accurate budget advice.';
     const tips = [];
 
@@ -3566,7 +3616,7 @@ function respondToBudgetQuery(question, budget, pax, diet, groceryItems) {
 
 function respondToGroceryQuery(question, budget, pax, diet, groceryItems) {
     const lower = question;
-    const groceryTotal = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
+    const groceryTotal = groceryItems.reduce((acc, i) => acc + ((getItemUnitPrice(i)) * (parseFloat(i.quantity) || 0)), 0);
     const analysis = analyzeGroceryList(groceryItems, budget);
 
     if (groceryItems.length === 0) {
@@ -3595,7 +3645,7 @@ function respondToGroceryQuery(question, budget, pax, diet, groceryItems) {
 function analyzeGroceryList(groceryItems, budget) {
     if (groceryItems.length === 0) return 'Your grocery list is empty.';
 
-    const total = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
+    const total = groceryItems.reduce((acc, i) => acc + ((getItemUnitPrice(i)) * (parseFloat(i.quantity) || 0)), 0);
     const categories = [...new Set(groceryItems.map(item => item.category.toLowerCase()))];
     const staples = findMissingStaples(groceryItems);
     const expensive = findExpensiveItems(groceryItems, budget);
