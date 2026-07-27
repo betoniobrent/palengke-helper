@@ -11,6 +11,7 @@ app = Flask(__name__)
 CORS(app, origins=["*"])
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+MODEL_NAME = os.environ.get("GROQ_MODEL", "gemma2-9b-it")
 
 ASSISTANT_INSTRUCTIONS = """You are Bo Sar, a wise and practical Filipino market-shopping and meal-planning assistant embedded in Palengke Helper+.
 
@@ -49,12 +50,13 @@ def chat():
     threads[thread_id].append({"role": "user", "content": full_message})
 
     try:
-        # Keep conversation from growing too large
-        recent = threads[thread_id][-20:]
+        # Keep conversation from growing too large while preserving the system prompt
+        history = threads[thread_id]
+        recent = history if len(history) <= 6 else [history[0]] + history[-5:]
         response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+            model=MODEL_NAME,
             messages=recent,
-            max_tokens=500,
+            max_tokens=400,
             temperature=0.7
         )
         reply = response.choices[0].message.content
