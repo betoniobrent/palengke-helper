@@ -753,6 +753,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (cachedUser) {
         const session = JSON.parse(cachedUser);
         console.log('Session role:', session.role);
+        updateAuthNav(session);
 
         // Restore Supabase session if member
         if (session.role === 'member' && supabaseClient) {
@@ -987,6 +988,18 @@ async function logout() {
     location.reload();
 }
 
+function updateAuthNav(session) {
+    const isLoggedIn = session && (session.role === 'member' || session.role === 'admin');
+    const loginRegisterDesktop = document.getElementById('navLoginRegisterDesktop');
+    const accountDesktop = document.getElementById('navAccountDesktop');
+    const loginRegisterMobile = document.getElementById('navLoginRegisterMobile');
+    const accountMobile = document.getElementById('navAccountMobile');
+    if (loginRegisterDesktop) loginRegisterDesktop.classList.toggle('hidden', isLoggedIn);
+    if (accountDesktop) accountDesktop.classList.toggle('hidden', !isLoggedIn);
+    if (loginRegisterMobile) loginRegisterMobile.classList.toggle('hidden', isLoggedIn);
+    if (accountMobile) accountMobile.classList.toggle('hidden', !isLoggedIn);
+}
+
 function hideAuthBoxes() {
     ['loginBox', 'registerBox', 'forgotPasswordBox', 'resetPasswordBox'].forEach(id => {
         const el = document.getElementById(id);
@@ -1103,6 +1116,9 @@ async function registerWithEmail() {
             await ensureUserProfile(data.user);
             localStorage.setItem('palengke_session', JSON.stringify({
                 user: email,
+                email: email,
+                full_name: fullname,
+                address: address,
                 role: 'member',
                 supabaseUserId: data.user.id,
                 accessToken: data.session.access_token,
@@ -1140,6 +1156,9 @@ async function loginWithEmail() {
         await ensureUserProfile(data.user);
         localStorage.setItem('palengke_session', JSON.stringify({
             user: email,
+            email: email,
+            full_name: data.user.user_metadata?.full_name || data.user.user_metadata?.name || '',
+            address: data.user.user_metadata?.address || '',
             role: 'member',
             supabaseUserId: data.user.id,
             accessToken: data.session.access_token,
@@ -1204,7 +1223,10 @@ async function handleOAuthCallback() {
             if (data.session) {
                 await ensureUserProfile(data.session.user);
                 localStorage.setItem('palengke_session', JSON.stringify({
-                    user: data.session.user.email || data.session.user.user_metadata?.full_name,
+                    user: data.session.user.email,
+                    email: data.session.user.email,
+                    full_name: data.session.user.user_metadata?.full_name || data.session.user.user_metadata?.name || '',
+                    address: data.session.user.user_metadata?.address || '',
                     role: 'member',
                     supabaseUserId: data.session.user.id,
                     accessToken: data.session.access_token,

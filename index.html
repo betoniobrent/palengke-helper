@@ -182,7 +182,10 @@
                         <li><button data-tab="prices" onclick="switchTab('prices')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Prices</button></li>
                         <li><button data-tab="suggestions" onclick="switchTab('suggestions')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Palengke AI</button></li>
                         <li><button data-tab="grocery" onclick="switchTab('grocery')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Grocery</button></li>
-                        <li class="relative">
+<li id='navLoginRegisterDesktop' class='hidden'>
+    <button onclick='logout()' class='hover:text-emerald-200 transition focus:outline-none font-semibold'>Login / Register</button>
+</li>
+<li id='navAccountDesktop' class='hidden relative'>
                             <button onclick="toggleAccountMenu()" class="hover:text-emerald-200 transition focus:outline-none flex items-center gap-1">
                                 <span>Account</span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -203,9 +206,14 @@
                     <button data-tab="prices" onclick="switchTab('prices'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Market Prices</button>
                     <button data-tab="suggestions" onclick="switchTab('suggestions'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Palengke AI</button>
                     <button data-tab="grocery" onclick="switchTab('grocery'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Grocery</button>
-                    <button onclick="openAccountSettings(); toggleMenu()" class="block w-full text-left py-2 border-b border-emerald-600">⚙️ Account Settings</button>
+                    <div id='navLoginRegisterMobile' class='hidden space-y-2'>
+                        <button onclick='logout(); toggleMenu()' class='block w-full text-left py-2 border-b border-emerald-600 font-semibold'>🔑 Login / Register</button>
+                    </div>
+                    <div id='navAccountMobile' class='hidden space-y-2'>
+                        <button onclick='openAccountSettings(); toggleMenu()' class='block w-full text-left py-2 border-b border-emerald-600'>⚙️ Account Settings</button>
                     <button onclick="openPwaInstallModal(); toggleMenu()" class="block w-full text-left py-2 border-b border-emerald-600">📲 Install App</button>
-                    <button onclick="logout(); toggleMenu()" class="block w-full text-left py-2 text-rose-300 font-bold">🚪 Logout</button>
+                        <button onclick='logout(); toggleMenu()' class='block w-full text-left py-2 text-rose-300 font-bold'>🚪 Logout</button>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -970,9 +978,11 @@
             <div class="p-6 space-y-6">
                 <!-- Account Info -->
                 <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
-                    <h3 class="font-semibold text-emerald-800 mb-2">Account Information</h3>
-                    <p class="text-sm text-gray-600">Email: <span id="settingsEmail" class="font-medium">-</span></p>
-                    <p class="text-sm text-gray-600">Role: <span id="settingsRole" class="font-medium">-</span></p>
+                    <h3 class='font-semibold text-emerald-800 mb-2'>Account Information</h3>
+                    <p class='text-sm text-gray-600'>Full Name: <span id='settingsFullName' class='font-medium'>-</span></p>
+                    <p class='text-sm text-gray-600'>Email: <span id='settingsEmail' class='font-medium'>-</span></p>
+                    <p class='text-sm text-gray-600'>Address: <span id='settingsAddress' class='font-medium'>-</span></p>
+                    <p class='text-sm text-gray-600'>Role: <span id='settingsRole' class='font-medium'>-</span></p>
                 </div>
 
                 <!-- Data Management -->
@@ -1103,7 +1113,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
     
     <script src="data/recipes.js?v=2"></script>
     <script src="supabase.js?v=2"></script>
-    <script src="app.js?v=8"></script>
+    <script src="app.js?v=9"></script>
     <script>
         function switchTab(tabId) {
             console.log('switchTab called with:', tabId);
@@ -1166,7 +1176,9 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
 
             // Populate account info
             const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
-            document.getElementById('settingsEmail').textContent = session.user || session.email || 'guest@local';
+            document.getElementById('settingsFullName').textContent = session.full_name || session.name || session.user || 'Not set';
+            document.getElementById('settingsEmail').textContent = session.email || session.user || 'guest@local';
+            document.getElementById('settingsAddress').textContent = session.address || 'Not set';
             document.getElementById('settingsRole').textContent = session.role || 'guest';
 
             // Close dropdown if open
@@ -1211,13 +1223,18 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
         }
 
         function deleteAccount() {
-            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
-                if (session.role === 'member' && session.supabaseUserId) {
-                    // For Supabase users, you would need to implement account deletion via Supabase
-                    showNotification('Account deletion requires backend integration. Please contact support.', 'error');
+            if (confirm('Are you sure you want to delete your account? This will sign you out and clear all local data.')) {
+                localStorage.removeItem('palengke_session');
+                localStorage.removeItem('palengke_budget');
+                localStorage.removeItem('palengke_grocery');
+                localStorage.removeItem('palengke_mealplans');
+                localStorage.removeItem('palengke_customrecipes');
+                localStorage.removeItem('palengke_ai_thread');
+
+                if (typeof supabaseClient !== 'undefined' && supabaseClient.auth) {
+                    supabaseClient.auth.signOut().finally(() => location.reload());
                 } else {
-                    clearAllData();
+                    location.reload();
                 }
             }
         }
