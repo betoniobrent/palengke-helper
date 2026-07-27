@@ -240,6 +240,7 @@ CREATE TABLE profiles (
     address TEXT,
     phone TEXT,
     avatar_url TEXT,
+    email TEXT,
     role TEXT DEFAULT 'user',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -310,6 +311,17 @@ ORDER BY item_name, category, source_date DESC, published_at DESC;
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE market_prices ENABLE ROW LEVEL SECURITY;
 
+-- Function to check admin status for RLS
+CREATE OR REPLACE FUNCTION is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+    RETURN EXISTS (
+        SELECT 1 FROM profiles
+        WHERE id = auth.uid() AND role = 'admin'
+    );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 -- Profiles: users can only manage their own profile
 CREATE POLICY "Users can view own profile"
     ON profiles FOR SELECT
@@ -322,6 +334,11 @@ CREATE POLICY "Users can insert own profile"
 CREATE POLICY "Users can update own profile"
     ON profiles FOR UPDATE
     USING (auth.uid() = id);
+
+-- Admins can view all user profiles for the admin dashboard
+CREATE POLICY "Admins can view all profiles"
+    ON profiles FOR SELECT
+    USING (is_admin());
 
 -- Market prices: anyone can read published prices
 CREATE POLICY "Published prices are public"

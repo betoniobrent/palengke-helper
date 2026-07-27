@@ -51,7 +51,6 @@ async function loginAdmin() {
 
     currentSession = data.session;
     showDashboard();
-    loadUsers();
 }
 
 async function logoutAdmin() {
@@ -66,6 +65,7 @@ function showDashboard() {
     document.getElementById('logoutBtn').classList.remove('hidden');
     // Default date to today
     document.getElementById('priceDate').valueAsDate = new Date();
+    loadUsers();
 }
 
 function showLogin() {
