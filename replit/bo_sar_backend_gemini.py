@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app, origins=["*"])
 
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
-MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-pro")
+MODEL_NAME = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
 genai.configure(api_key=GOOGLE_API_KEY)
 
 ASSISTANT_INSTRUCTIONS = """You are Bo Sar, a wise and practical Filipino market-shopping and meal-planning assistant embedded in Palengke Helper+.
