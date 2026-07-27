@@ -1,5 +1,6 @@
 import os
 import json
+import traceback
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import google.generativeai as genai
@@ -10,7 +11,8 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app, origins=["*"])
 
-genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+genai.configure(api_key=GOOGLE_API_KEY)
 
 ASSISTANT_INSTRUCTIONS = """You are Bo Sar, a wise and practical Filipino market-shopping and meal-planning assistant embedded in Palengke Helper+.
 
@@ -36,32 +38,32 @@ def chat():
     if not message:
         return jsonify({"error": "message is required"}), 400
 
+    if not GOOGLE_API_KEY:
+        return jsonify({"error": "GOOGLE_API_KEY environment variable is not set"}), 500
+
     if not thread_id:
         thread_id = os.urandom(16).hex()
 
     if thread_id not in threads:
         threads[thread_id] = []
 
-    full_message = message
+    user_content = ASSISTANT_INSTRUCTIONS
     if context:
-        full_message = f"Context:\n{context}\n\nQuestion:\n{message}"
+        user_content += f"\n\nContext:\n{context}"
+    user_content += f"\n\nQuestion:\n{message}"
 
-    threads[thread_id].append({"role": "user", "parts": [full_message]})
+    threads[thread_id].append({"role": "user", "parts": [user_content]})
 
     try:
-        model = genai.GenerativeModel(
-            model_name="gemini-1.5-flash",
-            system_instruction=ASSISTANT_INSTRUCTIONS
-        )
-        # Use previous messages as history, then send the latest message
-        history = threads[thread_id][:-1]
-        chat_session = model.start_chat(history=history)
-        response = chat_session.send_message(threads[thread_id][-1]["parts"][0])
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        # Keep recent turns to stay within context limits
+        contents = threads[thread_id][-10:]
+        response = model.generate_content(contents=contents)
         reply = response.text
         threads[thread_id].append({"role": "model", "parts": [reply]})
         return jsonify({"reply": reply, "thread_id": thread_id})
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": str(e), "trace": traceback.format_exc()}), 500
 
 @app.route("/health", methods=["GET"])
 def health():
