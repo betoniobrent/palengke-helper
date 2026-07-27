@@ -2294,7 +2294,7 @@ async function processAISuggestionQuery() {
     questionInput.value = '';
 
     const typingId = 'ai-typing-' + Date.now();
-    appendChatMessage('ai', '<span id="' + typingId + '">Typing...</span>');
+    appendChatMessage('ai', '<span id="' + typingId + '">Typing...</span>', true);
     chatHistory.scrollTop = chatHistory.scrollHeight;
 
     try {
@@ -2306,7 +2306,7 @@ async function processAISuggestionQuery() {
         console.error('AI response error:', error);
         const typingEl = document.getElementById(typingId);
         if (typingEl) typingEl.parentElement.remove();
-        appendChatMessage('ai', 'Sorry, I could not connect to Palengke AI. Please try again later.');
+        appendChatMessage('ai', 'Palengke AI error: ' + (error.message || 'Please try again later.'));
     }
 
     chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -2327,7 +2327,7 @@ function formatChatText(text) {
     return escapeChatHtml(text).replace(/\n/g, '<br>');
 }
 
-function appendChatMessage(sender, text) {
+function appendChatMessage(sender, text, raw = false) {
     const chatHistory = document.getElementById('aiChatHistory');
     if (!chatHistory) return;
 
@@ -2337,12 +2337,13 @@ function appendChatMessage(sender, text) {
 
     const message = document.createElement('div');
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const content = raw ? text : formatChatText(text);
     if (sender === 'user') {
         message.className = 'self-end bg-slate-100 border border-slate-200 p-4 rounded-3xl text-sm text-gray-800 max-w-[90%]';
-        message.innerHTML = `<div class="flex items-center justify-between gap-3"><strong class="text-xs text-gray-500">You</strong><span class="text-[10px] text-gray-400">${time}</span></div><p class="mt-2">${formatChatText(text)}</p>`;
+        message.innerHTML = `<div class="flex items-center justify-between gap-3"><strong class="text-xs text-gray-500">You</strong><span class="text-[10px] text-gray-400">${time}</span></div><p class="mt-2">${content}</p>`;
     } else {
         message.className = 'self-start bg-emerald-50 border border-emerald-100 p-4 rounded-3xl text-sm text-gray-800 max-w-[90%]';
-        message.innerHTML = `<div class="flex items-center justify-between gap-3"><strong class="text-xs text-emerald-700">Palengke AI</strong><span class="text-[10px] text-gray-400">${time}</span></div><p class="mt-2">${formatChatText(text)}</p>`;
+        message.innerHTML = `<div class="flex items-center justify-between gap-3"><strong class="text-xs text-emerald-700">Palengke AI</strong><span class="text-[10px] text-gray-400">${time}</span></div><p class="mt-2">${content}</p>`;
     }
     chatHistory.appendChild(message);
 }
@@ -2731,7 +2732,7 @@ async function generateAIResponseWithBackend(question) {
             body: JSON.stringify({ message: question, thread_id: palengkeAIThreadId, context: context })
         });
         const data = await response.json();
-        if (!response.ok || data.error) throw new Error(data.error || `HTTP ${response.status}`);
+        if (!response.ok || data.error) return 'Palengke AI error: ' + (data.error || `HTTP ${response.status}`);
         if (data.thread_id) {
             palengkeAIThreadId = data.thread_id;
             localStorage.setItem('palengke_ai_thread', palengkeAIThreadId);
@@ -2739,7 +2740,7 @@ async function generateAIResponseWithBackend(question) {
         return data.reply || 'No response from Palengke AI.';
     } catch (error) {
         console.error('Palengke AI backend error:', error);
-        return 'Sorry, I could not connect to Palengke AI. Please try again later.';
+        return 'Palengke AI error: ' + (error.message || 'Please try again later.');
     }
 }
 
