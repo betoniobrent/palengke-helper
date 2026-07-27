@@ -3,3 +3,4 @@ flask-cors
 openai>=1.0.0
 python-dotenv
 groq
+google-generativeai>=0.8.0
