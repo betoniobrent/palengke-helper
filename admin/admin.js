@@ -51,6 +51,7 @@ async function loginAdmin() {
 
     currentSession = data.session;
     showDashboard();
+    loadUsers();
 }
 
 async function logoutAdmin() {
@@ -456,6 +457,33 @@ async function publishPrices() {
         statusEl.classList.remove('hidden');
         publishBtn.disabled = false;
         publishBtn.textContent = 'Publish Market Prices';
+    }
+}
+
+async function loadUsers() {
+    const tbody = document.getElementById('usersTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">Loading users...</td></tr>';
+    try {
+        const { data, error } = await supabaseClient.from('profiles').select('id, role, created_at');
+        if (error) throw error;
+        if (!data || data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-gray-400">No users found.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = '';
+        data.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="p-3 font-mono text-xs text-gray-600">${escapeHtml(u.id ? u.id.slice(0, 12) + '...' : '')}</td>
+                <td class="p-3 capitalize">${escapeHtml(u.role || 'user')}</td>
+                <td class="p-3 text-gray-500 text-xs">${u.created_at ? new Date(u.created_at).toLocaleString() : '-'}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (err) {
+        console.error(err);
+        tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-red-500">Could not load users: ' + escapeHtml(err.message) + '</td></tr>';
     }
 }
 

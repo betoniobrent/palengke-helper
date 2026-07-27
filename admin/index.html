@@ -7,6 +7,28 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f3f4f6;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #10b981;
+            border-radius: 4px;
+            border: 2px solid #f3f4f6;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #059669;
+        }
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #10b981 #f3f4f6;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 min-h-screen text-gray-800">
     <div class="max-w-6xl mx-auto p-6">
@@ -47,8 +69,8 @@
                 </div>
             </div>
 
-            <!-- Step 1b: Fetch from DA Website -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <!-- Step 1b: Fetch from DA Website (hidden for now) -->
+            <div class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <h2 class="text-lg font-semibold mb-4">1b. Or Fetch from DA Bantay Presyo Website</h2>
                 <p class="text-sm text-gray-600 mb-4">Load public prices directly from the DA Bantay Presyo website for Region IV-A (CALABARZON).</p>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
@@ -94,7 +116,7 @@
                     </div>
                 </div>
                 <p class="text-xs text-gray-500 mb-3">Edit item names, categories, units, and prices before publishing. Rows marked for deletion will not be published.</p>
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto max-h-[60vh] overflow-y-auto custom-scrollbar rounded-lg border border-gray-100">
                     <table class="w-full text-sm">
                         <thead class="bg-gray-50 text-gray-600 text-left">
                             <tr>
@@ -123,10 +145,31 @@
                 <button id="publishBtn" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>Publish Market Prices</button>
                 <p id="publishStatus" class="text-sm mt-3 hidden"></p>
             </div>
+
+            <!-- Registered Users -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h2 class="text-lg font-semibold mb-4">Registered Users</h2>
+                <div class="overflow-x-auto max-h-64 overflow-y-auto custom-scrollbar rounded-lg border border-gray-100">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 text-gray-600 text-left">
+                            <tr>
+                                <th class="p-3 sticky top-0 bg-gray-50">User ID</th>
+                                <th class="p-3 sticky top-0 bg-gray-50">Role</th>
+                                <th class="p-3 sticky top-0 bg-gray-50">Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody" class="divide-y divide-gray-100">
+                            <tr>
+                                <td colspan="3" class="p-4 text-center text-gray-400">Loading users...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="../supabase.js?v=2"></script>
-    <script src="admin.js?v=3"></script>
+    <script src="admin.js?v=4"></script>
 </body>
 </html>
