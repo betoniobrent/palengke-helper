@@ -1915,7 +1915,7 @@ async function saveGroceryListToSupabase() {
         if (!user) return;
 
         const items = getGroceryData();
-        const totalCost = items.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);
+        const totalCost = items.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
 
         const { error } = await supabaseClient
             .from('user_grocery_lists')
@@ -1986,7 +1986,7 @@ function renderGroceryItems(filteredItems = null) {
                     </div>
                     <div class='flex flex-wrap items-center gap-2 mt-2'>
                         <button onclick="updateGroceryQuantity(${index}, -1)" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">-</button>
-                        <span class="w-8 text-center font-medium">${item.quantity}</span>
+                        <input type="number" step="0.01" min="0.01" value="${item.quantity}" onchange="setGroceryQuantity(${index}, this.value)" class="w-16 text-center font-medium border border-gray-300 rounded p-1 mx-1">
                         <button onclick="updateGroceryQuantity(${index}, 1)" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">+</button>
                         <button onclick='deleteItem(${index})' class='ml-auto text-rose-600 hover:text-rose-800 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-rose-50 transition'>Delete</button>
                     </div>
@@ -2000,11 +2000,11 @@ function renderGroceryItems(filteredItems = null) {
 }
 
 function updateCartSummary(items) {
-    const totalCost = items.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);
+    const totalCost = items.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
     const checkedItems = items.filter(i => i.checked);
-    const checkedCost = checkedItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);
+    const checkedCost = checkedItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
     const remainingItems = items.filter(i => !i.checked);
-    const remainingCost = remainingItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);
+    const remainingCost = remainingItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
 
     document.getElementById('totalCost').innerText = `₱${totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
     document.getElementById('totalItems').innerText = items.length;
@@ -2026,8 +2026,26 @@ function toggleGroceryItemCheck(index) {
 
 function updateGroceryQuantity(index, change) {
     const items = getGroceryData();
-    const newQuantity = Math.max(1, (items[index].quantity || 1) + change);
+    const unit = (items[index].unit || '').toString().toLowerCase();
+    const step = unit === 'kg' ? 0.5 : 1;
+    const min = unit === 'kg' ? 0.5 : 1;
+    const current = parseFloat(items[index].quantity) || 0;
+    const newQuantity = Math.max(min, current + (step * Math.sign(change)));
     items[index].quantity = newQuantity;
+    setGroceryData(items);
+    renderGroceryItems();
+    saveGroceryListToSupabase();
+}
+
+function setGroceryQuantity(index, value) {
+    const items = getGroceryData();
+    const quantity = parseFloat(value);
+    if (isNaN(quantity) || quantity <= 0) {
+        showNotification('Quantity must be a positive number.', 'error');
+        renderGroceryItems();
+        return;
+    }
+    items[index].quantity = quantity;
     setGroceryData(items);
     renderGroceryItems();
     saveGroceryListToSupabase();
@@ -2062,7 +2080,7 @@ function clearAllGroceryItems() {
 function addItem() {
     const name = document.getElementById('itemName').value.trim();
     const price = parseFloat(document.getElementById('itemPrice').value);
-    const quantity = parseInt(document.getElementById('itemQuantity').value);
+    const quantity = parseFloat(document.getElementById('itemQuantity').value);
     const unit = document.getElementById('itemUnit').value.trim() || 'pc';
     const category = document.getElementById('itemCategory').value;
 
@@ -2216,7 +2234,7 @@ function evaluateDynamicContextualAISuggestions() {
     planStatusNode.innerText = hasPlan ? 'Active meal plan detected' : 'No active plan';
 
     const groceryItems = getGroceryData();
-    const totalGroceryCost = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);
+    const totalGroceryCost = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
 
     let suggestions = [];
 
@@ -3518,7 +3536,7 @@ function respondToBudgetQuery(question, budget, pax, diet, groceryItems) {
 
     const perMeal = budget > 0 ? budget / 21 : 0;
     const budgetCategory = perMeal > 0 ? (perMeal < 80 ? 'tight' : perMeal < 140 ? 'moderate' : 'comfortable') : 'unset';
-    const groceryTotal = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);
+    const groceryTotal = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
     const planStatus = hasActiveMealPlan() ? 'You have a plan; compare it against your grocery list to decide where to swap or simplify.' : 'No plan loaded yet; generating one will help me give more accurate budget advice.';
     const tips = [];
 
@@ -3548,7 +3566,7 @@ function respondToBudgetQuery(question, budget, pax, diet, groceryItems) {
 
 function respondToGroceryQuery(question, budget, pax, diet, groceryItems) {
     const lower = question;
-    const groceryTotal = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);
+    const groceryTotal = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
     const analysis = analyzeGroceryList(groceryItems, budget);
 
     if (groceryItems.length === 0) {
@@ -3577,7 +3595,7 @@ function respondToGroceryQuery(question, budget, pax, diet, groceryItems) {
 function analyzeGroceryList(groceryItems, budget) {
     if (groceryItems.length === 0) return 'Your grocery list is empty.';
 
-    const total = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseInt(i.quantity) || 0)), 0);
+    const total = groceryItems.reduce((acc, i) => acc + ((parseFloat(i.price) || 0) * (parseFloat(i.quantity) || 0)), 0);
     const categories = [...new Set(groceryItems.map(item => item.category.toLowerCase()))];
     const staples = findMissingStaples(groceryItems);
     const expensive = findExpensiveItems(groceryItems, budget);
