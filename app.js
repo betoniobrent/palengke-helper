@@ -298,8 +298,9 @@ function renderPlannerSummaryFromCurrentPlan(showSummary = true){
         const dayPlan = currentMealPlan[day];
         if (!dayPlan) return;
 
+        const summaryPax = parseInt(document.getElementById('plannerPax')?.value, 10) || 0;
         const meals = ['Breakfast', 'Lunch', 'Dinner'].map(type => dayPlan[type]).filter(Boolean);
-        const dayCost = meals.reduce((sum, meal) => sum + (meal.baseCost || meal.estimatedCost || 0), 0);
+        const dayCost = meals.reduce((sum, meal) => sum + calculateRecipeCostFromMarket(meal, summaryPax), 0);
         totalCost += dayCost;
 
         const card = document.createElement('div');
@@ -1796,7 +1797,10 @@ function generateFilipinoMealPlan() {
             // Use market-based pricing for accurate cost calculation, scaled for target pax
             const marketBasedCost = calculateRecipeCostFromMarket(recipe, targetPaxCount);
             const perServingCost = marketBasedCost / Math.max(targetPaxCount, 1);
-            const costDistance = Math.abs(perServingCost - budgetPerServing);
+            // Going over budget is penalized much more than staying under it
+            const costDistance = perServingCost > budgetPerServing
+                ? (perServingCost - budgetPerServing) * 3.5
+                : (budgetPerServing - perServingCost);
             const servingDistance = Math.abs(recipe.servings - targetPaxCount);
             return {
                 recipe,
@@ -1841,12 +1845,56 @@ function generateFilipinoMealPlan() {
             Dinner: dMeal
         };
 
+        totalPlanCostAccumulator +=
+            calculateRecipeCostFromMarket(bMeal, targetPaxCount) +
+            calculateRecipeCostFromMarket(lMeal, targetPaxCount) +
+            calculateRecipeCostFromMarket(dMeal, targetPaxCount);
+    });
+
+    // Repair pass: while the plan exceeds the budget, swap the most
+    // expensive meals for the cheapest same-type alternatives
+    if (totalPlanCostAccumulator > targetWeekBudget) {
+        const optionsByType = {
+            Breakfast: breakfastOptions,
+            Lunch: lunchOptions,
+            Dinner: dinnerOptions
+        };
+        const cheapestByType = {};
+        Object.entries(optionsByType).forEach(([type, opts]) => {
+            cheapestByType[type] = opts
+                .map(recipe => ({ recipe, cost: calculateRecipeCostFromMarket(recipe, targetPaxCount) }))
+                .sort((a, b) => a.cost - b.cost);
+        });
+
+        const slots = [];
+        daysOfWeek.forEach(day => {
+            ["Breakfast", "Lunch", "Dinner"].forEach(type => {
+                slots.push({ day, type, cost: calculateRecipeCostFromMarket(currentMealPlan[day][type], targetPaxCount) });
+            });
+        });
+        slots.sort((a, b) => b.cost - a.cost);
+
+        for (const slot of slots) {
+            if (totalPlanCostAccumulator <= targetWeekBudget) break;
+            const dayIds = new Set(["Breakfast", "Lunch", "Dinner"].map(t => currentMealPlan[slot.day][t].id));
+            const candidate = (cheapestByType[slot.type] || []).find(c => !dayIds.has(c.recipe.id) && c.cost < slot.cost);
+            if (candidate) {
+                totalPlanCostAccumulator -= slot.cost - candidate.cost;
+                currentMealPlan[slot.day][slot.type] = candidate.recipe;
+            }
+        }
+    }
+
+    daysOfWeek.forEach(day => {
+        const bMeal = currentMealPlan[day].Breakfast;
+        const lMeal = currentMealPlan[day].Lunch;
+        const dMeal = currentMealPlan[day].Dinner;
+
         // Use market-based pricing scaled for target pax
         const bCost = calculateRecipeCostFromMarket(bMeal, targetPaxCount);
         const lCost = calculateRecipeCostFromMarket(lMeal, targetPaxCount);
         const dCost = calculateRecipeCostFromMarket(dMeal, targetPaxCount);
         const dayCost = bCost + lCost + dCost;
-        totalPlanCostAccumulator += dayCost;
 
         const dayCard = document.createElement('div');
         dayCard.className = "bg-white p-4 rounded-xl border border-gray-100 shadow-sm grid md:grid-cols-4 items-center gap-4 hover:border-emerald-200 transition";
@@ -2804,73 +2852,42 @@ async function generateAIResponseWithBackend(question) {
 // ==========================================
 
 // Parse ingredient string to extract item name and quantity
+const INGREDIENT_UNIT_PATTERN = /(\d+(?:\.\d+)?)(?:\s*\/\s*(\d+(?:\.\d+)?))?\s*(kg|kilos?|grams?|g|cups?|tbsps?|tsps?|ml|liters?|litro|l|pcs?|pieces?|cloves?|heads?|bunch(?:es)?|bundles?|whole|cans?|packs?|trays?)\b/;
+
+const INGREDIENT_UNIT_ALIASES = {
+    kilo: 'kg', kilos: 'kg',
+    gram: 'g', grams: 'g',
+    cups: 'cup',
+    tbsps: 'tbsp',
+    liter: 'l', liters: 'l',
+    pcs: 'pc', piece: 'pc', pieces: 'pc',
+    clove: 'cloves',
+    head: 'heads',
+    bunches: 'bunch',
+    bundles: 'bundle',
+    cans: 'can',
+    packs: 'pack',
+    trays: 'tray'
+};
+
 function parseIngredient(ingredientStr) {
     const str = ingredientStr.toLowerCase().trim();
-    
-    // Extract quantity patterns
-    const quantityPatterns = [
-        /(\d+(?:\.\d+)?)\s*kg/i,
-        /(\d+(?:\.\d+)?)\s*kilo/i,
-        /(\d+(?:\.\d+)?)\s*g/i,
-        /(\d+(?:\.\d+)?)\s*gram/i,
-        /(\d+(?:\.\d+)?)\s*cup/i,
-        /(\d+(?:\.\d+)?)\s*tbsp/i,
-        /(\d+(?:\.\d+)?)\s*tbsp/i,
-        /(\d+(?:\.\d+)?)\s*tsps/i,
-        /(\d+(?:\.\d+)?)\s*tsp/i,
-        /(\d+(?:\.\d+)?)\s*ml/i,
-        /(\d+(?:\.\d+)?)\s*l/i,
-        /(\d+(?:\.\d+)?)\s*pc/i,
-        /(\d+(?:\.\d+)?)\s*piece/i,
-        /(\d+(?:\.\d+)?)\s*pieces/i,
-        /(\d+(?:\.\d+)?)\s*cloves/i,
-        /(\d+(?:\.\d+)?)\s*heads/i,
-        /(\d+(?:\.\d+)?)\s*bunch/i,
-        /(\d+(?:\.\d+)?)\s*bundle/i,
-        /(\d+(?:\.\d+)?)\s*whole/i,
-        /(\d+(?:\.\d+)?)\s*can/i,
-        /(\d+(?:\.\d+)?)\s*pack/i,
-        /(\d+(?:\.\d+)?)\s*packs/i,
-    ];
-    
+
     let quantity = 1;
     let unit = 'piece';
-    
-    for (const pattern of quantityPatterns) {
-        const match = str.match(pattern);
-        if (match) {
-            quantity = parseFloat(match[1]);
-            unit = pattern.source.replace(/[\/\\^$*+?.()|[\]{}]/g, '').replace(/\\i/g, '').replace(/\s+/g, ' ').trim();
-            break;
-        }
+
+    const match = str.match(INGREDIENT_UNIT_PATTERN);
+    if (match) {
+        quantity = parseFloat(match[1]);
+        if (match[2]) quantity = quantity / parseFloat(match[2]);
+        unit = INGREDIENT_UNIT_ALIASES[match[3]] || match[3];
     }
-    
-    // Extract item name by removing quantity and common words
+
+    // Extract item name by removing quantity, units, and common words
     let itemName = str
-        .replace(quantityPatterns[0], '')
-        .replace(quantityPatterns[1], '')
-        .replace(quantityPatterns[2], '')
-        .replace(quantityPatterns[3], '')
-        .replace(quantityPatterns[4], '')
-        .replace(quantityPatterns[5], '')
-        .replace(quantityPatterns[6], '')
-        .replace(quantityPatterns[7], '')
-        .replace(quantityPatterns[8], '')
-        .replace(quantityPatterns[9], '')
-        .replace(quantityPatterns[10], '')
-        .replace(quantityPatterns[11], '')
-        .replace(quantityPatterns[12], '')
-        .replace(quantityPatterns[13], '')
-        .replace(quantityPatterns[14], '')
-        .replace(quantityPatterns[15], '')
-        .replace(quantityPatterns[16], '')
-        .replace(quantityPatterns[17], '')
-        .replace(quantityPatterns[18], '')
-        .replace(quantityPatterns[19], '')
-        .replace(quantityPatterns[20], '')
-        .replace(quantityPatterns[21], '')
-        .replace(/\d+/g, '')
-        .replace(/of|the|a|an|with|and|or|for|to|in|on|at|by/g, '')
+        .replace(new RegExp(INGREDIENT_UNIT_PATTERN.source, 'g'), '')
+        .replace(/\d+(?:\.\d+)?/g, '')
+        .replace(/\b(of|the|a|an|with|and|or|for|to|in|on|at|by)\b/g, '')
         .replace(/\s+/g, ' ')
         .trim();
     
@@ -2906,6 +2923,16 @@ function parseIngredient(ingredientStr) {
         'spinach': 'spinach',
         'kangkong': 'kangkong',
         'pechay': 'pechay',
+        'cabbage': 'cabbage',
+        'repolyo': 'cabbage',
+        'togue': 'togue',
+        'bean sprout': 'togue',
+        'sardines': 'sardines',
+        'sardinas': 'sardines',
+        'tuyo': 'tuyo',
+        'misua': 'noodles',
+        'canton': 'noodles',
+        'noodles': 'noodles',
         'squash': 'kalabasa',
         'kalabasa': 'kalabasa',
         'papaya': 'papaya',
@@ -2976,6 +3003,7 @@ function getMarketPriceForIngredient(ingredient) {
             'rice': 52, 'garlic': 140, 'onion': 155, 'tomato': 80,
             'potato': 60, 'carrot': 70, 'tokwa': 15, 'monggo': 90,
             'talong': 90, 'spinach': 25, 'kangkong': 15, 'pechay': 20,
+            'cabbage': 60, 'togue': 60, 'sardines': 25, 'tuyo': 8, 'noodles': 15,
             'kalabasa': 50, 'papaya': 40, 'malunggay': 30, 'soy sauce': 35,
             'vinegar': 30, 'fish sauce': 40, 'oil': 80, 'sugar': 60,
             'salt': 25, 'pepper': 200, 'milk': 75, 'coconut milk': 85
@@ -2994,7 +3022,16 @@ function getMarketPriceForIngredient(ingredient) {
         'litro': 1, 'liter': 1
     };
 
-    const multiplier = unitMultipliers[parsed.unit] || 1;
+    // Approximate weights for per-piece produce priced per kilo
+    const pieceWeightsKg = {
+        'onion': 0.1, 'tomato': 0.12, 'carrot': 0.1, 'potato': 0.15,
+        'talong': 0.15, 'papaya': 0.5, 'kalabasa': 0.5
+    };
+
+    let multiplier = unitMultipliers[parsed.unit] || 1;
+    if ((parsed.unit === 'pc' || parsed.unit === 'piece' || parsed.unit === 'whole') && pieceWeightsKg[parsed.name]) {
+        multiplier = pieceWeightsKg[parsed.name];
+    }
     return unitPrice * parsed.quantity * multiplier;
 }
 
