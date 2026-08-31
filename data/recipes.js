@@ -1470,6 +1470,259 @@ const RECIPE_DATABASE = [
             "Baste regularly.",
             "Serve with rice." 
         ]
+    },
+    {
+        id: 59,
+        name: "Itlog at Sinangag",
+        mealType: ["Breakfast"],
+        diet: ["anything", "tipid", "protein"],
+        image: "assets/recipes/itlog-sinangag.jpg",
+        servings: 2,
+        estimatedCost: 45,
+        prepTime: "5 mins",
+        cookTime: "10 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "2 pc Egg",
+            "2 cup Rice",
+            "3 cloves Garlic",
+            "2 tbsp Oil",
+            "1 tsp Salt"
+        ],
+        instructions: [
+            "Fry garlic in oil until golden.",
+            "Add day-old rice and stir-fry with salt.",
+            "Fry eggs sunny side up.",
+            "Serve eggs on top of garlic rice."
+        ]
+    },
+    {
+        id: 60,
+        name: "Tortang Itlog with Rice",
+        mealType: ["Breakfast", "Dinner"],
+        diet: ["anything", "tipid", "protein"],
+        image: "assets/recipes/tortang-itlog.jpg",
+        servings: 2,
+        estimatedCost: 50,
+        prepTime: "5 mins",
+        cookTime: "10 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "3 pc Egg",
+            "1 pc Onion",
+            "1 pc Tomato",
+            "2 tbsp Oil",
+            "2 cup Rice"
+        ],
+        instructions: [
+            "Beat eggs with chopped onion and tomato.",
+            "Pour into a hot oiled pan.",
+            "Cook both sides until golden.",
+            "Serve with hot rice."
+        ]
+    },
+    {
+        id: 61,
+        name: "Ginisang Sardinas with Rice",
+        mealType: ["Breakfast", "Lunch", "Dinner"],
+        diet: ["anything", "tipid", "nopork"],
+        image: "assets/recipes/ginisang-sardinas.jpg",
+        servings: 2,
+        estimatedCost: 55,
+        prepTime: "5 mins",
+        cookTime: "10 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "1 can Sardines",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tbsp Oil",
+            "2 cup Rice"
+        ],
+        instructions: [
+            "Sauté garlic and onion in oil.",
+            "Add sardines with sauce.",
+            "Simmer for 5 minutes.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 62,
+        name: "Pancit Canton with Itlog",
+        mealType: ["Breakfast"],
+        diet: ["anything", "tipid"],
+        image: "assets/recipes/canton-itlog.jpg",
+        servings: 1,
+        estimatedCost: 30,
+        prepTime: "2 mins",
+        cookTime: "8 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "1 pack Instant Pancit Canton",
+            "1 pc Egg",
+            "1 tbsp Oil"
+        ],
+        instructions: [
+            "Boil noodles until just tender, then drain.",
+            "Mix in the seasoning and oil packets.",
+            "Fry egg sunny side up.",
+            "Top noodles with the fried egg."
+        ]
+    },
+    {
+        id: 63,
+        name: "Lugaw na may Itlog",
+        mealType: ["Breakfast"],
+        diet: ["anything", "tipid", "healthy", "nopork"],
+        image: "assets/recipes/lugaw-itlog.jpg",
+        servings: 3,
+        estimatedCost: 40,
+        prepTime: "5 mins",
+        cookTime: "30 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "1 cup Rice",
+            "2 pc Egg",
+            "3 cloves Garlic",
+            "1 tbsp Fish Sauce",
+            "1 tsp Pepper"
+        ],
+        instructions: [
+            "Boil rice in plenty of water until porridge-like.",
+            "Season with fish sauce and pepper.",
+            "Add boiled eggs cut in half.",
+            "Top with fried garlic."
+        ]
+    },
+    {
+        id: 64,
+        name: "Tuyo, Kamatis at Kanin",
+        mealType: ["Breakfast"],
+        diet: ["anything", "tipid"],
+        image: "assets/recipes/tuyo-kamatis.jpg",
+        servings: 2,
+        estimatedCost: 45,
+        prepTime: "5 mins",
+        cookTime: "10 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "4 pc Tuyo",
+            "2 pc Tomato",
+            "2 cup Rice",
+            "1 tbsp Oil",
+            "2 tbsp Vinegar"
+        ],
+        instructions: [
+            "Fry tuyo in oil until crisp.",
+            "Slice tomatoes and season with a little vinegar.",
+            "Serve tuyo with tomatoes and hot rice."
+        ]
+    },
+    {
+        id: 65,
+        name: "Adobong Kangkong with Rice",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "healthy", "nopork"],
+        image: "assets/recipes/adobong-kangkong.jpg",
+        servings: 3,
+        estimatedCost: 50,
+        prepTime: "10 mins",
+        cookTime: "10 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "2 bundle Kangkong",
+            "4 cloves Garlic",
+            "3 tbsp Soy Sauce",
+            "2 tbsp Vinegar",
+            "1 tbsp Oil",
+            "3 cup Rice"
+        ],
+        instructions: [
+            "Sauté garlic in oil.",
+            "Add kangkong stalks first, then leaves.",
+            "Pour soy sauce and vinegar; simmer briefly.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 66,
+        name: "Ginisang Togue",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "healthy"],
+        image: "assets/recipes/ginisang-togue.jpg",
+        servings: 3,
+        estimatedCost: 60,
+        prepTime: "10 mins",
+        cookTime: "10 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "400 g Togue",
+            "1 pc Carrot",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "2 tbsp Fish Sauce",
+            "1 tbsp Oil",
+            "3 cup Rice"
+        ],
+        instructions: [
+            "Sauté garlic and onion in oil.",
+            "Add carrot strips and cook briefly.",
+            "Add togue and fish sauce; stir-fry 3-5 minutes.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 67,
+        name: "Sardinas con Misua",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "nopork"],
+        image: "assets/recipes/sardinas-misua.jpg",
+        servings: 3,
+        estimatedCost: 60,
+        prepTime: "5 mins",
+        cookTime: "15 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "1 can Sardines",
+            "1 pack Misua Noodles",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tbsp Oil",
+            "1 pc Egg"
+        ],
+        instructions: [
+            "Sauté garlic and onion in oil.",
+            "Add sardines and water; bring to a boil.",
+            "Drop in misua and beaten egg.",
+            "Simmer until noodles are soft."
+        ]
+    },
+    {
+        id: 68,
+        name: "Ginisang Repolyo",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "healthy"],
+        image: "assets/recipes/ginisang-repolyo.jpg",
+        servings: 4,
+        estimatedCost: 65,
+        prepTime: "10 mins",
+        cookTime: "15 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "500 g Cabbage",
+            "1 pc Carrot",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "2 tbsp Soy Sauce",
+            "1 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Sauté garlic and onion in oil.",
+            "Add carrot and cabbage.",
+            "Season with soy sauce and stir-fry until tender.",
+            "Serve with rice."
+        ]
     }
 ];
 
