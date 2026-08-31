@@ -298,8 +298,9 @@ function renderPlannerSummaryFromCurrentPlan(showSummary = true){
         const dayPlan = currentMealPlan[day];
         if (!dayPlan) return;
 
+        const summaryPax = parseInt(document.getElementById('plannerPax')?.value, 10) || 0;
         const meals = ['Breakfast', 'Lunch', 'Dinner'].map(type => dayPlan[type]).filter(Boolean);
-        const dayCost = meals.reduce((sum, meal) => sum + (meal.baseCost || meal.estimatedCost || 0), 0);
+        const dayCost = meals.reduce((sum, meal) => sum + calculateRecipeCostFromMarket(meal, summaryPax), 0);
         totalCost += dayCost;
 
         const card = document.createElement('div');
@@ -1796,7 +1797,10 @@ function generateFilipinoMealPlan() {
             // Use market-based pricing for accurate cost calculation, scaled for target pax
             const marketBasedCost = calculateRecipeCostFromMarket(recipe, targetPaxCount);
             const perServingCost = marketBasedCost / Math.max(targetPaxCount, 1);
-            const costDistance = Math.abs(perServingCost - budgetPerServing);
+            // Going over budget is penalized much more than staying under it
+            const costDistance = perServingCost > budgetPerServing
+                ? (perServingCost - budgetPerServing) * 3.5
+                : (budgetPerServing - perServingCost);
             const servingDistance = Math.abs(recipe.servings - targetPaxCount);
             return {
                 recipe,
@@ -1841,12 +1845,56 @@ function generateFilipinoMealPlan() {
             Dinner: dMeal
         };
 
+        totalPlanCostAccumulator +=
+            calculateRecipeCostFromMarket(bMeal, targetPaxCount) +
+            calculateRecipeCostFromMarket(lMeal, targetPaxCount) +
+            calculateRecipeCostFromMarket(dMeal, targetPaxCount);
+    });
+
+    // Repair pass: while the plan exceeds the budget, swap the most
+    // expensive meals for the cheapest same-type alternatives
+    if (totalPlanCostAccumulator > targetWeekBudget) {
+        const optionsByType = {
+            Breakfast: breakfastOptions,
+            Lunch: lunchOptions,
+            Dinner: dinnerOptions
+        };
+        const cheapestByType = {};
+        Object.entries(optionsByType).forEach(([type, opts]) => {
+            cheapestByType[type] = opts
+                .map(recipe => ({ recipe, cost: calculateRecipeCostFromMarket(recipe, targetPaxCount) }))
+                .sort((a, b) => a.cost - b.cost);
+        });
+
+        const slots = [];
+        daysOfWeek.forEach(day => {
+            ["Breakfast", "Lunch", "Dinner"].forEach(type => {
+                slots.push({ day, type, cost: calculateRecipeCostFromMarket(currentMealPlan[day][type], targetPaxCount) });
+            });
+        });
+        slots.sort((a, b) => b.cost - a.cost);
+
+        for (const slot of slots) {
+            if (totalPlanCostAccumulator <= targetWeekBudget) break;
+            const dayIds = new Set(["Breakfast", "Lunch", "Dinner"].map(t => currentMealPlan[slot.day][t].id));
+            const candidate = (cheapestByType[slot.type] || []).find(c => !dayIds.has(c.recipe.id) && c.cost < slot.cost);
+            if (candidate) {
+                totalPlanCostAccumulator -= slot.cost - candidate.cost;
+                currentMealPlan[slot.day][slot.type] = candidate.recipe;
+            }
+        }
+    }
+
+    daysOfWeek.forEach(day => {
+        const bMeal = currentMealPlan[day].Breakfast;
+        const lMeal = currentMealPlan[day].Lunch;
+        const dMeal = currentMealPlan[day].Dinner;
+
         // Use market-based pricing scaled for target pax
         const bCost = calculateRecipeCostFromMarket(bMeal, targetPaxCount);
         const lCost = calculateRecipeCostFromMarket(lMeal, targetPaxCount);
         const dCost = calculateRecipeCostFromMarket(dMeal, targetPaxCount);
         const dayCost = bCost + lCost + dCost;
-        totalPlanCostAccumulator += dayCost;
 
         const dayCard = document.createElement('div');
         dayCard.className = "bg-white p-4 rounded-xl border border-gray-100 shadow-sm grid md:grid-cols-4 items-center gap-4 hover:border-emerald-200 transition";
