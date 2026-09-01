@@ -1723,6 +1723,312 @@ const RECIPE_DATABASE = [
             "Season with soy sauce and stir-fry until tender.",
             "Serve with rice."
         ]
+    },
+    {
+        id: 69,
+        name: "Hotsilog",
+        mealType: ["Breakfast"],
+        diet: ["anything", "tipid"],
+        image: "assets/recipes/hotsilog.jpg",
+        servings: 2,
+        estimatedCost: 70,
+        prepTime: "5 mins",
+        cookTime: "15 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "250 g Hotdog",
+            "2 pc Egg",
+            "2 cup Rice",
+            "3 cloves Garlic",
+            "2 tbsp Oil"
+        ],
+        instructions: [
+            "Fry hotdogs until lightly blistered.",
+            "Fry garlic rice in the same pan.",
+            "Fry eggs sunny side up.",
+            "Plate rice, hotdog, and egg together."
+        ]
+    },
+    {
+        id: 70,
+        name: "Tinapa at Kamatis with Rice",
+        mealType: ["Breakfast"],
+        diet: ["anything", "tipid", "protein"],
+        image: "assets/recipes/tinapa-kamatis.jpg",
+        servings: 2,
+        estimatedCost: 65,
+        prepTime: "5 mins",
+        cookTime: "10 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "2 pc Tinapa",
+            "2 pc Tomato",
+            "1 pc Onion",
+            "2 cup Rice",
+            "1 tbsp Oil"
+        ],
+        instructions: [
+            "Fry tinapa until crisp on the edges.",
+            "Slice tomatoes and onion for ensalada.",
+            "Serve tinapa with rice and the tomato-onion side."
+        ]
+    },
+    {
+        id: 71,
+        name: "Nilagang Kamote at Kape",
+        mealType: ["Breakfast"],
+        diet: ["anything", "tipid", "healthy"],
+        image: "assets/recipes/nilagang-kamote.jpg",
+        servings: 2,
+        estimatedCost: 35,
+        prepTime: "5 mins",
+        cookTime: "20 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "500 g Kamote",
+            "2 pc Coffee",
+            "1 tbsp Sugar"
+        ],
+        instructions: [
+            "Boil kamote until fork-tender.",
+            "Prepare hot coffee.",
+            "Serve kamote peeled, with coffee on the side."
+        ]
+    },
+    {
+        id: 72,
+        name: "Pandesal at Itlog",
+        mealType: ["Breakfast"],
+        diet: ["anything", "tipid", "protein"],
+        image: "assets/recipes/pandesal-itlog.jpg",
+        servings: 2,
+        estimatedCost: 40,
+        prepTime: "5 mins",
+        cookTime: "10 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "6 pc Pandesal",
+            "2 pc Egg",
+            "1 tbsp Oil",
+            "2 pc Coffee"
+        ],
+        instructions: [
+            "Scramble the eggs in a little oil.",
+            "Stuff pandesal with the scrambled egg.",
+            "Serve with hot coffee."
+        ]
+    },
+    {
+        id: 73,
+        name: "Pancit Bihon Guisado",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid"],
+        image: "assets/recipes/pancit-bihon.jpg",
+        servings: 4,
+        estimatedCost: 110,
+        prepTime: "15 mins",
+        cookTime: "20 mins",
+        difficulty: "Medium",
+        ingredients: [
+            "1 pack Bihon",
+            "250 g Chicken",
+            "1 pc Carrot",
+            "300 g Cabbage",
+            "1 pc Onion",
+            "4 cloves Garlic",
+            "3 tbsp Soy Sauce",
+            "2 tbsp Oil"
+        ],
+        instructions: [
+            "Sauté garlic, onion, and chicken until cooked.",
+            "Add vegetables and stir-fry briefly.",
+            "Add soaked bihon, soy sauce, and a little water.",
+            "Toss until noodles absorb the sauce."
+        ]
+    },
+    {
+        id: 74,
+        name: "Ginisang Sayote with Egg",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "healthy"],
+        image: "assets/recipes/ginisang-sayote.jpg",
+        servings: 4,
+        estimatedCost: 60,
+        prepTime: "10 mins",
+        cookTime: "15 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "500 g Sayote",
+            "2 pc Egg",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Sauté garlic and onion in oil.",
+            "Add sliced sayote and a splash of water; cover until tender.",
+            "Stir in beaten eggs and cook through.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 75,
+        name: "Tortang Giniling",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "protein"],
+        image: "assets/recipes/tortang-giniling.jpg",
+        servings: 4,
+        estimatedCost: 130,
+        prepTime: "10 mins",
+        cookTime: "20 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "250 g Giniling",
+            "3 pc Egg",
+            "1 pc Onion",
+            "1 pc Tomato",
+            "2 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Sauté ground pork with onion and tomato until cooked.",
+            "Mix into beaten eggs.",
+            "Fry as small omelets until golden.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 76,
+        name: "Ginataang Kalabasa at Sitaw",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "healthy"],
+        image: "assets/recipes/ginataang-kalabasa.jpg",
+        servings: 4,
+        estimatedCost: 90,
+        prepTime: "10 mins",
+        cookTime: "25 mins",
+        difficulty: "Medium",
+        ingredients: [
+            "500 g Kalabasa",
+            "250 g Sitaw",
+            "2 cup Coconut Milk",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tbsp Fish Sauce",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Sauté garlic and onion.",
+            "Add squash, sitaw, and coconut milk.",
+            "Simmer until vegetables are tender.",
+            "Season with fish sauce and serve with rice."
+        ]
+    },
+    {
+        id: 77,
+        name: "Sinabawang Gulay with Malunggay",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "healthy"],
+        image: "assets/recipes/sinabawang-gulay.jpg",
+        servings: 4,
+        estimatedCost: 70,
+        prepTime: "10 mins",
+        cookTime: "20 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "1 bundle Malunggay",
+            "300 g Squash",
+            "1 pc Onion",
+            "2 pc Tomato",
+            "1 tbsp Fish Sauce",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Boil onion and tomato in water.",
+            "Add squash and simmer until soft.",
+            "Add malunggay leaves and fish sauce.",
+            "Serve hot with rice."
+        ]
+    },
+    {
+        id: 78,
+        name: "Pritong Tilapia with Ensaladang Kamatis",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "protein", "nopork"],
+        image: "assets/recipes/pritong-tilapia.jpg",
+        servings: 4,
+        estimatedCost: 160,
+        prepTime: "10 mins",
+        cookTime: "15 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "500 g Tilapia",
+            "3 pc Tomato",
+            "1 pc Onion",
+            "3 tbsp Oil",
+            "1 tsp Salt",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Season tilapia with salt and fry until crisp.",
+            "Chop tomatoes and onion for the ensalada.",
+            "Serve fish with rice and ensalada."
+        ]
+    },
+    {
+        id: 79,
+        name: "Tokwa't Toge",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "healthy"],
+        image: "assets/recipes/tokwat-toge.jpg",
+        servings: 4,
+        estimatedCost: 75,
+        prepTime: "10 mins",
+        cookTime: "15 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "4 pc Tokwa",
+            "300 g Togue",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "2 tbsp Soy Sauce",
+            "2 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Fry tokwa cubes until golden; set aside.",
+            "Sauté garlic, onion, and togue.",
+            "Add tokwa and soy sauce; toss briefly.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 80,
+        name: "Chicken Sopas",
+        mealType: ["Dinner", "Breakfast"],
+        diet: ["anything", "nopork"],
+        image: "assets/recipes/chicken-sopas.jpg",
+        servings: 4,
+        estimatedCost: 120,
+        prepTime: "10 mins",
+        cookTime: "30 mins",
+        difficulty: "Medium",
+        ingredients: [
+            "250 g Chicken",
+            "1 pack Noodles",
+            "1 pc Carrot",
+            "300 g Cabbage",
+            "1 can Evaporated Milk",
+            "1 pc Onion",
+            "3 cloves Garlic"
+        ],
+        instructions: [
+            "Sauté garlic, onion, and chicken.",
+            "Add water and bring to a boil.",
+            "Add macaroni noodles and vegetables; simmer until tender.",
+            "Stir in evaporated milk and season to taste."
+        ]
     }
 ];
 

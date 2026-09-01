@@ -858,6 +858,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
     if (plannerDiet) plannerDiet.addEventListener('change', calculatePlanMetrics);
+    document.querySelectorAll('#budgetPresets .budget-preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (plannerBudget) {
+                plannerBudget.value = btn.dataset.budget;
+                plannerBudget.classList.remove('border-rose-500', 'border-red-500');
+                const budgetError = document.getElementById('budgetError');
+                if (budgetError) budgetError.classList.add('hidden');
+                calculatePlanMetrics();
+            }
+        });
+    });
     if (generateMealPlanBtn) generateMealPlanBtn.addEventListener('click', () => {
         generateFilipinoMealPlan();
     });
@@ -1935,12 +1946,17 @@ function generateFilipinoMealPlan() {
     }
     
     const summaryWarning = document.getElementById('plannerSummaryWarning');
-    if (totalPlanCostAccumulator > targetWeekBudget) {
-        if (summaryWarning) {
-            summaryWarning.innerText = `Notice: estimated weekly cost ₱${totalPlanCostAccumulator.toFixed(0)} exceeds your target ₱${targetWeekBudget}.`;
+    if (summaryWarning) {
+        if (totalPlanCostAccumulator > targetWeekBudget) {
+            const avgDayCost = totalPlanCostAccumulator / 7;
+            const daysCovered = Math.max(1, Math.floor(targetWeekBudget / avgDayCost));
+            summaryWarning.innerText =
+                `Heads up: even the cheapest 7-day plan for ${targetPaxCount} pax costs about ₱${totalPlanCostAccumulator.toFixed(0)} ` +
+                `(₱${avgDayCost.toFixed(0)}/day). Your ₱${targetWeekBudget} budget fits about ${daysCovered} day${daysCovered === 1 ? '' : 's'} of this plan — ` +
+                `we still generated the full week so you can pick which days to follow.`;
+        } else {
+            summaryWarning.innerText = `Great — this plan fits your ₱${targetWeekBudget} weekly budget for ${targetPaxCount} pax (est. ₱${totalPlanCostAccumulator.toFixed(0)}).`;
         }
-    } else if (summaryWarning) {
-        summaryWarning.innerText = '';
     }
 }
 
@@ -2933,6 +2949,21 @@ function parseIngredient(ingredientStr) {
         'misua': 'noodles',
         'canton': 'noodles',
         'noodles': 'noodles',
+        'bihon': 'bihon',
+        'hotdog': 'hotdog',
+        'longganisa': 'longganisa',
+        'giniling': 'giniling',
+        'ground pork': 'giniling',
+        'tinapa': 'tinapa',
+        'kamote': 'kamote',
+        'sweet potato': 'kamote',
+        'sayote': 'sayote',
+        'sitaw': 'sitaw',
+        'string beans': 'sitaw',
+        'pandesal': 'pandesal',
+        'coffee': 'coffee',
+        'kape': 'coffee',
+        'corned beef': 'corned beef',
         'squash': 'kalabasa',
         'kalabasa': 'kalabasa',
         'papaya': 'papaya',
@@ -2945,9 +2976,9 @@ function parseIngredient(ingredientStr) {
         'sugar': 'sugar',
         'salt': 'salt',
         'pepper': 'pepper',
-        'milk': 'milk',
         'coconut milk': 'coconut milk',
         'gata': 'coconut milk',
+        'milk': 'milk',
     };
     
     // Find best match
@@ -3004,6 +3035,9 @@ function getMarketPriceForIngredient(ingredient) {
             'potato': 60, 'carrot': 70, 'tokwa': 15, 'monggo': 90,
             'talong': 90, 'spinach': 25, 'kangkong': 15, 'pechay': 20,
             'cabbage': 60, 'togue': 60, 'sardines': 25, 'tuyo': 8, 'noodles': 15,
+            'bihon': 40, 'hotdog': 180, 'longganisa': 220, 'giniling': 320,
+            'tinapa': 25, 'kamote': 50, 'sayote': 45, 'sitaw': 80,
+            'pandesal': 4, 'coffee': 9, 'corned beef': 40,
             'kalabasa': 50, 'papaya': 40, 'malunggay': 30, 'soy sauce': 35,
             'vinegar': 30, 'fish sauce': 40, 'oil': 80, 'sugar': 60,
             'salt': 25, 'pepper': 200, 'milk': 75, 'coconut milk': 85
@@ -3087,6 +3121,58 @@ const MARKET_PRICE_FALLBACK = [
     { keys: ['oil', 'mantika'], label: 'Cooking oil', price: '₱80–100/L' },
     { keys: ['sugar', 'asukal'], label: 'Sugar', price: '₱80–90/kg' }
 ];
+
+// Common palengke items that the DA Bantay Presyo feed does not cover.
+// Prices are typical CALABARZON wet-market retail estimates, used to
+// supplement the live feed for recipe costing and the Prices tab.
+const LOCAL_SUPPLEMENT_PRICES = [
+    { id: 'tokwa', name: 'Tokwa (Tofu)', keys: ['tokwa', 'tofu'], category: 'other food', unit: 'piece', price: 15 },
+    { id: 'togue', name: 'Togue (Mung Bean Sprouts)', keys: ['togue', 'bean sprout'], category: 'vegetables', unit: 'kg', price: 60 },
+    { id: 'repolyo', name: 'Repolyo (Cabbage)', keys: ['cabbage', 'repolyo'], category: 'vegetables', unit: 'kg', price: 70 },
+    { id: 'carrots', name: 'Carrots', keys: ['carrot'], category: 'vegetables', unit: 'kg', price: 90 },
+    { id: 'potato', name: 'Potato', keys: ['potato', 'patatas'], category: 'vegetables', unit: 'kg', price: 90 },
+    { id: 'sayote', name: 'Sayote', keys: ['sayote', 'chayote'], category: 'vegetables', unit: 'kg', price: 45 },
+    { id: 'kangkong', name: 'Kangkong', keys: ['kangkong'], category: 'vegetables', unit: 'kg', price: 60 },
+    { id: 'malunggay', name: 'Malunggay', keys: ['malunggay', 'moringa'], category: 'vegetables', unit: 'kg', price: 60 },
+    { id: 'sitaw', name: 'Sitaw (String Beans)', keys: ['sitaw', 'string beans'], category: 'vegetables', unit: 'kg', price: 80 },
+    { id: 'kamote', name: 'Kamote (Sweet Potato)', keys: ['kamote', 'sweet potato'], category: 'vegetables', unit: 'kg', price: 50 },
+    { id: 'ginger', name: 'Luya (Ginger)', keys: ['ginger', 'luya'], category: 'spices', unit: 'kg', price: 120 },
+    { id: 'calamansi', name: 'Calamansi', keys: ['calamansi', 'kalamansi'], category: 'fruits', unit: 'kg', price: 80 },
+    { id: 'saba', name: 'Saging na Saba', keys: ['saba', 'saging', 'banana'], category: 'fruits', unit: 'kg', price: 60 },
+    { id: 'tuyo', name: 'Tuyo (Dried Fish)', keys: ['tuyo', 'dried fish'], category: 'fish', unit: 'piece', price: 8 },
+    { id: 'tinapa', name: 'Tinapa (Smoked Fish)', keys: ['tinapa', 'smoked fish'], category: 'fish', unit: 'piece', price: 25 },
+    { id: 'instant-noodles', name: 'Instant Pancit Canton', keys: ['instant pancit canton', 'instant noodles', 'canton', 'noodles'], category: 'other food', unit: 'pack', price: 15 },
+    { id: 'misua', name: 'Misua Noodles', keys: ['misua'], category: 'other food', unit: 'pack', price: 25 },
+    { id: 'bihon', name: 'Bihon Noodles', keys: ['bihon'], category: 'other food', unit: 'pack', price: 40 },
+    { id: 'corned-beef', name: 'Corned Beef (Small Can)', keys: ['corned beef'], category: 'other food', unit: 'can', price: 40 },
+    { id: 'hotdog', name: 'Hotdog', keys: ['hotdog'], category: 'meat', unit: 'kg', price: 180 },
+    { id: 'longganisa', name: 'Longganisa', keys: ['longganisa', 'longganiza'], category: 'meat', unit: 'kg', price: 220 },
+    { id: 'giniling', name: 'Pork Giniling (Ground Pork)', keys: ['giniling', 'ground pork'], category: 'meat', unit: 'kg', price: 320 },
+    { id: 'pandesal', name: 'Pandesal', keys: ['pandesal'], category: 'other food', unit: 'piece', price: 4 },
+    { id: 'coffee-3in1', name: 'Coffee 3-in-1 Sachet', keys: ['coffee', 'kape'], category: 'other food', unit: 'piece', price: 9 },
+    { id: 'evap-milk', name: 'Evaporated Milk (Can)', keys: ['evaporated milk', 'milk'], category: 'other food', unit: 'can', price: 40 },
+    { id: 'gata', name: 'Gata (Coconut Milk)', keys: ['coconut milk', 'gata'], category: 'other food', unit: 'l', price: 100 },
+    { id: 'soy-sauce', name: 'Soy Sauce', keys: ['soy sauce', 'toyo'], category: 'spices', unit: 'l', price: 60 },
+    { id: 'vinegar', name: 'Vinegar (Suka)', keys: ['vinegar', 'suka'], category: 'spices', unit: 'l', price: 50 },
+    { id: 'fish-sauce', name: 'Patis (Fish Sauce)', keys: ['fish sauce', 'patis'], category: 'spices', unit: 'l', price: 80 },
+    { id: 'salt', name: 'Salt (Asin)', keys: ['salt', 'asin'], category: 'spices', unit: 'kg', price: 25 },
+    { id: 'tablea', name: 'Tablea (Cacao)', keys: ['tablea'], category: 'other food', unit: 'pack', price: 60 }
+].map(item => ({
+    ...item,
+    item_name: item.name,
+    price_min: null,
+    price_max: null,
+    price_avg: item.price,
+    notes: 'Local palengke estimate (not in DA Bantay Presyo)'
+}));
+
+// Merge supplemental estimates into a price list, skipping items the
+// live feed already covers.
+function mergeSupplementalPrices(items) {
+    const haystack = items.map(i => `${i.id || ''} ${i.name || ''} ${i.item_name || ''}`.toLowerCase()).join(' | ');
+    const missing = LOCAL_SUPPLEMENT_PRICES.filter(sup => !sup.keys.some(key => haystack.includes(key)));
+    return [...items, ...missing];
+}
 
 // Live reference, replaced once the GitHub-hosted DA price feed loads.
 // Starts as the fallback so the AI always has something to answer with.
@@ -3227,7 +3313,7 @@ async function loadLiveMarketPrices() {
         if (!Array.isArray(rows) || rows.length === 0) throw new Error('Empty price feed');
 
         // Map to internal format
-        const items = rows.map(row => ({
+        const items = mergeSupplementalPrices(rows.map(row => ({
             id: row.id,
             name: row.item_name,
             item_name: row.item_name,
@@ -3240,7 +3326,7 @@ async function loadLiveMarketPrices() {
             notes: row.notes,
             source_date: row.source_date,
             reportDate: row.source_date
-        }));
+        })));
 
         renderMarketPricesTable(items);
 
@@ -3264,7 +3350,7 @@ async function loadLiveMarketPrices() {
         updateHomePagePriceMovements(items);
     } catch (error) {
         console.warn('Live price feed unavailable, using fallback prices:', error);
-        renderMarketPricesTable(MARKET_PRICE_FALLBACK.map(entry => ({
+        renderMarketPricesTable(mergeSupplementalPrices(MARKET_PRICE_FALLBACK.map(entry => ({
             id: entry.keys[0],
             name: entry.label,
             price_min: null,
@@ -3273,7 +3359,7 @@ async function loadLiveMarketPrices() {
             price: null,
             unit: '',
             category: null
-        })));
+        }))));
         if (updatedLabel) {
             updatedLabel.textContent = 'Showing offline estimated rates — live DA feed unavailable right now.';
         }

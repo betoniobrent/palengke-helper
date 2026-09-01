@@ -625,6 +625,13 @@
                     placeholder="2500"
                     class="w-full mt-1 rounded-xl border border-emerald-300 p-3 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                 <p id="budgetError" class="text-rose-600 text-xs mt-1 hidden">Budget cannot be empty</p>
+                <div class="flex flex-wrap gap-2 mt-2" id="budgetPresets">
+                    <button type="button" data-budget="500" class="budget-preset-btn px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100">₱500</button>
+                    <button type="button" data-budget="750" class="budget-preset-btn px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100">₱750</button>
+                    <button type="button" data-budget="1000" class="budget-preset-btn px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100">₱1,000</button>
+                    <button type="button" data-budget="1500" class="budget-preset-btn px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100">₱1,500</button>
+                    <button type="button" data-budget="2500" class="budget-preset-btn px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100">₱2,500</button>
+                </div>
 
             </div>
 
@@ -1132,9 +1139,9 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
 
     <!-- Modular Operational Architecture Decoupled Initialization -->
     
-    <script src="data/recipes.js?v=3"></script>
+    <script src="data/recipes.js?v=4"></script>
     <script src="supabase.js?v=3"></script>
-    <script src="app.js?v=13"></script>
+    <script src="app.js?v=14"></script>
     <script>
         function switchTab(tabId) {
             console.log('switchTab called with:', tabId);
