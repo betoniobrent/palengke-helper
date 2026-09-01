@@ -2029,6 +2029,161 @@ const RECIPE_DATABASE = [
             "Add macaroni noodles and vegetables; simmer until tender.",
             "Stir in evaporated milk and season to taste."
         ]
+    },
+    {
+        id: 81,
+        name: "Adobong Paa ng Manok",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "protein", "nopork"],
+        image: "assets/recipes/adobong-paa.jpg",
+        servings: 4,
+        estimatedCost: 90,
+        prepTime: "15 mins",
+        cookTime: "45 mins",
+        difficulty: "Medium",
+        ingredients: [
+            "500 g Chicken Feet",
+            "1/2 cup Soy Sauce",
+            "1/4 cup Vinegar",
+            "5 cloves Garlic",
+            "1 pc Onion",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Clean chicken feet and trim the nails.",
+            "Simmer in soy sauce, vinegar, garlic, and onion.",
+            "Cook low and slow until tender and the sauce thickens.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 82,
+        name: "Adobong Atay ng Manok",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "protein", "nopork"],
+        image: "assets/recipes/adobong-atay.jpg",
+        servings: 4,
+        estimatedCost: 100,
+        prepTime: "10 mins",
+        cookTime: "25 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "500 g Chicken Liver",
+            "1/4 cup Soy Sauce",
+            "1/4 cup Vinegar",
+            "5 cloves Garlic",
+            "1 pc Onion",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Sauté garlic and onion.",
+            "Add chicken liver and sear briefly.",
+            "Add soy sauce and vinegar; simmer until just cooked through.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 83,
+        name: "Sinigang na Baboy (Tipid)",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid"],
+        image: "assets/recipes/sinigang-tipid.jpg",
+        servings: 4,
+        estimatedCost: 180,
+        prepTime: "10 mins",
+        cookTime: "45 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "400 g Pork",
+            "1 bunch Kangkong",
+            "2 pc Tomato",
+            "1 pc Onion",
+            "1 pack Sinigang Mix",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Boil pork with onion and tomato until tender.",
+            "Add sinigang mix and season.",
+            "Add kangkong last — skip the extra gulay to cut cost.",
+            "Serve hot with rice."
+        ]
+    },
+    {
+        id: 84,
+        name: "Tortang Talong",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "healthy"],
+        image: "assets/recipes/tortang-talong.jpg",
+        servings: 2,
+        estimatedCost: 50,
+        prepTime: "10 mins",
+        cookTime: "15 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "2 pc Eggplant",
+            "2 pc Egg",
+            "2 tbsp Oil",
+            "1 tsp Salt",
+            "2 cup Rice"
+        ],
+        instructions: [
+            "Grill or broil eggplants, then peel.",
+            "Flatten and dip in beaten egg with salt.",
+            "Fry until golden on both sides.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 85,
+        name: "Ginisang Monggo (Tipid)",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "healthy"],
+        image: "assets/recipes/monggo-tipid.jpg",
+        servings: 4,
+        estimatedCost: 60,
+        prepTime: "10 mins",
+        cookTime: "40 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "1 cup Monggo",
+            "1 bundle Malunggay",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tbsp Fish Sauce",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Boil monggo until soft.",
+            "Sauté garlic and onion, then add the boiled monggo.",
+            "Add malunggay and season with fish sauce — no pork needed.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 86,
+        name: "Nilagang Paa ng Manok",
+        mealType: ["Dinner"],
+        diet: ["anything", "tipid", "nopork"],
+        image: "assets/recipes/nilagang-paa.jpg",
+        servings: 4,
+        estimatedCost: 95,
+        prepTime: "10 mins",
+        cookTime: "50 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "500 g Chicken Feet",
+            "300 g Kamote",
+            "1 bunch Pechay",
+            "1 pc Onion",
+            "1 tbsp Fish Sauce",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Boil chicken feet with onion until tender.",
+            "Add kamote and simmer until soft.",
+            "Add pechay and season with fish sauce.",
+            "Serve hot with rice."
+        ]
     }
 ];
 

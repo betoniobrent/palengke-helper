@@ -1885,13 +1885,47 @@ function generateFilipinoMealPlan() {
         });
         slots.sort((a, b) => b.cost - a.cost);
 
+        const weeklyUsage = {};
+        daysOfWeek.forEach(day => {
+            ["Breakfast", "Lunch", "Dinner"].forEach(type => {
+                const id = currentMealPlan[day][type].id;
+                weeklyUsage[id] = (weeklyUsage[id] || 0) + 1;
+            });
+        });
+
         for (const slot of slots) {
             if (totalPlanCostAccumulator <= targetWeekBudget) break;
             const dayIds = new Set(["Breakfast", "Lunch", "Dinner"].map(t => currentMealPlan[slot.day][t].id));
-            const candidate = (cheapestByType[slot.type] || []).find(c => !dayIds.has(c.recipe.id) && c.cost < slot.cost);
+            // Prefer cheaper recipes not yet used this week to keep variety
+            const candidate = (cheapestByType[slot.type] || [])
+                .filter(c => !dayIds.has(c.recipe.id) && c.cost < slot.cost)
+                .sort((a, b) =>
+                    (weeklyUsage[a.recipe.id] || 0) - (weeklyUsage[b.recipe.id] || 0) ||
+                    a.cost - b.cost
+                )[0];
             if (candidate) {
+                const oldId = currentMealPlan[slot.day][slot.type].id;
+                weeklyUsage[oldId] = Math.max((weeklyUsage[oldId] || 1) - 1, 0);
+                weeklyUsage[candidate.recipe.id] = (weeklyUsage[candidate.recipe.id] || 0) + 1;
                 totalPlanCostAccumulator -= slot.cost - candidate.cost;
                 currentMealPlan[slot.day][slot.type] = candidate.recipe;
+                slot.cost = candidate.cost;
+            }
+        }
+
+        // Last resort: if still over budget, allow repeats and take the
+        // absolute cheapest alternatives
+        if (totalPlanCostAccumulator > targetWeekBudget) {
+            slots.sort((a, b) => b.cost - a.cost);
+            for (const slot of slots) {
+                if (totalPlanCostAccumulator <= targetWeekBudget) break;
+                const dayIds = new Set(["Breakfast", "Lunch", "Dinner"].map(t => currentMealPlan[slot.day][t].id));
+                const candidate = (cheapestByType[slot.type] || []).find(c => !dayIds.has(c.recipe.id) && c.cost < slot.cost);
+                if (candidate) {
+                    totalPlanCostAccumulator -= slot.cost - candidate.cost;
+                    currentMealPlan[slot.day][slot.type] = candidate.recipe;
+                    slot.cost = candidate.cost;
+                }
             }
         }
     }
@@ -2909,6 +2943,10 @@ function parseIngredient(ingredientStr) {
     
     // Map common ingredient variations to standard names
     const ingredientMap = {
+        'chicken feet': 'chicken feet',
+        'paa ng manok': 'chicken feet',
+        'chicken liver': 'chicken liver',
+        'atay': 'chicken liver',
         'chicken': 'chicken',
         'pork': 'pork',
         'beef': 'beef',
@@ -3038,6 +3076,7 @@ function getMarketPriceForIngredient(ingredient) {
             'bihon': 40, 'hotdog': 180, 'longganisa': 220, 'giniling': 320,
             'tinapa': 25, 'kamote': 50, 'sayote': 45, 'sitaw': 80,
             'pandesal': 4, 'coffee': 9, 'corned beef': 40,
+            'chicken feet': 100, 'chicken liver': 140, 'sinigang mix': 25,
             'kalabasa': 50, 'papaya': 40, 'malunggay': 30, 'soy sauce': 35,
             'vinegar': 30, 'fish sauce': 40, 'oil': 80, 'sugar': 60,
             'salt': 25, 'pepper': 200, 'milk': 75, 'coconut milk': 85
@@ -3146,6 +3185,8 @@ const LOCAL_SUPPLEMENT_PRICES = [
     { id: 'bihon', name: 'Bihon Noodles', keys: ['bihon'], category: 'other food', unit: 'pack', price: 40 },
     { id: 'corned-beef', name: 'Corned Beef (Small Can)', keys: ['corned beef'], category: 'other food', unit: 'can', price: 40 },
     { id: 'hotdog', name: 'Hotdog', keys: ['hotdog'], category: 'meat', unit: 'kg', price: 180 },
+    { id: 'chicken-feet', name: 'Chicken Feet (Paa ng Manok)', keys: ['chicken feet', 'paa ng manok'], category: 'meat', unit: 'kg', price: 100 },
+    { id: 'chicken-liver', name: 'Chicken Liver (Atay ng Manok)', keys: ['chicken liver', 'atay'], category: 'meat', unit: 'kg', price: 140 },
     { id: 'longganisa', name: 'Longganisa', keys: ['longganisa', 'longganiza'], category: 'meat', unit: 'kg', price: 220 },
     { id: 'giniling', name: 'Pork Giniling (Ground Pork)', keys: ['giniling', 'ground pork'], category: 'meat', unit: 'kg', price: 320 },
     { id: 'pandesal', name: 'Pandesal', keys: ['pandesal'], category: 'other food', unit: 'piece', price: 4 },
