@@ -2925,12 +2925,19 @@ function parseIngredient(ingredientStr) {
 
     let quantity = 1;
     let unit = 'piece';
+    let unitSpecified = false;
 
     const match = str.match(INGREDIENT_UNIT_PATTERN);
+    const bareCount = !match && str.match(/^(\d+(?:\.\d+)?)(?:\s*\/\s*(\d+(?:\.\d+)?))?\s+/);
     if (match) {
         quantity = parseFloat(match[1]);
         if (match[2]) quantity = quantity / parseFloat(match[2]);
         unit = INGREDIENT_UNIT_ALIASES[match[3]] || match[3];
+        unitSpecified = true;
+    } else if (bareCount) {
+        quantity = parseFloat(bareCount[1]);
+        if (bareCount[2]) quantity = quantity / parseFloat(bareCount[2]);
+        unitSpecified = true;
     }
 
     // Extract item name by removing quantity, units, and common words
@@ -3027,8 +3034,23 @@ function parseIngredient(ingredientStr) {
         }
     }
     
-    return { name: itemName, quantity, unit };
+    return { name: itemName, quantity, unit, unitSpecified };
 }
+
+// Ingredients sold by the piece/can/pack rather than by weight
+const COUNT_PRICED_INGREDIENTS = new Set([
+    'egg', 'tokwa', 'tuyo', 'tinapa', 'pandesal', 'coffee', 'sardines',
+    'noodles', 'bihon', 'corned beef', 'milk', 'sinigang mix'
+]);
+
+// Rough amount (kg or L) a recipe uses when it lists a condiment or aromatic
+// with no quantity; anything else unit-less is assumed to be 1 kg.
+const UNITLESS_DEFAULT_KG = {
+    'salt': 0.05, 'pepper': 0.02, 'sugar': 0.1, 'oil': 0.1,
+    'soy sauce': 0.1, 'vinegar': 0.1, 'fish sauce': 0.05,
+    'garlic': 0.05, 'onion': 0.15, 'ginger': 0.05, 'tomato': 0.2,
+    'chili': 0.02, 'calamansi': 0.1
+};
 
 function findSupabasePriceForIngredient(parsed) {
     if (!ALL_PRICE_ITEMS || ALL_PRICE_ITEMS.length === 0) return null;
@@ -3049,10 +3071,11 @@ function findReferencePriceForIngredient(parsed) {
     return parsePriceValue(marketItem.price);
 }
 
-// Get price from market data for an ingredient
-function getMarketPriceForIngredient(ingredient) {
+// Resolve an ingredient string to its market unit price and the multiplier
+// that converts the recipe quantity into that priced unit.
+function resolveIngredientPricing(ingredient) {
     const parsed = parseIngredient(ingredient);
-    if (!parsed) return 0;
+    if (!parsed) return null;
 
     // 1. Try Supabase live market prices first
     let unitPrice = findSupabasePriceForIngredient(parsed);
@@ -3079,7 +3102,8 @@ function getMarketPriceForIngredient(ingredient) {
             'chicken feet': 100, 'chicken liver': 140, 'sinigang mix': 25,
             'kalabasa': 50, 'papaya': 40, 'malunggay': 30, 'soy sauce': 35,
             'vinegar': 30, 'fish sauce': 40, 'oil': 80, 'sugar': 60,
-            'salt': 25, 'pepper': 200, 'milk': 75, 'coconut milk': 85
+            'salt': 25, 'pepper': 200, 'milk': 75, 'coconut milk': 85,
+            'ginger': 120, 'calamansi': 80, 'chili': 200, 'bay leaves': 1
         };
         unitPrice = fallbackPrices[parsed.name] || 50;
         source = 'fallback';
@@ -3101,11 +3125,26 @@ function getMarketPriceForIngredient(ingredient) {
         'talong': 0.15, 'papaya': 0.5, 'kalabasa': 0.5
     };
 
+    // Units bought by count rather than by weight; everything else is bought per kg
+    const countUnits = { 'pc': 'pc', 'piece': 'pc', 'pieces': 'pc', 'whole': 'pc', 'can': 'can', 'pack': 'pack', 'packs': 'pack', 'tray': 'tray' };
+
     let multiplier = unitMultipliers[parsed.unit] || 1;
+    let purchaseUnit = countUnits[parsed.unit] || 'kg';
     if ((parsed.unit === 'pc' || parsed.unit === 'piece' || parsed.unit === 'whole') && pieceWeightsKg[parsed.name]) {
         multiplier = pieceWeightsKg[parsed.name];
+        purchaseUnit = 'kg';
+    } else if (!parsed.unitSpecified && !COUNT_PRICED_INGREDIENTS.has(parsed.name)) {
+        multiplier = UNITLESS_DEFAULT_KG[parsed.name] || 1;
+        purchaseUnit = 'kg';
     }
-    return unitPrice * parsed.quantity * multiplier;
+    return { parsed, unitPrice, multiplier, purchaseUnit, source };
+}
+
+// Get price from market data for an ingredient
+function getMarketPriceForIngredient(ingredient) {
+    const pricing = resolveIngredientPricing(ingredient);
+    if (!pricing) return 0;
+    return pricing.unitPrice * pricing.parsed.quantity * pricing.multiplier;
 }
 
 // Calculate recipe cost based on market prices, scaled for target pax
@@ -3126,6 +3165,116 @@ function calculateRecipeCostFromMarket(recipe, pax = 0) {
         return (baseCost / Math.max(recipe.servings, 1)) * pax;
     }
     return Math.round(baseCost);
+}
+
+// ==========================================
+// 6c. MEAL PLAN → GROCERY LIST
+// ==========================================
+
+const GROCERY_CATEGORY_BY_INGREDIENT = {
+    'chicken': 'meat', 'pork': 'meat', 'beef': 'meat', 'fish': 'meat', 'bangus': 'meat',
+    'tilapia': 'meat', 'galunggong': 'meat', 'hotdog': 'meat', 'longganisa': 'meat',
+    'giniling': 'meat', 'tinapa': 'meat', 'tuyo': 'meat', 'chicken feet': 'meat', 'chicken liver': 'meat',
+    'egg': 'rice', 'rice': 'rice', 'monggo': 'rice',
+    'garlic': 'vegetables', 'onion': 'vegetables', 'tomato': 'vegetables', 'potato': 'vegetables',
+    'carrot': 'vegetables', 'talong': 'vegetables', 'spinach': 'vegetables', 'kangkong': 'vegetables',
+    'pechay': 'vegetables', 'cabbage': 'vegetables', 'togue': 'vegetables', 'kamote': 'vegetables',
+    'sayote': 'vegetables', 'sitaw': 'vegetables', 'kalabasa': 'vegetables', 'papaya': 'vegetables',
+    'malunggay': 'vegetables', 'ginger': 'vegetables', 'calamansi': 'vegetables',
+    'soy sauce': 'spices', 'vinegar': 'spices', 'fish sauce': 'spices', 'oil': 'spices',
+    'sugar': 'spices', 'salt': 'spices', 'pepper': 'spices', 'sinigang mix': 'spices',
+    'tokwa': 'other food', 'sardines': 'other food', 'noodles': 'other food', 'bihon': 'other food',
+    'corned beef': 'other food', 'pandesal': 'other food', 'coffee': 'other food',
+    'milk': 'other food', 'coconut milk': 'other food'
+};
+
+const LIQUID_INGREDIENTS = new Set(['soy sauce', 'vinegar', 'fish sauce', 'oil', 'milk', 'coconut milk']);
+
+function formatIngredientLabel(name) {
+    return name.replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// Aggregate every ingredient in the current weekly plan (scaled to pax) into
+// one line per ingredient, in the unit you'd actually buy it at the palengke.
+function buildGroceryItemsFromMealPlan(pax) {
+    const totals = {};
+
+    DAYS_OF_WEEK.forEach(day => {
+        const dayPlan = currentMealPlan[day];
+        if (!dayPlan) return;
+        ['Breakfast', 'Lunch', 'Dinner'].forEach(type => {
+            const recipe = dayPlan[type];
+            if (!recipe || !recipe.ingredients) return;
+            const scale = pax > 0 ? pax / Math.max(recipe.servings, 1) : 1;
+
+            recipe.ingredients.forEach(ingredient => {
+                const pricing = resolveIngredientPricing(ingredient);
+                if (!pricing) return;
+                const { parsed, unitPrice, multiplier, purchaseUnit } = pricing;
+                const key = `${parsed.name}|${purchaseUnit}`;
+                const purchaseQty = purchaseUnit === 'kg'
+                    ? parsed.quantity * multiplier * scale
+                    : parsed.quantity * scale;
+
+                if (!totals[key]) {
+                    totals[key] = { name: parsed.name, unit: purchaseUnit, quantity: 0, cost: 0 };
+                }
+                totals[key].quantity += purchaseQty;
+                totals[key].cost += unitPrice * parsed.quantity * multiplier * scale;
+            });
+        });
+    });
+
+    return Object.values(totals)
+        .filter(t => t.quantity > 0)
+        .map(t => {
+            const quantity = t.unit === 'kg'
+                ? Math.max(0.05, Math.ceil(t.quantity * 20) / 20)
+                : Math.max(1, Math.ceil(t.quantity));
+            const unitPrice = t.cost / quantity;
+            return {
+                name: formatIngredientLabel(t.name),
+                price: unitPrice,
+                basePrice: unitPrice,
+                piecesPerKg: null,
+                quantity,
+                unit: t.unit === 'kg' && LIQUID_INGREDIENTS.has(t.name) ? 'L' : t.unit,
+                category: GROCERY_CATEGORY_BY_INGREDIENT[t.name] || 'other food',
+                checked: false,
+                fromMealPlan: true
+            };
+        })
+        .sort((a, b) => CATEGORY_TAB_ORDER.indexOf(a.category) - CATEGORY_TAB_ORDER.indexOf(b.category) || a.name.localeCompare(b.name));
+}
+
+function addMealPlanToGroceryList() {
+    if (!hasActiveMealPlan()) {
+        showNotification('Generate or open a meal plan first', 'error');
+        return;
+    }
+
+    const pax = parseInt(document.getElementById('plannerPax')?.value, 10) || 0;
+    const planItems = buildGroceryItemsFromMealPlan(pax);
+    if (planItems.length === 0) {
+        showNotification('No ingredients found in this plan', 'error');
+        return;
+    }
+
+    const existing = getGroceryData();
+    const previousPlanItems = existing.filter(i => i.fromMealPlan);
+    if (previousPlanItems.length > 0 &&
+        !confirm(`Replace the ${previousPlanItems.length} item(s) previously added from a meal plan?`)) {
+        return;
+    }
+
+    const kept = existing.filter(i => !i.fromMealPlan);
+    setGroceryData([...kept, ...planItems]);
+    renderGroceryItems();
+    saveGroceryListToSupabase();
+
+    const total = planItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    showNotification(`Added ${planItems.length} ingredients (≈₱${total.toFixed(0)}) to your Grocery List`, 'success');
+    if (typeof switchTab === 'function') switchTab('grocery');
 }
 
 // ==========================================
