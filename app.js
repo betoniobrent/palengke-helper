@@ -2115,12 +2115,12 @@ function updateCartSummary(items) {
     const remainingItems = items.filter(i => !i.checked);
     const remainingCost = remainingItems.reduce((acc, i) => acc + ((getItemUnitPrice(i)) * (parseFloat(i.quantity) || 0)), 0);
 
-    document.getElementById('totalCost').innerText = `₱${totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    document.getElementById('totalCost').innerText = `₱${totalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     document.getElementById('totalItems').innerText = items.length;
     document.getElementById('checkedItems').innerText = checkedItems.length;
     document.getElementById('remainingItems').innerText = remainingItems.length;
-    document.getElementById('checkedTotal').innerText = `₱${checkedCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-    document.getElementById('remainingTotal').innerText = `₱${remainingCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    document.getElementById('checkedTotal').innerText = `₱${checkedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('remainingTotal').innerText = `₱${remainingCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     
     checkGroceryBudgetConstraints(totalCost);
 }
@@ -2957,7 +2957,7 @@ function parseIngredient(ingredientStr) {
         'chicken': 'chicken',
         'pork': 'pork',
         'beef': 'beef',
-        'fish': 'fish',
+        'fish': 'tilapia',
         'bangus': 'bangus',
         'tilapia': 'tilapia',
         'galunggong': 'galunggong',
@@ -2988,8 +2988,8 @@ function parseIngredient(ingredientStr) {
         'repolyo': 'cabbage',
         'togue': 'togue',
         'bean sprout': 'togue',
-        'sardines': 'sardines',
-        'sardinas': 'sardines',
+        'sardines': 'canned sardines',
+        'sardinas': 'canned sardines',
         'tuyo': 'tuyo',
         'misua': 'noodles',
         'canton': 'noodles',
@@ -3000,6 +3000,47 @@ function parseIngredient(ingredientStr) {
         'giniling': 'giniling',
         'ground pork': 'giniling',
         'tinapa': 'tinapa',
+        'smoked fish': 'tinapa',
+        'tomato sauce': 'tomato sauce',
+        'broth': 'broth cube',
+        'liver': 'chicken liver',
+        'tablea': 'tablea',
+        'shrimp paste': 'bagoong',
+        'bagoong': 'bagoong',
+        'shrimp': 'shrimp',
+        'hipon': 'shrimp',
+        'squid': 'squid',
+        'pusit': 'squid',
+        'oxtail': 'oxtail',
+        'okra': 'okra',
+        'radish': 'radish',
+        'labanos': 'radish',
+        'bitter melon': 'ampalaya',
+        'ampalaya': 'ampalaya',
+        'bok choy': 'pechay',
+        'corn': 'corn',
+        'mushroom': 'mushrooms',
+        'pineapple': 'pineapple',
+        'banana ketchup': 'banana ketchup',
+        'mayonnaise': 'mayonnaise',
+        'tamarind broth mix': 'sinigang mix',
+        'tamarind': 'tamarind',
+        'sampalok': 'tamarind',
+        'lemon grass': 'lemon grass',
+        'lemongrass': 'lemon grass',
+        'tanglad': 'lemon grass',
+        'star anise': 'star anise',
+        'vanilla': 'vanilla',
+        'cream': 'cream',
+        'mixed vegetables': 'mixed vegetables',
+        'taro leaves': 'taro leaves',
+        'laing': 'taro leaves',
+        'banana blossom': 'banana blossom',
+        'puso ng saging': 'banana blossom',
+        'winged beans': 'sigarilyas',
+        'sigarilyas': 'sigarilyas',
+        'peanut butter': 'peanut butter',
+        'arnibal': 'sugar',
         'kamote': 'kamote',
         'sweet potato': 'kamote',
         'sayote': 'sayote',
@@ -3020,16 +3061,30 @@ function parseIngredient(ingredientStr) {
         'oil': 'oil',
         'sugar': 'sugar',
         'salt': 'salt',
-        'pepper': 'pepper',
+        'bell pepper': 'bell pepper',
+        'pepper': 'black pepper',
+        'dried fish': 'tuyo',
+        'bay lea': 'bay leaves',
+        'cornstarch': 'cornstarch',
+        'butter': 'butter',
+        'cheese': 'cheese',
+        'sago': 'sago',
+        'chili': 'chili',
+        'sili': 'chili',
+        'ginger': 'ginger',
+        'luya': 'ginger',
+        'calamansi': 'calamansi',
+        'kalamansi': 'calamansi',
         'coconut milk': 'coconut milk',
         'gata': 'coconut milk',
         'milk': 'milk',
     };
     
-    // Find best match
-    for (const [key, value] of Object.entries(ingredientMap)) {
+    // Find best match, longest key first so "fish sauce" wins over "fish"
+    const sortedKeys = Object.keys(ingredientMap).sort((a, b) => b.length - a.length);
+    for (const key of sortedKeys) {
         if (itemName.includes(key)) {
-            itemName = value;
+            itemName = ingredientMap[key];
             break;
         }
     }
@@ -3037,35 +3092,65 @@ function parseIngredient(ingredientStr) {
     return { name: itemName, quantity, unit, unitSpecified };
 }
 
-// Ingredients sold by the piece/can/pack rather than by weight
-const COUNT_PRICED_INGREDIENTS = new Set([
-    'egg', 'tokwa', 'tuyo', 'tinapa', 'pandesal', 'coffee', 'sardines',
-    'noodles', 'bihon', 'corned beef', 'milk', 'sinigang mix'
-]);
-
-// Rough amount (kg or L) a recipe uses when it lists a condiment or aromatic
-// with no quantity; anything else unit-less is assumed to be 1 kg.
-const UNITLESS_DEFAULT_KG = {
-    'salt': 0.05, 'pepper': 0.02, 'sugar': 0.1, 'oil': 0.1,
-    'soy sauce': 0.1, 'vinegar': 0.1, 'fish sauce': 0.05,
-    'garlic': 0.05, 'onion': 0.15, 'ginger': 0.05, 'tomato': 0.2,
-    'chili': 0.02, 'calamansi': 0.1
+// Ingredients sold by the piece/can/pack rather than by weight, with the
+// approximate weight of one piece so gram-based recipes can be converted.
+const COUNT_PRICED_INGREDIENTS = {
+    'egg': { kg: 0.06, unit: 'pc' }, 'tokwa': { kg: 0.1, unit: 'pc' }, 'tuyo': { kg: 0.02, unit: 'pc' },
+    'tinapa': { kg: 0.1, unit: 'pc' }, 'pandesal': { kg: 0.03, unit: 'pc' }, 'coffee': { kg: 0.02, unit: 'pc' },
+    'canned sardines': { kg: 0.155, unit: 'can' }, 'noodles': { kg: 0.06, unit: 'pack' }, 'bihon': { kg: 0.25, unit: 'pack' },
+    'corned beef': { kg: 0.15, unit: 'can' }, 'milk': { kg: 0.37, unit: 'can' }, 'sinigang mix': { kg: 0.02, unit: 'pack' },
+    'bay leaves': { kg: 0.001, unit: 'pc' }, 'tablea': { kg: 0.2, unit: 'pack' }, 'tomato sauce': { kg: 0.2, unit: 'pack' },
+    'broth cube': { kg: 0.01, unit: 'pc' }
 };
 
-function findSupabasePriceForIngredient(parsed) {
-    if (!ALL_PRICE_ITEMS || ALL_PRICE_ITEMS.length === 0) return null;
+// Approximate weight of one piece of produce/protein that is priced per kilo
+const PIECE_WEIGHTS_KG = {
+    'onion': 0.1, 'tomato': 0.12, 'carrot': 0.1, 'potato': 0.15,
+    'talong': 0.15, 'papaya': 0.5, 'kalabasa': 0.5, 'sayote': 0.3,
+    'kamote': 0.2, 'bangus': 0.5, 'tilapia': 0.25, 'chicken': 1.2,
+    'calamansi': 0.01, 'chili': 0.005
+};
 
-    const item = ALL_PRICE_ITEMS.find(p =>
-        parsed.name.includes(p.item_name?.toLowerCase()) ||
-        p.item_name?.toLowerCase().includes(parsed.name)
-    );
+// Rough amount (kg or L) a recipe uses when it lists a condiment or aromatic
+// with no quantity; other known items default to 1 kg, unknown ones to 0.25 kg.
+const UNITLESS_DEFAULT_KG = {
+    'salt': 0.05, 'black pepper': 0.02, 'sugar': 0.1, 'oil': 0.1,
+    'soy sauce': 0.1, 'vinegar': 0.1, 'fish sauce': 0.05,
+    'garlic': 0.03, 'onion': 0.15, 'ginger': 0.05, 'tomato': 0.2,
+    'chili': 0.02, 'calamansi': 0.1, 'cornstarch': 0.05, 'butter': 0.05,
+    'cheese': 0.1, 'sago': 0.1, 'coconut milk': 0.4, 'bell pepper': 0.15,
+    'shrimp': 0.5, 'squid': 0.5, 'mushrooms': 0.2, 'star anise': 0.01,
+    'vanilla': 0.01, 'bagoong': 0.1, 'mayonnaise': 0.1, 'banana ketchup': 0.1,
+    'cream': 0.25, 'tamarind': 0.1, 'lemon grass': 0.05, 'peanut butter': 0.1,
+    'okra': 0.25, 'radish': 0.25, 'ampalaya': 0.25, 'corn': 0.25,
+    'pineapple': 0.5, 'mixed vegetables': 0.25, 'taro leaves': 0.1,
+    'banana blossom': 0.3, 'sigarilyas': 0.25
+};
+
+function escapeRegExp(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Whole-word match in either direction ("egg" must not match "eggplant")
+function ingredientNameMatches(name, candidate) {
+    if (!name || !candidate) return false;
+    if (name === candidate) return true;
+    return new RegExp(`\\b${escapeRegExp(name)}\\b`).test(candidate) ||
+        new RegExp(`\\b${escapeRegExp(candidate)}\\b`).test(name);
+}
+
+function findSupabasePriceForIngredient(parsed) {
+    if (!ALL_PRICE_ITEMS || ALL_PRICE_ITEMS.length === 0 || !parsed.name) return null;
+
+    const exact = ALL_PRICE_ITEMS.find(p => (p.item_name || '').toLowerCase() === parsed.name);
+    const item = exact || ALL_PRICE_ITEMS.find(p => ingredientNameMatches(parsed.name, (p.item_name || '').toLowerCase()));
 
     return item ? item.price_avg : null;
 }
 
 function findReferencePriceForIngredient(parsed) {
     const marketItem = MARKET_PRICE_REFERENCE.find(item =>
-        item.keys.some(key => parsed.name.includes(key) || key.includes(parsed.name))
+        item.keys.some(key => ingredientNameMatches(parsed.name, key))
     );
     if (!marketItem || !marketItem.price) return null;
     return parsePriceValue(marketItem.price);
@@ -3095,18 +3180,25 @@ function resolveIngredientPricing(ingredient) {
             'rice': 52, 'garlic': 140, 'onion': 155, 'tomato': 80,
             'potato': 60, 'carrot': 70, 'tokwa': 15, 'monggo': 90,
             'talong': 90, 'spinach': 25, 'kangkong': 15, 'pechay': 20,
-            'cabbage': 60, 'togue': 60, 'sardines': 25, 'tuyo': 8, 'noodles': 15,
+            'cabbage': 60, 'togue': 60, 'canned sardines': 25, 'tuyo': 8, 'noodles': 15,
             'bihon': 40, 'hotdog': 180, 'longganisa': 220, 'giniling': 320,
             'tinapa': 25, 'kamote': 50, 'sayote': 45, 'sitaw': 80,
             'pandesal': 4, 'coffee': 9, 'corned beef': 40,
             'chicken feet': 100, 'chicken liver': 140, 'sinigang mix': 25,
             'kalabasa': 50, 'papaya': 40, 'malunggay': 30, 'soy sauce': 35,
             'vinegar': 30, 'fish sauce': 40, 'oil': 80, 'sugar': 60,
-            'salt': 25, 'pepper': 200, 'milk': 75, 'coconut milk': 85,
-            'ginger': 120, 'calamansi': 80, 'chili': 200, 'bay leaves': 1
+            'salt': 25, 'black pepper': 200, 'bell pepper': 250, 'milk': 75,
+            'coconut milk': 85, 'ginger': 120, 'calamansi': 80, 'chili': 200,
+            'bay leaves': 0.5, 'cornstarch': 60, 'butter': 400, 'cheese': 300, 'sago': 80,
+            'tomato sauce': 25, 'broth cube': 8, 'tablea': 60, 'bagoong': 120, 'shrimp': 400,
+            'squid': 300, 'oxtail': 450, 'okra': 80, 'radish': 60, 'ampalaya': 80, 'corn': 40,
+            'mushrooms': 200, 'pineapple': 60, 'banana ketchup': 60, 'mayonnaise': 150,
+            'tamarind': 100, 'lemon grass': 60, 'star anise': 400, 'vanilla': 300, 'cream': 150,
+            'mixed vegetables': 100, 'taro leaves': 150, 'banana blossom': 60, 'sigarilyas': 80,
+            'peanut butter': 200
         };
         unitPrice = fallbackPrices[parsed.name] || 50;
-        source = 'fallback';
+        source = fallbackPrices[parsed.name] ? 'fallback' : 'unknown';
     }
 
     // Adjust for unit
@@ -3114,28 +3206,36 @@ function resolveIngredientPricing(ingredient) {
         'kg': 1, 'kilo': 1, 'g': 0.001, 'gram': 0.001,
         'cup': 0.24, 'tbsp': 0.015, 'tsps': 0.005, 'tsp': 0.005,
         'ml': 0.001, 'l': 1, 'pc': 1, 'piece': 1, 'pieces': 1,
-        'cloves': 0.02, 'heads': 0.1, 'bunch': 0.2, 'bundle': 0.2,
+        'cloves': 0.005, 'heads': 0.05, 'bunch': 0.2, 'bundle': 0.2,
         'whole': 1, 'can': 1, 'pack': 1, 'packs': 1, 'tray': 1,
         'litro': 1, 'liter': 1
     };
 
-    // Approximate weights for per-piece produce priced per kilo
-    const pieceWeightsKg = {
-        'onion': 0.1, 'tomato': 0.12, 'carrot': 0.1, 'potato': 0.15,
-        'talong': 0.15, 'papaya': 0.5, 'kalabasa': 0.5
-    };
-
-    // Units bought by count rather than by weight; everything else is bought per kg
+    // Recipe units that count items rather than weigh them
     const countUnits = { 'pc': 'pc', 'piece': 'pc', 'pieces': 'pc', 'whole': 'pc', 'can': 'can', 'pack': 'pack', 'packs': 'pack', 'tray': 'tray' };
 
-    let multiplier = unitMultipliers[parsed.unit] || 1;
-    let purchaseUnit = countUnits[parsed.unit] || 'kg';
-    if ((parsed.unit === 'pc' || parsed.unit === 'piece' || parsed.unit === 'whole') && pieceWeightsKg[parsed.name]) {
-        multiplier = pieceWeightsKg[parsed.name];
+    // `multiplier` converts the recipe quantity into `purchaseUnit`, which is
+    // also the unit the price is quoted in.
+    const countPriced = COUNT_PRICED_INGREDIENTS[parsed.name];
+    let multiplier;
+    let purchaseUnit;
+
+    if (countPriced) {
+        purchaseUnit = countPriced.unit;
+        if (!parsed.unitSpecified || countUnits[parsed.unit]) {
+            multiplier = 1;
+        } else {
+            multiplier = (unitMultipliers[parsed.unit] || 1) / countPriced.kg;
+        }
+    } else {
         purchaseUnit = 'kg';
-    } else if (!parsed.unitSpecified && !COUNT_PRICED_INGREDIENTS.has(parsed.name)) {
-        multiplier = UNITLESS_DEFAULT_KG[parsed.name] || 1;
-        purchaseUnit = 'kg';
+        if (!parsed.unitSpecified) {
+            multiplier = UNITLESS_DEFAULT_KG[parsed.name] || (source === 'unknown' ? 0.25 : 1);
+        } else if (countUnits[parsed.unit]) {
+            multiplier = PIECE_WEIGHTS_KG[parsed.name] || 1;
+        } else {
+            multiplier = unitMultipliers[parsed.unit] || 1;
+        }
     }
     return { parsed, unitPrice, multiplier, purchaseUnit, source };
 }
@@ -3175,6 +3275,14 @@ const GROCERY_CATEGORY_BY_INGREDIENT = {
     'chicken': 'meat', 'pork': 'meat', 'beef': 'meat', 'fish': 'meat', 'bangus': 'meat',
     'tilapia': 'meat', 'galunggong': 'meat', 'hotdog': 'meat', 'longganisa': 'meat',
     'giniling': 'meat', 'tinapa': 'meat', 'tuyo': 'meat', 'chicken feet': 'meat', 'chicken liver': 'meat',
+    'bell pepper': 'vegetables', 'chili': 'vegetables', 'bay leaves': 'spices', 'black pepper': 'spices',
+    'cornstarch': 'other food', 'butter': 'other food', 'cheese': 'other food', 'sago': 'other food', 'canned sardines': 'other food',
+    'tomato sauce': 'other food', 'broth cube': 'spices', 'tablea': 'other food', 'bagoong': 'spices', 'shrimp': 'fish',
+    'squid': 'fish', 'oxtail': 'meat', 'okra': 'vegetables', 'radish': 'vegetables', 'ampalaya': 'vegetables', 'corn': 'vegetables',
+    'mushrooms': 'vegetables', 'pineapple': 'fruits', 'banana ketchup': 'spices', 'mayonnaise': 'other food',
+    'tamarind': 'vegetables', 'lemon grass': 'spices', 'star anise': 'spices', 'vanilla': 'spices', 'cream': 'other food',
+    'mixed vegetables': 'vegetables', 'taro leaves': 'vegetables', 'banana blossom': 'vegetables', 'sigarilyas': 'vegetables',
+    'peanut butter': 'other food',
     'egg': 'rice', 'rice': 'rice', 'monggo': 'rice',
     'garlic': 'vegetables', 'onion': 'vegetables', 'tomato': 'vegetables', 'potato': 'vegetables',
     'carrot': 'vegetables', 'talong': 'vegetables', 'spinach': 'vegetables', 'kangkong': 'vegetables',
@@ -3182,8 +3290,8 @@ const GROCERY_CATEGORY_BY_INGREDIENT = {
     'sayote': 'vegetables', 'sitaw': 'vegetables', 'kalabasa': 'vegetables', 'papaya': 'vegetables',
     'malunggay': 'vegetables', 'ginger': 'vegetables', 'calamansi': 'vegetables',
     'soy sauce': 'spices', 'vinegar': 'spices', 'fish sauce': 'spices', 'oil': 'spices',
-    'sugar': 'spices', 'salt': 'spices', 'pepper': 'spices', 'sinigang mix': 'spices',
-    'tokwa': 'other food', 'sardines': 'other food', 'noodles': 'other food', 'bihon': 'other food',
+    'sugar': 'spices', 'salt': 'spices', 'sinigang mix': 'spices',
+    'tokwa': 'other food', 'noodles': 'other food', 'bihon': 'other food',
     'corned beef': 'other food', 'pandesal': 'other food', 'coffee': 'other food',
     'milk': 'other food', 'coconut milk': 'other food'
 };
@@ -3212,9 +3320,7 @@ function buildGroceryItemsFromMealPlan(pax) {
                 if (!pricing) return;
                 const { parsed, unitPrice, multiplier, purchaseUnit } = pricing;
                 const key = `${parsed.name}|${purchaseUnit}`;
-                const purchaseQty = purchaseUnit === 'kg'
-                    ? parsed.quantity * multiplier * scale
-                    : parsed.quantity * scale;
+                const purchaseQty = parsed.quantity * multiplier * scale;
 
                 if (!totals[key]) {
                     totals[key] = { name: parsed.name, unit: purchaseUnit, quantity: 0, cost: 0 };
@@ -3231,7 +3337,7 @@ function buildGroceryItemsFromMealPlan(pax) {
             const quantity = t.unit === 'kg'
                 ? Math.max(0.05, Math.ceil(t.quantity * 20) / 20)
                 : Math.max(1, Math.ceil(t.quantity));
-            const unitPrice = t.cost / quantity;
+            const unitPrice = t.cost / t.quantity;
             return {
                 name: formatIngredientLabel(t.name),
                 price: unitPrice,
@@ -3273,7 +3379,7 @@ function addMealPlanToGroceryList() {
     saveGroceryListToSupabase();
 
     const total = planItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    showNotification(`Added ${planItems.length} ingredients (≈₱${total.toFixed(0)}) to your Grocery List`, 'success');
+    showNotification(`Added ${planItems.length} ingredients (≈₱${total.toFixed(0)}, rounded up to buyable amounts) to your Grocery List`, 'success');
     if (typeof switchTab === 'function') switchTab('grocery');
 }
 
@@ -3329,7 +3435,8 @@ const LOCAL_SUPPLEMENT_PRICES = [
     { id: 'saba', name: 'Saging na Saba', keys: ['saba', 'saging', 'banana'], category: 'fruits', unit: 'kg', price: 60 },
     { id: 'tuyo', name: 'Tuyo (Dried Fish)', keys: ['tuyo', 'dried fish'], category: 'fish', unit: 'piece', price: 8 },
     { id: 'tinapa', name: 'Tinapa (Smoked Fish)', keys: ['tinapa', 'smoked fish'], category: 'fish', unit: 'piece', price: 25 },
-    { id: 'instant-noodles', name: 'Instant Pancit Canton', keys: ['instant pancit canton', 'instant noodles', 'canton', 'noodles'], category: 'other food', unit: 'pack', price: 15 },
+    { id: 'instant-noodles', name: 'Instant Noodles (Pancit Canton)', keys: ['instant pancit canton', 'instant noodles', 'canton', 'noodles'], category: 'other food', unit: 'pack', price: 15 },
+    { id: 'canned-sardines', name: 'Canned Sardines', keys: ['canned sardines'], category: 'other food', unit: 'can', price: 25 },
     { id: 'misua', name: 'Misua Noodles', keys: ['misua'], category: 'other food', unit: 'pack', price: 25 },
     { id: 'bihon', name: 'Bihon Noodles', keys: ['bihon'], category: 'other food', unit: 'pack', price: 40 },
     { id: 'corned-beef', name: 'Corned Beef (Small Can)', keys: ['corned beef'], category: 'other food', unit: 'can', price: 40 },
