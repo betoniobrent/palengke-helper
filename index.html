@@ -742,60 +742,22 @@
         </div>
     </div>
 
-    <div class="bg-gradient-to-br from-teal-50 to-green-50 rounded-2xl shadow-md border border-teal-200 p-6 mb-6">
-
-        <div class="flex items-center justify-between mb-6">
-
-            <div>
-
-                <h3 class="text-2xl font-bold text-teal-900">
-
-                    📅 Weekly Meal Schedule
-
-                </h3>
-
-                <p class="text-gray-600">
-
-                    Click any meal slot to choose a recipe.
-
-                </p>
-
-            </div>
-
-            <button
-                id="clearMealPlanBtn"
-                class="bg-white border border-rose-300 text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-xl text-sm font-semibold transition shadow-sm">
-
-                Clear Week
-
-            </button>
-
-        </div>
-
-        <div id="weeklyPlanner" class="space-y-4">
-
-        </div>
-
-    </div>
-
-    <div id="plannerResultsSection" class="hidden bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200 p-6 mb-6 shadow-md">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
-            <div>
-                <button onclick="backToMealPlannerIntro()" class="mb-2 text-emerald-700 hover:text-emerald-900 font-semibold text-sm flex items-center gap-1">
-                    ← Back to Options
-                </button>
+    <div id="plannerResultsSection" class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200 p-6 mb-6 shadow-md">
+        <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-5">
+            <div class="shrink-0">
                 <button id="backToSavedPlansBtn" class="hidden mb-2 text-emerald-700 hover:text-emerald-900 font-semibold text-sm flex items-center gap-1">
                     ← Back to Meal Plans
                 </button>
-                <h3 class="text-xl font-bold text-emerald-900">🧾 Meal Plan Summary</h3>
-                <p id="plannerSummaryText" class="text-gray-600 text-sm mt-1">Your generated plan appears below. Click a meal name to view ingredients, cost, and recipe.</p>
+                <h3 class="text-xl font-bold text-emerald-900">📅 Weekly Meal Plan</h3>
+                <p id="plannerSummaryText" class="text-gray-600 text-sm mt-1">Click a meal name to view ingredients, cost, and recipe. Use “Change” to swap a meal.</p>
             </div>
             <div class="text-right flex flex-col items-end gap-3">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2 w-full">
-                    <input id="mealPlanNameInput" type="text" placeholder="Meal plan name" class="w-full sm:w-auto min-w-[220px] border border-gray-200 rounded-xl px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+                <div class="flex flex-wrap items-center justify-end gap-2 w-full">
+                    <input id="mealPlanNameInput" type="text" placeholder="Meal plan name" class="w-full sm:w-auto sm:min-w-[200px] border border-gray-200 rounded-xl px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
                     <button id="saveMealPlanBtn" class="hidden bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-xl font-semibold whitespace-nowrap">Save Meal Plan</button>
                     <button onclick="addMealPlanToGroceryList()" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl font-semibold whitespace-nowrap">🛒 Add to Grocery List</button>
                     <button onclick="backToMealPlannerIntro()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-xl font-semibold">Generate New Plan</button>
+                    <button id="clearMealPlanBtn" class="bg-white border border-rose-300 text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-xl font-semibold whitespace-nowrap">Clear Week</button>
                 </div>
                 <div>
                     <p class="text-sm text-gray-500">Estimated Week Cost</p>
@@ -1142,7 +1104,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
     
     <script src="data/recipes.js?v=5"></script>
     <script src="supabase.js?v=3"></script>
-    <script src="app.js?v=16"></script>
+    <script src="app.js?v=19"></script>
     <script>
         function switchTab(tabId) {
             console.log('switchTab called with:', tabId);
@@ -1189,7 +1151,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
                 const planActive = typeof hasActiveMealPlan === 'function' && hasActiveMealPlan();
                 if (mealWrapper) mealWrapper.classList.toggle('hidden', !planActive);
                 if (intro) intro.classList.toggle('hidden', planActive);
-                if (plannerResult) plannerResult.classList.add('hidden');
+                if (plannerResult) plannerResult.classList.toggle('hidden', !planActive);
                 if (savedWrapper) savedWrapper.classList.remove('hidden');
             }
         }
