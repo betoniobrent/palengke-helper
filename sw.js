@@ -1,4 +1,4 @@
-const CACHE_NAME = 'palengke-helper-v15';
+const CACHE_NAME = 'palengke-helper-v17';
 
 const STATIC_ASSETS = [
   '/',
