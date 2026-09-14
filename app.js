@@ -136,69 +136,28 @@ function initializeMealPlanner() {
     renderWeeklyPlanner();
 
 }
+// The weekly schedule and plan summary are one section; both render the same day cards
 function renderWeeklyPlanner() {
-
-    const planner = document.getElementById("weeklyPlanner");
-
-    planner.innerHTML = "";
-
-    DAYS_OF_WEEK.forEach(day => {
-
-        planner.innerHTML += `
-
-        <div class="border rounded-xl p-5 bg-gray-50">
-
-            <h3 class="text-xl font-bold mb-4">
-
-                ${day}
-
-            </h3>
-
-            <div class="grid md:grid-cols-3 gap-3">
-
-                ${renderMealSlot(day,"Breakfast")}
-
-                ${renderMealSlot(day,"Lunch")}
-
-                ${renderMealSlot(day,"Dinner")}
-
-            </div>
-
-        </div>
-
-        `;
-
-    });
-
+    renderPlannerSummaryFromCurrentPlan(true);
 }
-function renderMealSlot(day,type){
 
-    const meal=currentMealPlan[day][type];
-
+function renderMealSlot(day, type) {
+    const meal = currentMealPlan[day]?.[type];
+    if (!meal) {
+        return `
+            <button onclick="openRecipeSelector('${day}','${type}')" class="text-left bg-gray-50 p-3 rounded-xl border border-dashed border-gray-300 hover:border-emerald-400 transition">
+                <div class="text-xs font-semibold text-gray-500">${type}</div>
+                <p class="mt-2 text-sm text-emerald-700 font-semibold">+ Choose Meal</p>
+            </button>`;
+    }
     return `
-
-    <button
-
-    onclick="openRecipeSelector('${day}','${type}')"
-
-    class="bg-white border border-gray-200 rounded-xl p-4 hover:border-emerald-600 hover:shadow transition">
-
-        <div class="text-sm text-gray-500">
-
-            ${type}
-
-        </div>
-
-        <div class="font-semibold mt-2">
-
-            ${meal ? meal.name : "+ Choose Meal"}
-
-        </div>
-
-    </button>
-
-    `;
-
+        <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 hover:border-emerald-200 transition flex flex-col">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-gray-500">${type}</span>
+                <button onclick="openRecipeSelector('${day}','${type}')" class="text-[11px] font-semibold text-emerald-700 hover:text-emerald-900">Change</button>
+            </div>
+            <button onclick="showRecipeDetailsById(${meal.id})" class="text-left mt-2 font-semibold text-gray-800 hover:text-emerald-800">${meal.name}</button>
+        </div>`;
 }
 function openRecipeSelector(day,type){
 
@@ -258,7 +217,7 @@ function enterMealScheduleFlow(){
         }
     }
     
-    if (summary) summary.classList.add('hidden');
+    if (summary) summary.classList.remove('hidden');
     if (saveButton) saveButton.classList.add('hidden');
     showMealPlannerWrapper();
 }
@@ -272,7 +231,7 @@ function completeMealPlan(){
     if (saveButton) saveButton.classList.remove('hidden');
     if (actions) actions.classList.add('hidden');
     if (summary) summary.classList.remove('hidden');
-    document.getElementById('weeklyPlanner')?.scrollIntoView({ behavior: 'smooth' });
+    summary?.scrollIntoView({ behavior: 'smooth' });
 }
 
 function customizeMealPlan(){
@@ -281,7 +240,7 @@ function customizeMealPlan(){
     
     initializeMealPlanner();
     enterMealScheduleFlow();
-    document.getElementById('weeklyPlanner').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('plannerResultsSection')?.scrollIntoView({ behavior: 'smooth' });
 }
 
 function renderPlannerSummaryFromCurrentPlan(showSummary = true){
@@ -313,16 +272,7 @@ function renderPlannerSummaryFromCurrentPlan(showSummary = true){
                 </div>
             </div>
             <div class="grid sm:grid-cols-3 gap-3 text-sm text-gray-700">
-                ${['Breakfast','Lunch','Dinner'].map(type => {
-                    const meal = dayPlan[type];
-                    if (!meal) return `<div class="bg-gray-50 p-3 rounded-xl border border-gray-100"> <div class="text-xs font-semibold text-gray-500">${type}</div><p class="mt-2 text-sm text-gray-400">No meal selected</p></div>`;
-                    return `
-                        <button onclick="showRecipeDetailsById(${meal.id})" class="text-left bg-gray-50 p-3 rounded-xl border border-gray-100 hover:border-emerald-200 transition">
-                            <div class="text-xs font-semibold text-gray-500">${type}</div>
-                            <p class="mt-2 font-semibold text-gray-800">${meal.name}</p>
-                        </button>
-                    `;
-                }).join('')}
+                ${['Breakfast','Lunch','Dinner'].map(type => renderMealSlot(day, type)).join('')}
             </div>
         `;
         scheduleContainer.appendChild(card);
@@ -591,9 +541,7 @@ function clearCurrentMealPlan(){
     initializeMealPlanner();
     document.getElementById('plannerSummaryCost').innerText = '₱0';
     document.getElementById('plannerSummaryWarning').innerText = '';
-    const mealWrapper = document.getElementById('mealScheduleWrapper');
-    if (mealWrapper) mealWrapper.classList.add('hidden');
-    document.getElementById('plannerResultsSection').classList.add('hidden');
+    document.getElementById('saveMealPlanBtn')?.classList.add('hidden');
 }
 
 function backToMealPlannerIntro(){
