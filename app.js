@@ -340,7 +340,7 @@ function renderRecipeSelector(){
         <div
             class="bg-white border rounded-2xl p-6 hover:shadow-lg cursor-pointer text-center transition"
             onclick="openCustomRecipePrompt()">
-            <div class="text-3xl">✍️</div>
+            
             <h4 class="font-bold text-lg mt-3">Create Your Own Dish</h4>
             <p class="text-sm text-gray-500 mt-2">Add a custom meal to this slot.</p>
         </div>
@@ -1901,15 +1901,15 @@ function generateFilipinoMealPlan() {
             </div>
             <div class="md:col-span-3 grid sm:grid-cols-3 gap-3 text-xs text-gray-700">
                 <div class="bg-gray-50/70 p-2 rounded border border-gray-100">
-                    <span class="text-[10px] font-black uppercase tracking-tight text-amber-700 block mb-0.5">🌅 Aga-Han (Breakfast)</span>
+                    <span class="text-[10px] font-black uppercase tracking-tight text-amber-700 block mb-0.5">Aga-Han (Breakfast)</span>
                     <p class="font-medium text-gray-800">${bMeal.name}</p>
                 </div>
                 <div class="bg-gray-50/70 p-2 rounded border border-gray-100">
-                    <span class="text-[10px] font-black uppercase tracking-tight text-emerald-700 block mb-0.5">☀️ Tanghalian (Lunch)</span>
+                    <span class="text-[10px] font-black uppercase tracking-tight text-emerald-700 block mb-0.5">Tanghalian (Lunch)</span>
                     <p class="font-medium text-gray-800">${lMeal.name}</p>
                 </div>
                 <div class="bg-gray-50/70 p-2 rounded border border-gray-100">
-                    <span class="text-[10px] font-black uppercase tracking-tight text-indigo-700 block mb-0.5">🌙 Hapunan (Dinner)</span>
+                    <span class="text-[10px] font-black uppercase tracking-tight text-indigo-700 block mb-0.5">Hapunan (Dinner)</span>
                     <p class="font-medium text-gray-800">${dMeal.name}</p>
                 </div>
             </div>
@@ -2292,7 +2292,7 @@ function checkGroceryBudgetConstraints(currentTotal) {
 
     // Cross-check values directly with the Active Workspace Module Framework
     if (!currentActiveMonthId) {
-        warningNode.innerText = "💡 Notice: No active monthly budget folder selected to run comparison safeguards against.";
+        warningNode.innerText = "Notice: No active monthly budget folder selected to run comparison safeguards against.";
         return;
     }
 
@@ -2303,7 +2303,7 @@ function checkGroceryBudgetConstraints(currentTotal) {
     const computedIncomePool = activeData.incomeList.filter(i => activeSpecificationFilter === 'all' || i.specCadence === activeSpecificationFilter).reduce((acc, i) => acc + parseFloat(i.amount || 0), 0);
 
     if (computedIncomePool > 0 && currentTotal > computedIncomePool) {
-        warningNode.innerText = `🚨 Warning: This grocery compilation setup (₱${currentTotal.toFixed(0)}) exceeds your currently filtered active income allocation context pool (₱${computedIncomePool.toFixed(0)}).`;
+        warningNode.innerText = `Warning: This grocery compilation setup (₱${currentTotal.toFixed(0)}) exceeds your currently filtered active income allocation context pool (₱${computedIncomePool.toFixed(0)}).`;
     } else {
         warningNode.innerText = "";
     }
@@ -3467,14 +3467,14 @@ function formatPriceValue(item) {
 
 // Display labels for Supabase market_prices.category values.
 const CATEGORY_TAB_LABELS = {
-    'rice': '🍚 Rice',
-    'meat': '🥩 Meat',
-    'fish': '🐟 Fish',
-    'vegetables': '🥬 Vegetables',
-    'fruits': '🍎 Fruits',
-    'spices': '🧂 Spices',
-    'other food': '🥫 Other Food',
-    'household': '🧹 Household'
+    'rice': 'Rice',
+    'meat': 'Meat',
+    'fish': 'Fish',
+    'vegetables': 'Vegetables',
+    'fruits': 'Fruits',
+    'spices': 'Spices',
+    'other food': 'Other Food',
+    'household': 'Household'
 };
 const CATEGORY_TAB_ORDER = ['rice', 'meat', 'fish', 'vegetables', 'fruits', 'spices', 'other food', 'household'];
 const CATEGORY_GROUP_ORDER = CATEGORY_TAB_ORDER;
@@ -3491,7 +3491,7 @@ function renderPriceCategoryTabs(items) {
 
     container.innerHTML = groups.map(g => {
         const active = g === ACTIVE_PRICE_GROUP;
-        const label = g === 'All' ? '🌐 All' : (CATEGORY_TAB_LABELS[g] || g);
+        const label = g === 'All' ? 'All' : (CATEGORY_TAB_LABELS[g] || g);
         const cls = active
             ? 'bg-emerald-600 text-white'
             : 'bg-gray-100 text-gray-600 hover:bg-gray-200';
