@@ -68,3 +68,62 @@ button {
 .ph-input::placeholder {
   color: #9ca3af;                     /* gray-400 */
 }
+/* --- Motion: tab, modal, card and button animations --- */
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.tab-content:not(.hidden) {
+    animation: fadeSlideUp 0.3s ease-out both;
+}
+
+.fixed.inset-0:not(.hidden) {
+    animation: fadeIn 0.2s ease-out both;
+}
+
+.fixed.inset-0:not(.hidden) > * {
+    animation: popIn 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+button {
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+button:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+.rounded-2xl.shadow-md,
+.rounded-2xl.shadow-sm,
+.rounded-xl.shadow-sm {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rounded-2xl.shadow-md:hover,
+.rounded-2xl.shadow-sm:hover,
+.rounded-xl.shadow-sm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -8px rgba(4, 120, 87, 0.25);
+}
+
+.tab-link {
+    position: relative;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
