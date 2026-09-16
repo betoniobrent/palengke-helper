@@ -12,7 +12,7 @@
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Decoupled Visual Presentation Design Component Layer -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body class="bg-gray-50 min-h-screen text-gray-800">
     <div id="authPage" style="background: #f0fdf4; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
@@ -64,7 +64,7 @@
                         onclick="loginAsGuest()"
                         style="width: 100%; background: #f3f4f6; color: #374151; padding: 0.5rem; border-radius: 0.375rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.25rem;"
                     >
-                        👤 Continue as visitor
+                        Continue as visitor
                     </button>
 
                     <button
@@ -191,9 +191,9 @@
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
                             <div id="accountDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
-                                <button onclick="openAccountSettings()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-emerald-50 text-sm">⚙️ Settings</button>
-                                <button onclick="openPwaInstallModal()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-emerald-50 text-sm">📲 Install App</button>
-                                <button onclick="logout()" class="block w-full text-left px-4 py-2 text-rose-600 hover:bg-rose-50 text-sm font-semibold">🚪 Logout</button>
+                                <button onclick="openAccountSettings()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-emerald-50 text-sm">Settings</button>
+                                <button onclick="openPwaInstallModal()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-emerald-50 text-sm">Install App</button>
+                                <button onclick="logout()" class="block w-full text-left px-4 py-2 text-rose-600 hover:bg-rose-50 text-sm font-semibold">Logout</button>
                             </div>
                         </li>
                     </ul>
@@ -207,12 +207,12 @@
                     <button data-tab="suggestions" onclick="switchTab('suggestions'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Palengke AI</button>
                     <button data-tab="grocery" onclick="switchTab('grocery'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Grocery</button>
                     <div id='navLoginRegisterMobile' class='hidden space-y-2'>
-                        <button onclick='logout(); toggleMenu()' class='block w-full text-left py-2 border-b border-emerald-600 font-semibold'>🔑 Login / Register</button>
+                        <button onclick='logout(); toggleMenu()' class='block w-full text-left py-2 border-b border-emerald-600 font-semibold'>Login / Register</button>
                     </div>
                     <div id='navAccountMobile' class='hidden space-y-2'>
-                        <button onclick='openAccountSettings(); toggleMenu()' class='block w-full text-left py-2 border-b border-emerald-600'>⚙️ Account Settings</button>
-                    <button onclick="openPwaInstallModal(); toggleMenu()" class="block w-full text-left py-2 border-b border-emerald-600">📲 Install App</button>
-                        <button onclick='logout(); toggleMenu()' class='block w-full text-left py-2 text-rose-300 font-bold'>🚪 Logout</button>
+                        <button onclick='openAccountSettings(); toggleMenu()' class='block w-full text-left py-2 border-b border-emerald-600'>Account Settings</button>
+                    <button onclick="openPwaInstallModal(); toggleMenu()" class="block w-full text-left py-2 border-b border-emerald-600">Install App</button>
+                        <button onclick='logout(); toggleMenu()' class='block w-full text-left py-2 text-rose-300 font-bold'>Logout</button>
                     </div>
                 </div>
             </div>
@@ -244,23 +244,23 @@
                         <!-- MARKET TRENDS -->
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <h3 class="text-xl font-bold mb-3 text-gray-800 flex items-center gap-2">
-                                📊 Price Movements This Week
+                                Price Movements This Week
                             </h3>
                             <div class="grid sm:grid-cols-2 gap-4">
                                 <div class="bg-rose-50 p-4 rounded-xl border border-rose-100">
                                     <span class="text-xs font-bold uppercase tracking-wider text-rose-700">▲ Price Increase Alert</span>
                                     <ul class="mt-2 space-y-1 text-sm text-gray-700 font-medium">
-                                        <li>🍅 Native Tomatoes (+₱15/kg)</li>
-                                        <li>🧅 Red Onions (+₱10/kg)</li>
-                                        <li>🧄 Imported Garlic (+₱5/kg)</li>
+                                        <li>Native Tomatoes (+₱15/kg)</li>
+                                        <li>Red Onions (+₱10/kg)</li>
+                                        <li>Imported Garlic (+₱5/kg)</li>
                                     </ul>
                                 </div>
                                 <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100">
                                     <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">▼ Price Drop Savings</span>
                                     <ul class="mt-2 space-y-1 text-sm text-gray-700 font-medium">
-                                        <li>🍗 Whole Chicken (-₱10/kg)</li>
-                                        <li>🥬 Baguio Cabbage (-₱20/kg)</li>
-                                        <li>🥚 Medium Eggs (-₱0.50/pc)</li>
+                                        <li>Whole Chicken (-₱10/kg)</li>
+                                        <li>Baguio Cabbage (-₱20/kg)</li>
+                                        <li>Medium Eggs (-₱0.50/pc)</li>
                                     </ul>
                                 </div>
                             </div>
@@ -269,7 +269,7 @@
                         <!-- LOCALIZED SAVING STRATEGIES -->
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <h3 class="text-xl font-bold mb-3 text-gray-800 flex items-center gap-2">
-                                💡 Tipid Tips (How to Save This Week)
+                                Tipid Tips (How to Save This Week)
                             </h3>
                             <div class="grid sm:grid-cols-2 gap-4 text-sm text-gray-600">
                                 <div class="space-y-2">
@@ -286,7 +286,7 @@
                         <!-- GAS MONITORING -->
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <h3 class="text-xl font-bold mb-3 text-gray-800 flex items-center gap-2">
-                                ⛽ Fuel Price Watch — Calabarzon (IV-A)
+                                Fuel Price Watch — Calabarzon (IV-A)
                             </h3>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-center">
                                 <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
@@ -321,7 +321,7 @@
                                 </div>
                             </div>
                             <p class="text-xs text-amber-600 mt-3">
-                                ⚠️ Fuel prices are crowd-sourced and may not reflect real-time changes. Verify at the station before refueling.
+                                Fuel prices are crowd-sourced and may not reflect real-time changes. Verify at the station before refueling.
                             </p>
                         </div>
                     </div>
@@ -330,7 +330,7 @@
                         <!-- ULAM OF THE DAY -->
                         <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 text-white p-6 rounded-xl shadow-sm">
                             <span class="bg-white/20 text-xs uppercase tracking-widest font-bold px-2.5 py-1 rounded-full text-white inline-block mb-3">
-                                🍽️ Ulam of the Day
+                                Ulam of the Day
                             </span>
                             <h3 class="text-2xl font-bold">Ginisang Ampalaya with Egg</h3>
                             <p class="text-sm opacity-90 mt-2">Healthy, affordable, and bitter-free if prepared correctly! Perfect paired with fried fish.</p>
@@ -343,7 +343,7 @@
 
                         <!-- BIBLE VERSE -->
                         <div class="bg-amber-50 border border-amber-200 p-6 rounded-xl shadow-sm text-center">
-                            <span class="text-2xl block mb-2">🍞</span>
+                            
                             <p class="italic text-gray-700 text-sm font-medium">
                                 "Go, eat your food with gladness, and drink your wine with a joyful heart, for God has already approved what you do."
                             </p>
@@ -409,10 +409,10 @@
                         <p class="text-sm text-gray-600">Filter workspace details dynamically by specification intervals below.</p>
                         <!-- LOCALIZED DYNAMIC SPECIFICATION QUICK FILTERS -->
                         <div class="flex flex-wrap gap-1.5 bg-gradient-to-br from-gray-50 to-gray-100 p-1.5 rounded-xl border border-gray-200 shadow-sm">
-                            <button onclick="applySpecificationFilter('all')" class="bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm" id="filter-spec-all">✨ All</button>
-                            <button onclick="applySpecificationFilter('Monthly')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-Monthly">🗓️ Monthly</button>
-                            <button onclick="applySpecificationFilter('1st Cut (1st-15th)')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-1st">🌓 1st Cut</button>
-                            <button onclick="applySpecificationFilter('2nd Cut (16th-End)')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-2nd">🌓 2nd Cut</button>
+                            <button onclick="applySpecificationFilter('all')" class="bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm" id="filter-spec-all">All</button>
+                            <button onclick="applySpecificationFilter('Monthly')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-Monthly">Monthly</button>
+                            <button onclick="applySpecificationFilter('1st Cut (1st-15th)')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-1st">1st Cut</button>
+                            <button onclick="applySpecificationFilter('2nd Cut (16th-End)')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-2nd">2nd Cut</button>
                             <button onclick="applySpecificationFilter('Week 1')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w1">W1</button>
                             <button onclick="applySpecificationFilter('Week 2')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w2">W2</button>
                             <button onclick="applySpecificationFilter('Week 3')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w3">W3</button>
@@ -439,7 +439,7 @@
                     <!-- REAL-TIME EXPENSE CATEGORY DISTRIBUTION ANALYTICS (WITH LIVE PIE CHART) -->
                     <div class="bg-gradient-to-br from-slate-50 to-gray-100 p-5 rounded-xl shadow-md border border-gray-200 mb-6">
                         <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider mb-4 flex items-center gap-2">
-                            📊 Filtered Expense Allocation Breakdown
+                            Filtered Expense Allocation Breakdown
                         </h3>
 
                         <div class="grid md:grid-cols-3 gap-6 items-center">
@@ -470,7 +470,7 @@
                             <div>
                                 <div class="flex justify-between items-center border-b border-emerald-200 pb-3 mb-4">
                                     <h3 class="text-lg font-bold text-emerald-900 flex items-center gap-2">
-                                        <span class="text-emerald-600">📥</span> Income & Allowance Streams
+                                        Income & Allowance Streams
                                     </h3>
                                     <button onclick="toggleForm('incomeForm')" class="bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg font-bold hover:bg-emerald-800 shadow-sm transition">+ Add</button>
                                 </div>
@@ -491,13 +491,13 @@
                                         <div>
                                             <label class="text-[10px] font-bold text-emerald-800 uppercase">Specification Cadence</label>
                                             <select id="incSpec" class="w-full bg-emerald-50 text-gray-800 border border-emerald-300 p-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                                                <option value="Monthly">🗓️ Monthly (Full Cycle)</option>
-                                                <option value="1st Cut (1st-15th)">🌓 Kinsena: 1st Cut (1st-15th)</option>
-                                                <option value="2nd Cut (16th-End)">🌓 Kinsena: 2nd Cut (16th-End)</option>
-                                                <option value="Week 1">📆 Week 1</option>
-                                                <option value="Week 2">📆 Week 2</option>
-                                                <option value="Week 3">📆 Week 3</option>
-                                                <option value="Week 4">📆 Week 4</option>
+                                                <option value="Monthly">Monthly (Full Cycle)</option>
+                                                <option value="1st Cut (1st-15th)">Kinsena: 1st Cut (1st-15th)</option>
+                                                <option value="2nd Cut (16th-End)">Kinsena: 2nd Cut (16th-End)</option>
+                                                <option value="Week 1">Week 1</option>
+                                                <option value="Week 2">Week 2</option>
+                                                <option value="Week 3">Week 3</option>
+                                                <option value="Week 4">Week 4</option>
                                             </select>
                                         </div>
                                         <div>
@@ -523,7 +523,7 @@
                             <div>
                                 <div class="flex justify-between items-center border-b border-rose-200 pb-3 mb-4">
                                     <h3 class="text-lg font-bold text-rose-900 flex items-center gap-2">
-                                        <span class="text-rose-500">📤</span> Expenses
+                                        Expenses
                                     </h3>
                                     <button onclick="toggleForm('expenseForm')" class="bg-rose-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold hover:bg-rose-700 shadow-sm transition">+ Add</button>
                                 </div>
@@ -555,13 +555,13 @@
                                         <div>
                                             <label class="text-[10px] font-bold text-rose-800 uppercase">Specification Target</label>
                                             <select id="expSpec" class="w-full bg-rose-50 text-gray-800 border border-rose-300 p-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500">
-                                                <option value="Monthly">🗓️ Monthly (Full Cycle)</option>
-                                                <option value="1st Cut (1st-15th)">🌓 Kinsena: 1st Cut (1st-15th)</option>
-                                                <option value="2nd Cut (16th-End)">🌓 Kinsena: 2nd Cut (16th-End)</option>
-                                                <option value="Week 1">📆 Week 1</option>
-                                                <option value="Week 2">📆 Week 2</option>
-                                                <option value="Week 3">📆 Week 3</option>
-                                                <option value="Week 4">📆 Week 4</option>
+                                                <option value="Monthly">Monthly (Full Cycle)</option>
+                                                <option value="1st Cut (1st-15th)">Kinsena: 1st Cut (1st-15th)</option>
+                                                <option value="2nd Cut (16th-End)">Kinsena: 2nd Cut (16th-End)</option>
+                                                <option value="Week 1">Week 1</option>
+                                                <option value="Week 2">Week 2</option>
+                                                <option value="Week 3">Week 3</option>
+                                                <option value="Week 4">Week 4</option>
                                             </select>
                                         </div>
                                     </div>
@@ -605,7 +605,7 @@
 
         <h3 class="text-xl font-semibold text-emerald-900 mb-4">
 
-            🤖 Generate Automatically
+            Generate Automatically
 
         </h3>
 
@@ -692,7 +692,7 @@
 
         <h3 class="text-xl font-semibold text-teal-900 mb-4">
 
-            ✍️ Create Your Own
+            Create Your Own
 
         </h3>
 
@@ -721,7 +721,7 @@
 
 <div id="savedMealPlansWrapper" class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-md border border-emerald-200 p-6 mb-6 max-w-4xl mx-auto">
     <div class="flex justify-between items-center mb-5">
-        <h3 class="text-xl font-bold text-emerald-900">💾 Saved Meal Plans</h3>
+        <h3 class="text-xl font-bold text-emerald-900">Saved Meal Plans</h3>
         <button id="refreshMealPlansBtn" class="text-emerald-700 hover:text-emerald-900 font-semibold">Refresh</button>
     </div>
     <div id="savedMealPlans" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
@@ -748,14 +748,14 @@
                 <button id="backToSavedPlansBtn" class="hidden mb-2 text-emerald-700 hover:text-emerald-900 font-semibold text-sm flex items-center gap-1">
                     ← Back to Meal Plans
                 </button>
-                <h3 class="text-xl font-bold text-emerald-900">📅 Weekly Meal Plan</h3>
+                <h3 class="text-xl font-bold text-emerald-900">Weekly Meal Plan</h3>
                 <p id="plannerSummaryText" class="text-gray-600 text-sm mt-1">Click a meal name to view ingredients, cost, and recipe. Use “Change” to swap a meal.</p>
             </div>
             <div class="text-right flex flex-col items-end gap-3">
                 <div class="flex flex-wrap items-center justify-end gap-2 w-full">
                     <input id="mealPlanNameInput" type="text" placeholder="Meal plan name" class="w-full sm:w-auto sm:min-w-[200px] border border-gray-200 rounded-xl px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
                     <button id="saveMealPlanBtn" class="hidden bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-xl font-semibold whitespace-nowrap">Save Meal Plan</button>
-                    <button onclick="addMealPlanToGroceryList()" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl font-semibold whitespace-nowrap">🛒 Add to Grocery List</button>
+                    <button onclick="addMealPlanToGroceryList()" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl font-semibold whitespace-nowrap">Add to Grocery List</button>
                     <button onclick="backToMealPlannerIntro()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-xl font-semibold">Generate New Plan</button>
                     <button id="clearMealPlanBtn" class="bg-white border border-rose-300 text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-xl font-semibold whitespace-nowrap">Clear Week</button>
                 </div>
@@ -854,7 +854,7 @@
                     <div class="lg:col-span-2 bg-gradient-to-br from-slate-50 to-gray-100 p-6 rounded-xl shadow-md border border-gray-200">
                         
                         <div class="mb-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <span class="text-sm font-bold text-emerald-800">📋 Tracking Target Routine:</span>
+                            <span class="text-sm font-bold text-emerald-800">Tracking Target Routine:</span>
                             <select id="groceryCycle" class="border border-emerald-300 p-1.5 rounded-lg text-sm bg-white font-medium text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <option value="weekly" selected>Weekly Budget Interval (Lingguhan)</option>
                                 <option value="biweekly">15-Day Cycle Target (Kinsenas)</option>
@@ -864,7 +864,7 @@
 
                         <!-- Search with Market Price Integration -->
                         <div class="relative mb-4">
-                            <input id="grocerySearchInput" onkeyup="searchGroceryItemsWithMarket()" placeholder="🔍 Search items (integrates with market prices)..." class="border border-gray-300 p-3 rounded-xl w-full bg-white text-gray-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none pl-10">
+                            <input id="grocerySearchInput" onkeyup="searchGroceryItemsWithMarket()" placeholder="Search items (integrates with market prices)..." class="border border-gray-300 p-3 rounded-xl w-full bg-white text-gray-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none pl-10">
                             <svg class="absolute left-3 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
@@ -872,7 +872,7 @@
 
                         <!-- Market Price Suggestions -->
                         <div id="marketPriceSuggestions" class="hidden mb-4 bg-white border border-emerald-200 rounded-xl p-3 shadow-sm">
-                            <p class="text-xs font-bold text-emerald-700 mb-2">💰 Market Price Matches:</p>
+                            <p class="text-xs font-bold text-emerald-700 mb-2">Market Price Matches:</p>
                             <div id="suggestionsList" class="space-y-1"></div>
                         </div>
 
@@ -963,7 +963,7 @@
     <div id="accountSettingsModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div class="p-6 border-b border-gray-100 flex justify-between items-center">
-                <h2 class="text-xl font-bold text-gray-800">⚙️ Account Settings</h2>
+                <h2 class="text-xl font-bold text-gray-800">Account Settings</h2>
                 <button onclick="closeAccountSettings()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
             </div>
             <div class="p-6 space-y-6">
@@ -981,10 +981,10 @@
                     <h3 class="font-semibold text-gray-800 mb-3">Data Management</h3>
                     <div class="space-y-2">
                         <button onclick="exportAllData()" class="w-full bg-white border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 text-gray-700 py-3 rounded-xl text-sm font-medium transition flex items-center justify-center gap-2">
-                            <span>📤</span> Export All Data
+                            Export All Data
                         </button>
                         <button onclick="clearAllData()" class="w-full bg-white border border-gray-200 hover:border-rose-500 hover:bg-rose-50 text-rose-600 py-3 rounded-xl text-sm font-medium transition flex items-center justify-center gap-2">
-                            <span>🗑️</span> Clear All Local Data
+                            Clear All Local Data
                         </button>
                     </div>
                 </div>
@@ -1016,7 +1016,7 @@ class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
 
 <h2 class="text-2xl font-bold">
 
-🍽 Select Recipe
+Select Recipe
 
 </h2>
 
@@ -1063,7 +1063,7 @@ class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 p-6 overflow-y-auto max-h-[70vh]
             <button onclick="document.getElementById('customRecipeModal').classList.add('hidden')" class="text-gray-500 hover:text-gray-800 flex items-center gap-1">
                 ← Back
             </button>
-            <h2 class="text-2xl font-bold">✍️ Create Custom Recipe</h2>
+            <h2 class="text-2xl font-bold">Create Custom Recipe</h2>
             <button id="closeCustomRecipeModal" class="text-2xl">✕</button>
         </div>
         <div class="p-6 space-y-4">
@@ -1091,7 +1091,7 @@ id="recipeDetailsModal"
 class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-xl w-11/12 max-w-6xl overflow-hidden">
         <div class="p-6 border-b flex items-center justify-between">
-            <h2 class="text-2xl font-bold">🍳 Recipe Details</h2>
+            <h2 class="text-2xl font-bold">Recipe Details</h2>
             <button id="closeRecipeDetails" class="text-2xl">✕</button>
         </div>
         <div id="recipeDetailsContent" class="p-6">
@@ -1104,7 +1104,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
     
     <script src="data/recipes.js?v=5"></script>
     <script src="supabase.js?v=3"></script>
-    <script src="app.js?v=19"></script>
+    <script src="app.js?v=22"></script>
     <script>
         function switchTab(tabId) {
             console.log('switchTab called with:', tabId);
@@ -1265,7 +1265,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
     <div id="pwaInstallModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
         <div class="bg-white rounded-2xl shadow-xl w-11/12 max-w-md p-6">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold">📲 Install Palengke Helper+</h2>
+                <h2 class="text-xl font-bold">Install Palengke Helper+</h2>
                 <button onclick="closePwaInstallModal()" class="text-2xl">&times;</button>
             </div>
             <div class="space-y-3 text-sm text-gray-700">
