@@ -3961,31 +3961,6 @@ function clearAIChatHistory() {
     chatHistory.innerHTML = '';
 }
 
-// ==========================================
-// 8. DATA EXPEDITION DATA TRANSFER CAPABILITIES
-// ==========================================
-
-document.getElementById('exportCsvBtn').addEventListener('click', function() {
-    const items = getGroceryData();
-    if (items.length === 0) return alert('No valid list items arrays are tracked to backup via CSV transfer maps.');
-
-    let csvContent = "data:text/csv;charset=utf-8,Category,Item Name,Quantity,Unit Price,Subtotal\n";
-    
-    items.forEach(i => {
-        const rowString = `"${i.category}","${i.name}",${i.quantity},${i.price},${(i.price * i.quantity).toFixed(2)}`;
-        csvContent += rowString + "\n";
-    });
-
-    const encodedUri = encodeURI(csvContent);
-    const downloadAnchor = document.createElement("a");
-    downloadAnchor.setAttribute("href", encodedUri);
-    downloadAnchor.setAttribute("download", `PalengkeHelper_Backup_2026.csv`);
-    document.body.appendChild(downloadAnchor);
-    
-    downloadAnchor.click();
-    document.body.removeChild(downloadAnchor);
-});
-
 // PWA install helpers and service worker registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
