@@ -198,14 +198,17 @@
                         </li>
                     </ul>
                 </div>
-                <!-- MOBILE MENU COLLAPSIBLE BLOCK CONTAINER -->
+                <!-- MOBILE TAB STRIP: always visible on small screens -->
+                <div class="md:hidden mt-3 -mx-4 px-4 flex gap-2 overflow-x-auto whitespace-nowrap text-sm font-medium" style="scrollbar-width:none">
+                    <button data-tab="home" onclick="switchTab('home')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-emerald-800/60 text-emerald-100">Home</button>
+                    <button data-tab="budget" onclick="switchTab('budget')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-emerald-800/60 text-emerald-100">Budget</button>
+                    <button data-tab="meal" onclick="switchTab('meal')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-emerald-800/60 text-emerald-100">Meal Planner</button>
+                    <button data-tab="prices" onclick="switchTab('prices')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-emerald-800/60 text-emerald-100">Prices</button>
+                    <button data-tab="suggestions" onclick="switchTab('suggestions')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-emerald-800/60 text-emerald-100">Palengke AI</button>
+                    <button data-tab="grocery" onclick="switchTab('grocery')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-emerald-800/60 text-emerald-100">Grocery</button>
+                </div>
+                <!-- MOBILE MENU (account / login only) -->
                 <div id="mobileMenu" class="hidden md:hidden mt-4 space-y-2 pb-2">
-                    <button data-tab="home" onclick="switchTab('home'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Home</button>
-                    <button data-tab="budget" onclick="switchTab('budget'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Budget</button>
-                    <button data-tab="meal" onclick="switchTab('meal'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Meal Planner</button>
-                    <button data-tab="prices" onclick="switchTab('prices'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Market Prices</button>
-                    <button data-tab="suggestions" onclick="switchTab('suggestions'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Palengke AI</button>
-                    <button data-tab="grocery" onclick="switchTab('grocery'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Grocery</button>
                     <div id='navLoginRegisterMobile' class='hidden space-y-2'>
                         <button onclick='logout(); toggleMenu()' class='block w-full text-left py-2 border-b border-emerald-600 font-semibold'>Login / Register</button>
                     </div>
@@ -1096,7 +1099,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
     
     <script src="data/recipes.js?v=5"></script>
     <script src="supabase.js?v=3"></script>
-    <script src="app.js?v=23"></script>
+    <script src="app.js?v=25"></script>
     <script>
         function switchTab(tabId) {
             console.log('switchTab called with:', tabId);
