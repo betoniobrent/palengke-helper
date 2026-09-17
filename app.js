@@ -2988,7 +2988,7 @@ function parseIngredient(ingredientStr) {
 // Ingredients sold by the piece/can/pack rather than by weight
 const COUNT_PRICED_INGREDIENTS = new Set([
     'egg', 'tokwa', 'tuyo', 'tinapa', 'pandesal', 'coffee', 'sardines',
-    'noodles', 'bihon', 'corned beef', 'milk', 'sinigang mix'
+    'noodles', 'bihon', 'corned beef', 'milk', 'sinigang mix', 'corn', 'puso ng saging', 'lumpia wrapper'
 ]);
 
 // Rough amount (kg or L) a recipe uses when it lists a condiment or aromatic
@@ -3070,7 +3070,8 @@ function resolveIngredientPricing(ingredient) {
     // Approximate weights for per-piece produce priced per kilo
     const pieceWeightsKg = {
         'onion': 0.1, 'tomato': 0.12, 'carrot': 0.1, 'potato': 0.15,
-        'talong': 0.15, 'papaya': 0.5, 'kalabasa': 0.5
+        'talong': 0.15, 'papaya': 0.5, 'kalabasa': 0.5, 'patola': 0.25,
+        'labanos': 0.25, 'bell pepper': 0.1, 'chili': 0.005, 'ampalaya': 0.2
     };
 
     // Units bought by count rather than by weight; everything else is bought per kg
@@ -3294,7 +3295,25 @@ const LOCAL_SUPPLEMENT_PRICES = [
     { id: 'vinegar', name: 'Vinegar (Suka)', keys: ['vinegar', 'suka'], category: 'spices', unit: 'l', price: 50 },
     { id: 'fish-sauce', name: 'Patis (Fish Sauce)', keys: ['fish sauce', 'patis'], category: 'spices', unit: 'l', price: 80 },
     { id: 'salt', name: 'Salt (Asin)', keys: ['salt', 'asin'], category: 'spices', unit: 'kg', price: 25 },
-    { id: 'tablea', name: 'Tablea (Cacao)', keys: ['tablea'], category: 'other food', unit: 'pack', price: 60 }
+    { id: 'tablea', name: 'Tablea (Cacao)', keys: ['tablea'], category: 'other food', unit: 'pack', price: 60 },
+    { id: 'ampalaya', name: 'Ampalaya', keys: ['ampalaya', 'bitter gourd'], category: 'vegetables', unit: 'kg', price: 80 },
+    { id: 'okra', name: 'Okra', keys: ['okra'], category: 'vegetables', unit: 'kg', price: 70 },
+    { id: 'patola', name: 'Patola', keys: ['patola'], category: 'vegetables', unit: 'kg', price: 60 },
+    { id: 'labanos', name: 'Labanos (Radish)', keys: ['labanos', 'radish'], category: 'vegetables', unit: 'kg', price: 60 },
+    { id: 'gabi', name: 'Gabi (Taro)', keys: ['gabi', 'taro'], category: 'vegetables', unit: 'kg', price: 80 },
+    { id: 'gabi-leaves', name: 'Dahon ng Gabi (Dried Taro Leaves)', keys: ['taro leaves', 'gabi leaves', 'dahon ng gabi'], category: 'vegetables', unit: 'kg', price: 150 },
+    { id: 'langka', name: 'Langka (Unripe Jackfruit)', keys: ['langka', 'jackfruit'], category: 'vegetables', unit: 'kg', price: 60 },
+    { id: 'puso-ng-saging', name: 'Puso ng Saging (Banana Heart)', keys: ['puso ng saging', 'banana heart', 'banana flower'], category: 'vegetables', unit: 'piece', price: 30 },
+    { id: 'bell-pepper', name: 'Bell Pepper', keys: ['bell pepper'], category: 'vegetables', unit: 'kg', price: 200 },
+    { id: 'baguio-beans', name: 'Baguio Beans', keys: ['baguio beans'], category: 'vegetables', unit: 'kg', price: 90 },
+    { id: 'cauliflower', name: 'Cauliflower', keys: ['cauliflower'], category: 'vegetables', unit: 'kg', price: 160 },
+    { id: 'singkamas', name: 'Singkamas', keys: ['singkamas'], category: 'vegetables', unit: 'kg', price: 60 },
+    { id: 'lettuce', name: 'Lettuce', keys: ['lettuce'], category: 'vegetables', unit: 'kg', price: 150 },
+    { id: 'corn', name: 'Mais (Sweet Corn)', keys: ['sweet corn', 'corn', 'mais'], category: 'vegetables', unit: 'piece', price: 20 },
+    { id: 'shrimp', name: 'Hipon (Shrimp)', keys: ['shrimp', 'hipon'], category: 'fish', unit: 'kg', price: 380 },
+    { id: 'bagoong', name: 'Bagoong Alamang', keys: ['bagoong', 'shrimp paste'], category: 'spices', unit: 'kg', price: 120 },
+    { id: 'peanut-butter', name: 'Peanut Butter', keys: ['peanut butter', 'peanuts'], category: 'other food', unit: 'kg', price: 200 },
+    { id: 'lumpia-wrapper', name: 'Lumpia Wrapper (Fresh)', keys: ['lumpia wrapper'], category: 'other food', unit: 'pack', price: 40 }
 ].map(item => ({
     ...item,
     item_name: item.name,
@@ -3388,10 +3407,53 @@ function renderPriceCategoryTabs(items) {
     }).join('');
 }
 
+const PRICE_PAGE_SIZE = 15;
+let PRICE_PAGE = 1;
+
 function selectPriceCategory(groupName) {
     ACTIVE_PRICE_GROUP = groupName;
+    PRICE_PAGE = 1;
     renderPriceCategoryTabs(ALL_PRICE_ITEMS);
     renderFilteredPriceRows();
+}
+
+function goToPricePage(page) {
+    PRICE_PAGE = page;
+    renderFilteredPriceRows();
+    document.getElementById('view-prices')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderPricePagination(total) {
+    const container = document.getElementById('pricePagination');
+    if (!container) return;
+    const pages = Math.max(1, Math.ceil(total / PRICE_PAGE_SIZE));
+    if (pages <= 1) { container.innerHTML = ''; return; }
+
+    const start = (PRICE_PAGE - 1) * PRICE_PAGE_SIZE + 1;
+    const end = Math.min(total, PRICE_PAGE * PRICE_PAGE_SIZE);
+    const btn = (label, page, extra = '') =>
+        `<button onclick="goToPricePage(${page})" ${extra} class="min-w-[36px] h-9 px-2 rounded-lg text-sm font-semibold border transition ${
+            page === PRICE_PAGE
+                ? 'bg-emerald-600 border-emerald-600 text-white'
+                : 'bg-white border-slate-300 text-slate-600 hover:bg-emerald-50 disabled:opacity-40 disabled:hover:bg-white'
+        }">${label}</button>`;
+
+    const numbers = [];
+    for (let p = 1; p <= pages; p++) {
+        if (p === 1 || p === pages || Math.abs(p - PRICE_PAGE) <= 1) {
+            numbers.push(btn(p, p));
+        } else if (numbers[numbers.length - 1] !== '<span class="px-1 text-slate-400">…</span>') {
+            numbers.push('<span class="px-1 text-slate-400">…</span>');
+        }
+    }
+
+    container.innerHTML = `
+        <p class="text-xs text-slate-500">Showing ${start}–${end} of ${total} items</p>
+        <div class="flex items-center gap-1">
+            ${btn('‹', PRICE_PAGE - 1, PRICE_PAGE === 1 ? 'disabled' : '')}
+            ${numbers.join('')}
+            ${btn('›', PRICE_PAGE + 1, PRICE_PAGE === pages ? 'disabled' : '')}
+        </div>`;
 }
 
 function renderFilteredPriceRows() {
@@ -3404,12 +3466,18 @@ function renderFilteredPriceRows() {
 
     if (!items || items.length === 0) {
         tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-gray-400">No price data available right now.</td></tr>';
+        renderPricePagination(0);
         return;
     }
 
-    tbody.innerHTML = items.map(item => `
+    const pages = Math.max(1, Math.ceil(items.length / PRICE_PAGE_SIZE));
+    PRICE_PAGE = Math.min(Math.max(1, PRICE_PAGE), pages);
+    const pageItems = items.slice((PRICE_PAGE - 1) * PRICE_PAGE_SIZE, PRICE_PAGE * PRICE_PAGE_SIZE);
+    renderPricePagination(items.length);
+
+    tbody.innerHTML = pageItems.map(item => `
         <tr class="hover:bg-gray-50 transition">
-            <td class="p-3 border-r border-gray-200 font-medium">${guessPriceEmoji(item)} ${item.name}</td>
+            <td class="p-3 font-medium">${guessPriceEmoji(item)} ${item.name}</td>
             <td class="p-3 text-right font-mono font-bold text-gray-800">${formatPriceValue(item)}</td>
             <td class="p-3 text-right text-xs text-gray-500">${item.notes ? escapeHtml(item.notes) : '-'}</td>
         </tr>
