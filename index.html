@@ -12,9 +12,9 @@
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Decoupled Visual Presentation Design Component Layer -->
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
-<body class="bg-gray-50 min-h-screen text-gray-800">
+<body class="bg-slate-100 min-h-screen text-slate-900">
     <div id="authPage" style="background: #f0fdf4; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
         <div style="background: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; width: 100%; max-width: 28rem;">
             <h1 style="font-size: 1.875rem; font-weight: bold; text-align: center; color: #047857; margin-bottom: 1rem;">🥬 Palengke Helper+</h1>
@@ -169,63 +169,93 @@
 
     <!-- MAIN DASHBOARD CONTENT INTERFACE CONTAINER -->
     <div id="appPage" class="hidden">
-        <!-- GLOBAL APPLICATION NAVIGATION BAR SYSTEM -->
-        <nav class="bg-emerald-700 text-white p-4 shadow-md sticky top-0 z-50">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex justify-between items-center">
-                    <h1 class="font-bold text-xl cursor-pointer" onclick="switchTab('home')">🥬 Palengke Helper+</h1>
-                    <button class="md:hidden text-2xl focus:outline-none" onclick="toggleMenu()">☰</button>
-                    <ul id="menu" class="hidden md:flex gap-4 lg:gap-6 font-medium text-xs lg:text-sm">
-                        <li><button data-tab="home" onclick="switchTab('home')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Home</button></li>
-                        <li><button data-tab="budget" onclick="switchTab('budget')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Budget</button></li>
-                        <li><button data-tab="meal" onclick="switchTab('meal')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Meal Planner</button></li>
-                        <li><button data-tab="prices" onclick="switchTab('prices')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Prices</button></li>
-                        <li><button data-tab="suggestions" onclick="switchTab('suggestions')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Palengke AI</button></li>
-                        <li><button data-tab="grocery" onclick="switchTab('grocery')" class="tab-link hover:text-emerald-200 transition focus:outline-none">Grocery</button></li>
-<li id='navLoginRegisterDesktop' class='hidden'>
-    <button onclick='logout()' class='hover:text-emerald-200 transition focus:outline-none font-semibold'>Login / Register</button>
-</li>
-<li id='navAccountDesktop' class='hidden relative'>
-                            <button onclick="toggleAccountMenu()" class="hover:text-emerald-200 transition focus:outline-none flex items-center gap-1">
-                                <span>Account</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </button>
-                            <div id="accountDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
-                                <button onclick="openAccountSettings()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-emerald-50 text-sm">Settings</button>
-                                <button onclick="openPwaInstallModal()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-emerald-50 text-sm">Install App</button>
-                                <button onclick="logout()" class="block w-full text-left px-4 py-2 text-rose-600 hover:bg-rose-50 text-sm font-semibold">Logout</button>
-                            </div>
-                        </li>
-                    </ul>
+        <!-- DESKTOP SIDEBAR -->
+        <aside class="hidden md:flex fixed inset-y-0 left-0 z-40 w-[240px] flex-col border-r border-slate-300 bg-white">
+            <div class="flex items-center gap-2 p-4 border-b border-slate-200 cursor-pointer" onclick="switchTab('home')">
+                <span class="text-2xl">🥬</span>
+                <span class="text-lg font-semibold text-slate-900">Palengke Helper+</span>
+            </div>
+            <div class="flex flex-col gap-y-1 p-3 overflow-y-auto flex-1">
+                <p class="sidebar-group-title px-3 mb-1">Menu</p>
+                <button data-tab="home" onclick="switchTab('home')" class="tab-link sidebar-item">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-8 9 8M5 10v10h14V10"/></svg>
+                    <span>Home</span>
+                </button>
+                <button data-tab="budget" onclick="switchTab('budget')" class="tab-link sidebar-item">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18v10H3zM7 12h.01M17 12h.01M12 9.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"/></svg>
+                    <span>Budget</span>
+                </button>
+                <button data-tab="meal" onclick="switchTab('meal')" class="tab-link sidebar-item">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3v8M5 3v8a3 3 0 006 0V3M16 3c-2 2-2 6-2 8h4v10M8 14v7"/></svg>
+                    <span>Meal Planner</span>
+                </button>
+                <button data-tab="prices" onclick="switchTab('prices')" class="tab-link sidebar-item">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M6 16V10M11 16V6M16 16v-3"/></svg>
+                    <span>Prices</span>
+                </button>
+                <button data-tab="suggestions" onclick="switchTab('suggestions')" class="tab-link sidebar-item">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2M8 7h8a3 3 0 013 3v6a3 3 0 01-3 3H8a3 3 0 01-3-3v-6a3 3 0 013-3zM9 13h.01M15 13h.01"/></svg>
+                    <span>Palengke AI</span>
+                </button>
+                <button data-tab="grocery" onclick="switchTab('grocery')" class="tab-link sidebar-item">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h2l2.5 11h11L21 7H6M9 20a1 1 0 100-2 1 1 0 000 2zM17 20a1 1 0 100-2 1 1 0 000 2z"/></svg>
+                    <span>Grocery</span>
+                </button>
+            </div>
+            <div class="p-3 border-t border-slate-200">
+                <div id='navLoginRegisterDesktop' class='hidden'>
+                    <button onclick='logout()' class='sidebar-item text-emerald-700'>Login / Register</button>
                 </div>
-                <!-- MOBILE MENU COLLAPSIBLE BLOCK CONTAINER -->
-                <div id="mobileMenu" class="hidden md:hidden mt-4 space-y-2 pb-2">
-                    <button data-tab="home" onclick="switchTab('home'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Home</button>
-                    <button data-tab="budget" onclick="switchTab('budget'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Budget</button>
-                    <button data-tab="meal" onclick="switchTab('meal'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Meal Planner</button>
-                    <button data-tab="prices" onclick="switchTab('prices'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Market Prices</button>
-                    <button data-tab="suggestions" onclick="switchTab('suggestions'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Palengke AI</button>
-                    <button data-tab="grocery" onclick="switchTab('grocery'); toggleMenu()" class="tab-link block w-full text-left py-2 border-b border-emerald-600">Grocery</button>
-                    <div id='navLoginRegisterMobile' class='hidden space-y-2'>
-                        <button onclick='logout(); toggleMenu()' class='block w-full text-left py-2 border-b border-emerald-600 font-semibold'>Login / Register</button>
+                <div id='navAccountDesktop' class='hidden relative'>
+                    <button onclick="toggleAccountMenu()" class="sidebar-item justify-between">
+                        <span>Account</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                    </button>
+                    <div id="accountDropdown" class="hidden absolute left-0 bottom-full mb-2 w-full bg-white rounded-lg shadow-lg border border-slate-300 py-2 z-50">
+                        <button onclick="openAccountSettings()" class="block w-full text-left px-4 py-2 text-slate-700 hover:bg-emerald-50 text-sm">Settings</button>
+                        <button onclick="openPwaInstallModal()" class="block w-full text-left px-4 py-2 text-slate-700 hover:bg-emerald-50 text-sm">Install App</button>
+                        <button onclick="logout()" class="block w-full text-left px-4 py-2 text-rose-600 hover:bg-rose-50 text-sm font-semibold">Logout</button>
                     </div>
-                    <div id='navAccountMobile' class='hidden space-y-2'>
-                        <button onclick='openAccountSettings(); toggleMenu()' class='block w-full text-left py-2 border-b border-emerald-600'>Account Settings</button>
-                    <button onclick="openPwaInstallModal(); toggleMenu()" class="block w-full text-left py-2 border-b border-emerald-600">Install App</button>
-                        <button onclick='logout(); toggleMenu()' class='block w-full text-left py-2 text-rose-300 font-bold'>Logout</button>
-                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MOBILE TOP BAR + TAB STRIP -->
+        <nav class="md:hidden bg-white border-b border-slate-300 px-4 pt-3 pb-2 sticky top-0 z-50">
+            <div class="flex justify-between items-center">
+                <h1 class="font-semibold text-lg text-slate-900 cursor-pointer" onclick="switchTab('home')">🥬 Palengke Helper+</h1>
+                <button class="text-2xl text-slate-600 focus:outline-none" onclick="toggleMenu()">☰</button>
+            </div>
+            <div class="mt-3 -mx-4 px-4 flex gap-2 overflow-x-auto whitespace-nowrap" style="scrollbar-width:none">
+                <button data-tab="home" onclick="switchTab('home')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">Home</button>
+                <button data-tab="budget" onclick="switchTab('budget')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">Budget</button>
+                <button data-tab="meal" onclick="switchTab('meal')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">Meal Planner</button>
+                <button data-tab="prices" onclick="switchTab('prices')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">Prices</button>
+                <button data-tab="suggestions" onclick="switchTab('suggestions')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">Palengke AI</button>
+                <button data-tab="grocery" onclick="switchTab('grocery')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">Grocery</button>
+            </div>
+            <div id="mobileMenu" class="hidden mt-3 space-y-1 pb-1 border-t border-slate-200 pt-2">
+                <div id='navLoginRegisterMobile' class='hidden'>
+                    <button onclick='logout(); toggleMenu()' class='block w-full text-left py-2 font-semibold text-emerald-700'>Login / Register</button>
+                </div>
+                <div id='navAccountMobile' class='hidden'>
+                    <button onclick='openAccountSettings(); toggleMenu()' class='block w-full text-left py-2 text-slate-700'>Account Settings</button>
+                    <button onclick="openPwaInstallModal(); toggleMenu()" class="block w-full text-left py-2 text-slate-700">Install App</button>
+                    <button onclick='logout(); toggleMenu()' class='block w-full text-left py-2 text-rose-600 font-bold'>Logout</button>
                 </div>
             </div>
         </nav>
 
+        <div class="md:ml-[240px] min-h-screen flex flex-col">
+
         <!-- APP HERO ATTRIBUTION DISPLAY PANEL -->
-        <section id="homeHero" class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white py-12 text-center mt-4 mx-6 rounded-xl shadow-sm">
+        <section id="homeHero" class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white py-12 text-center mt-6 mx-4 md:mx-6 rounded-lg shadow-sm">
             <h2 class="text-4xl md:text-5xl font-bold px-4">Plan Your Budget. Feed Your Family Better.</h2>
             <p class="mt-4 text-base md:text-lg px-4 opacity-90">A smart budgeting and meal planning web app for Filipino families.</p>
         </section>
 
         <!-- MAIN DECOUPLED CONTENT TABBING SECTION LAYER -->
-        <section class="max-w-7xl mx-auto py-8 px-6 min-h-[50vh] bg-gray-50">
+        <section class="w-full max-w-7xl mx-auto py-6 px-4 md:px-6 min-h-[50vh] flex-1">
 
             <!-- TAB 0: HOME VIEW PANEL -->
             <div id="view-home" class="tab-content">
@@ -767,7 +797,7 @@
             <!-- TAB 3: PALENGKE PRICES MONITOR VIEW PANEL -->
             <div id="view-prices" class="tab-content hidden">
                 <h2 class="text-3xl font-bold mb-6 text-gray-800">Palengke Market Prices</h2>
-                <div class="bg-gradient-to-br from-slate-50 to-gray-100 p-6 rounded-xl shadow-md border border-gray-200 max-w-4xl">
+                <div class="bg-white p-6 rounded-lg border border-slate-300 max-w-4xl">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-200 pb-3 mb-4 gap-2">
                         <div>
                             <h3 class="text-2xl font-bold text-gray-800">Bantay Presyo Watchlist</h3>
@@ -778,12 +808,12 @@
                     <div id="priceCategoryTabs" class="flex flex-wrap gap-2 mb-4">
                         <!-- Tabs are generated by selectPriceCategory() -->
                     </div>
-                    <div class="overflow-x-auto border border-gray-200 rounded-xl bg-white">
+                    <div class="overflow-x-auto border border-slate-300 rounded-lg bg-white">
                         <table class="w-full text-left text-sm border-collapse">
-                            <thead class="bg-gradient-to-r from-emerald-50 to-teal-50 border-b border-emerald-200 font-bold text-emerald-800 uppercase tracking-wider text-xs">
+                            <thead class="bg-slate-200 font-semibold text-slate-700 text-xs uppercase tracking-wider">
                                 <tr>
-                                    <th class="p-3 border-r border-emerald-200">Commodity Item</th>
-                                    <th class="p-3 text-right border-r border-emerald-200">Reference Price</th>
+                                    <th class="p-3">Commodity Item</th>
+                                    <th class="p-3 text-right">Reference Price</th>
                                     <th class="p-3 text-right">Notes</th>
                                 </tr>
                             </thead>
@@ -794,6 +824,7 @@
                             </tbody>
                         </table>
                     </div>
+                    <div id="pricePagination" class="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4"></div>
                 </div>
             </div>
 
@@ -944,9 +975,10 @@
         </section>
 
         <!-- FOOTER LAYER CONTAINER -->
-        <footer class="bg-emerald-800 text-white text-center p-6 mt-12 border-t border-emerald-900">
-            <p class="text-sm opacity-80">© 2026 Palengke Helper+ · Smart budgeting and meal planning for Filipino families</p>
+        <footer class="bg-white text-slate-500 text-center p-4 mt-8 border-t border-slate-300">
+            <p class="text-sm">© 2026 Palengke Helper+ · Smart budgeting and meal planning for Filipino families</p>
         </footer>
+        </div>
     </div>
 
     <!-- ====================================== -->
@@ -1096,7 +1128,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
     
     <script src="data/recipes.js?v=5"></script>
     <script src="supabase.js?v=3"></script>
-    <script src="app.js?v=23"></script>
+    <script src="app.js?v=24"></script>
     <script>
         function switchTab(tabId) {
             console.log('switchTab called with:', tabId);
@@ -1130,10 +1162,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
             }
             const tabButtons = document.querySelectorAll('.tab-link');
             tabButtons.forEach(btn => {
-                btn.classList.remove('text-white', 'font-bold', 'underline', 'underline-offset-4');
-                if (btn.dataset.tab === tabId) {
-                    btn.classList.add('text-white', 'font-bold', 'underline', 'underline-offset-4');
-                }
+                btn.classList.toggle('active', btn.dataset.tab === tabId);
             });
             if (tabId === 'meal') {
                 const mealWrapper = document.getElementById('mealScheduleWrapper');

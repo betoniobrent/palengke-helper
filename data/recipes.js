@@ -2184,6 +2184,445 @@ const RECIPE_DATABASE = [
             "Add pechay and season with fish sauce.",
             "Serve hot with rice."
         ]
+    },
+    {
+        id: 87,
+        name: "Ginisang Ampalaya with Egg",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "healthy", "tipid", "nopork"],
+        image: "assets/recipes/ginisang-ampalaya-with-egg.jpg",
+        servings: 4,
+        estimatedCost: 75,
+        prepTime: "10 mins",
+        cookTime: "15 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "300 g Ampalaya",
+            "3 pcs Egg",
+            "2 pcs Tomato",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tbsp Fish Sauce",
+            "1 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Slice ampalaya thinly and soak in salted water for 10 minutes, then squeeze dry to reduce bitterness.",
+            "Saute garlic, onion, and tomato in oil.",
+            "Add ampalaya and stir-fry for 3 minutes.",
+            "Pour in beaten eggs and season with fish sauce; cook until set.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 88,
+        name: "Filipino-style Chop Suey",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "healthy", "nopork"],
+        image: "assets/recipes/filipino-style-chop-suey.jpg",
+        servings: 4,
+        estimatedCost: 180,
+        prepTime: "20 mins",
+        cookTime: "20 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "150 g Chicken",
+            "1 pc Carrot",
+            "200 g Repolyo",
+            "150 g Sayote",
+            "100 g Baguio Beans",
+            "1 pc Bell Pepper",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "2 tbsp Soy Sauce",
+            "1 tbsp Cornstarch",
+            "1 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Saute garlic and onion, then brown the chicken strips.",
+            "Add the harder vegetables first (carrot, sayote, beans) with a splash of water.",
+            "Add repolyo and bell pepper, season with soy sauce.",
+            "Thicken with cornstarch slurry and cook 2 more minutes.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 89,
+        name: "Ginisang Sitaw at Kalabasa",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "healthy", "tipid", "nopork"],
+        image: "assets/recipes/ginisang-sitaw-at-kalabasa.jpg",
+        servings: 4,
+        estimatedCost: 85,
+        prepTime: "10 mins",
+        cookTime: "20 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "300 g Kalabasa",
+            "200 g Sitaw",
+            "2 pcs Tomato",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tbsp Fish Sauce",
+            "1 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Saute garlic, onion, and tomato in oil.",
+            "Add cubed kalabasa with 1/2 cup water; simmer until almost tender.",
+            "Add sitaw and cook 3-4 minutes so it stays crunchy.",
+            "Season with fish sauce and serve with rice."
+        ]
+    },
+    {
+        id: 90,
+        name: "Ginisang Pechay",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "healthy", "tipid", "nopork"],
+        image: "assets/recipes/ginisang-pechay.jpg",
+        servings: 4,
+        estimatedCost: 55,
+        prepTime: "5 mins",
+        cookTime: "10 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "2 bunch Pechay",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tbsp Soy Sauce",
+            "1 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Saute garlic and onion in oil.",
+            "Add pechay stalks first, then leaves.",
+            "Season with soy sauce and cook 2-3 minutes.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 91,
+        name: "Monggo Guisado with Malunggay",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "healthy", "tipid", "protein", "nopork"],
+        image: "assets/recipes/monggo-guisado-with-malunggay.jpg",
+        servings: 4,
+        estimatedCost: 80,
+        prepTime: "10 mins",
+        cookTime: "45 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "250 g Monggo",
+            "1 cup Malunggay",
+            "2 pcs Tomato",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "2 tbsp Fish Sauce",
+            "1 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Boil monggo in 5 cups water until soft, about 30 minutes.",
+            "Saute garlic, onion, and tomato in a separate pan.",
+            "Pour the cooked monggo into the saute and season with fish sauce.",
+            "Stir in malunggay leaves and simmer 2 minutes.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 92,
+        name: "Corn and Malunggay Soup",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "healthy", "tipid", "nopork"],
+        image: "assets/recipes/corn-and-malunggay-soup.jpg",
+        servings: 4,
+        estimatedCost: 70,
+        prepTime: "10 mins",
+        cookTime: "20 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "3 pcs Sweet Corn",
+            "1 cup Malunggay",
+            "2 pcs Tinapa",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tbsp Fish Sauce",
+            "1 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Shave the corn kernels off the cob.",
+            "Saute garlic and onion, then add flaked tinapa.",
+            "Add corn and 4 cups water; simmer 10 minutes.",
+            "Season with fish sauce, add malunggay, and cook 1 more minute.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 93,
+        name: "Ensaladang Talong",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "healthy", "tipid", "nopork"],
+        image: "assets/recipes/ensaladang-talong.jpg",
+        servings: 4,
+        estimatedCost: 60,
+        prepTime: "10 mins",
+        cookTime: "15 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "4 pcs Talong",
+            "2 pcs Tomato",
+            "1 pc Onion",
+            "2 tbsp Vinegar",
+            "1 tbsp Fish Sauce",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Grill or roast talong over the flame until charred and soft; peel.",
+            "Chop the flesh roughly.",
+            "Toss with diced tomato, onion, vinegar, and fish sauce.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 94,
+        name: "Ginisang Tokwa at Gulay",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "healthy", "tipid", "protein", "nopork"],
+        image: "assets/recipes/ginisang-tokwa-at-gulay.jpg",
+        servings: 4,
+        estimatedCost: 90,
+        prepTime: "15 mins",
+        cookTime: "20 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "4 pcs Tokwa",
+            "200 g Togue",
+            "1 bunch Pechay",
+            "150 g Repolyo",
+            "100 g Sitaw",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tsp Ginger",
+            "2 tbsp Soy Sauce",
+            "2 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Fry cubed tokwa until golden brown; set aside.",
+            "Saute garlic, onion, and ginger.",
+            "Add sitaw and repolyo with a splash of water; cook 3 minutes.",
+            "Add togue, pechay, and tokwa; season with soy sauce.",
+            "Serve hot with rice."
+        ]
+    },
+    {
+        id: 95,
+        name: "Vegetable Sinigang",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "healthy", "tipid", "nopork"],
+        image: "assets/recipes/vegetable-sinigang.jpg",
+        servings: 4,
+        estimatedCost: 85,
+        prepTime: "15 mins",
+        cookTime: "30 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "1 pc Labanos",
+            "200 g Gabi",
+            "150 g Sitaw",
+            "100 g Okra",
+            "2 pcs Talong",
+            "1 bunch Kangkong",
+            "2 pcs Tomato",
+            "1 pc Onion",
+            "1 pack Sinigang Mix",
+            "1 tbsp Fish Sauce",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Boil 6 cups water with onion, tomato, and gabi until gabi softens.",
+            "Add labanos, sitaw, okra, and talong; simmer 5 minutes.",
+            "Stir in sinigang mix and fish sauce.",
+            "Add kangkong last and turn off heat.",
+            "Serve hot with rice."
+        ]
+    },
+    {
+        id: 96,
+        name: "Lumpiang Sariwa",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "healthy", "nopork"],
+        image: "assets/recipes/lumpiang-sariwa.jpg",
+        servings: 4,
+        estimatedCost: 160,
+        prepTime: "30 mins",
+        cookTime: "25 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "1 pack Lumpia Wrapper",
+            "200 g Singkamas",
+            "1 pc Carrot",
+            "150 g Repolyo",
+            "100 g Sitaw",
+            "150 g Togue",
+            "100 g Lettuce",
+            "4 pcs Tokwa",
+            "1 pc Onion",
+            "4 cloves Garlic",
+            "3 tbsp Soy Sauce",
+            "3 tbsp Sugar",
+            "2 tbsp Cornstarch",
+            "2 tbsp Peanut Butter",
+            "1 tbsp Oil"
+        ],
+        instructions: [
+            "Saute garlic and onion, then cook singkamas, carrot, sitaw, and repolyo until tender-crisp.",
+            "Add togue and fried tokwa cubes; season lightly with soy sauce.",
+            "Make the sauce: simmer 1 cup water with soy sauce, sugar, and peanut butter; thicken with cornstarch.",
+            "Wrap the filling with a lettuce leaf in each wrapper.",
+            "Pour sauce on top and sprinkle with crushed garlic."
+        ]
+    },
+    {
+        id: 97,
+        name: "Adobong Sitaw",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "nopork"],
+        image: "assets/recipes/adobong-sitaw.jpg",
+        servings: 4,
+        estimatedCost: 60,
+        prepTime: "10 mins",
+        cookTime: "15 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "300 g Sitaw",
+            "1 pc Onion",
+            "4 cloves Garlic",
+            "2 tbsp Soy Sauce",
+            "1 tbsp Vinegar",
+            "1 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Saute garlic and onion in oil.",
+            "Add sitaw and stir-fry 2 minutes.",
+            "Add soy sauce and vinegar; do not stir until it boils.",
+            "Simmer 5 minutes until sitaw is tender.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 98,
+        name: "Ginisang Patola with Egg",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "healthy", "tipid", "nopork"],
+        image: "assets/recipes/ginisang-patola-with-egg.jpg",
+        servings: 4,
+        estimatedCost: 65,
+        prepTime: "10 mins",
+        cookTime: "15 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "2 pcs Patola",
+            "2 pcs Egg",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tbsp Fish Sauce",
+            "1 tbsp Oil",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Peel and slice patola.",
+            "Saute garlic and onion in oil.",
+            "Add patola with 1/2 cup water; simmer 5 minutes.",
+            "Stir in beaten eggs and season with fish sauce.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 99,
+        name: "Steamed Okra with Bagoong",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "healthy", "tipid", "nopork"],
+        image: "assets/recipes/steamed-okra-with-bagoong.jpg",
+        servings: 4,
+        estimatedCost: 55,
+        prepTime: "5 mins",
+        cookTime: "10 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "300 g Okra",
+            "2 tbsp Bagoong",
+            "2 pcs Tomato",
+            "1 pc Onion",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Steam or blanch okra for 3-4 minutes until bright green.",
+            "Chop tomato and onion.",
+            "Serve okra with bagoong, tomato, and onion on the side.",
+            "Eat with rice."
+        ]
+    },
+    {
+        id: 100,
+        name: "Ginataang Langka",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "nopork"],
+        image: "assets/recipes/ginataang-langka.jpg",
+        servings: 4,
+        estimatedCost: 90,
+        prepTime: "15 mins",
+        cookTime: "30 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "500 g Langka",
+            "1 cup Coconut Milk",
+            "2 pcs Tinapa",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tsp Ginger",
+            "1 tbsp Fish Sauce",
+            "1 pc Chili",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Saute garlic, onion, and ginger.",
+            "Add sliced unripe langka and flaked tinapa.",
+            "Pour in coconut milk and simmer 20 minutes until langka is tender.",
+            "Season with fish sauce and chili.",
+            "Serve with rice."
+        ]
+    },
+    {
+        id: 101,
+        name: "Ginataang Puso ng Saging",
+        mealType: ["Lunch", "Dinner"],
+        diet: ["anything", "tipid", "nopork"],
+        image: "assets/recipes/ginataang-puso-ng-saging.jpg",
+        servings: 4,
+        estimatedCost: 75,
+        prepTime: "15 mins",
+        cookTime: "25 mins",
+        difficulty: "Easy",
+        ingredients: [
+            "1 pc Puso ng Saging",
+            "1 cup Coconut Milk",
+            "2 pcs Tinapa",
+            "1 pc Onion",
+            "3 cloves Garlic",
+            "1 tsp Ginger",
+            "1 tbsp Vinegar",
+            "1 tbsp Fish Sauce",
+            "4 cup Rice"
+        ],
+        instructions: [
+            "Remove tough outer layers of the banana heart; slice thinly and soak in salted water, then squeeze dry.",
+            "Saute garlic, onion, and ginger, then add flaked tinapa.",
+            "Add the banana heart, vinegar, and coconut milk; simmer 15 minutes.",
+            "Season with fish sauce and serve with rice."
+        ]
     }
 ];
-
