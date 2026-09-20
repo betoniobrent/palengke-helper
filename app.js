@@ -2957,6 +2957,14 @@ function parseIngredient(ingredientStr) {
         'coffee': 'coffee',
         'kape': 'coffee',
         'corned beef': 'corned beef',
+        'salted egg': 'salted egg',
+        'itlog na maalat': 'salted egg',
+        'upo': 'upo',
+        'bottle gourd': 'upo',
+        'dilis': 'dilis',
+        'canned tuna': 'canned tuna',
+        'luncheon meat': 'luncheon meat',
+        'flour': 'flour',
         'squash': 'kalabasa',
         'kalabasa': 'kalabasa',
         'papaya': 'papaya',
@@ -2975,7 +2983,8 @@ function parseIngredient(ingredientStr) {
     };
     
     // Find best match
-    for (const [key, value] of Object.entries(ingredientMap)) {
+    const mapEntries = Object.entries(ingredientMap).sort((a, b) => b[0].length - a[0].length);
+    for (const [key, value] of mapEntries) {
         if (itemName.includes(key)) {
             itemName = value;
             break;
@@ -2988,7 +2997,8 @@ function parseIngredient(ingredientStr) {
 // Ingredients sold by the piece/can/pack rather than by weight
 const COUNT_PRICED_INGREDIENTS = new Set([
     'egg', 'tokwa', 'tuyo', 'tinapa', 'pandesal', 'coffee', 'sardines',
-    'noodles', 'bihon', 'corned beef', 'milk', 'sinigang mix', 'corn', 'puso ng saging', 'lumpia wrapper'
+    'noodles', 'bihon', 'corned beef', 'milk', 'sinigang mix', 'corn', 'puso ng saging', 'lumpia wrapper',
+    'salted egg', 'canned tuna', 'luncheon meat'
 ]);
 
 // Rough amount (kg or L) a recipe uses when it lists a condiment or aromatic
@@ -3051,7 +3061,9 @@ function resolveIngredientPricing(ingredient) {
             'kalabasa': 50, 'papaya': 40, 'malunggay': 30, 'soy sauce': 35,
             'vinegar': 30, 'fish sauce': 40, 'oil': 80, 'sugar': 60,
             'salt': 25, 'pepper': 200, 'milk': 75, 'coconut milk': 85,
-            'ginger': 120, 'calamansi': 80, 'chili': 200, 'bay leaves': 1
+            'ginger': 120, 'calamansi': 80, 'chili': 200, 'bay leaves': 1,
+            'salted egg': 15, 'upo': 40, 'dilis': 280, 'canned tuna': 40,
+            'luncheon meat': 45, 'flour': 60
         };
         unitPrice = fallbackPrices[parsed.name] || 50;
         source = 'fallback';
@@ -3124,6 +3136,8 @@ const GROCERY_CATEGORY_BY_INGREDIENT = {
     'chicken': 'meat', 'pork': 'meat', 'beef': 'meat', 'fish': 'meat', 'bangus': 'meat',
     'tilapia': 'meat', 'galunggong': 'meat', 'hotdog': 'meat', 'longganisa': 'meat',
     'giniling': 'meat', 'tinapa': 'meat', 'tuyo': 'meat', 'chicken feet': 'meat', 'chicken liver': 'meat',
+    'dilis': 'meat', 'upo': 'vegetables', 'salted egg': 'rice',
+    'canned tuna': 'other food', 'luncheon meat': 'other food', 'flour': 'other food',
     'egg': 'rice', 'rice': 'rice', 'monggo': 'rice',
     'garlic': 'vegetables', 'onion': 'vegetables', 'tomato': 'vegetables', 'potato': 'vegetables',
     'carrot': 'vegetables', 'talong': 'vegetables', 'spinach': 'vegetables', 'kangkong': 'vegetables',
@@ -3282,6 +3296,12 @@ const LOCAL_SUPPLEMENT_PRICES = [
     { id: 'misua', name: 'Misua Noodles', keys: ['misua'], category: 'other food', unit: 'pack', price: 25 },
     { id: 'bihon', name: 'Bihon Noodles', keys: ['bihon'], category: 'other food', unit: 'pack', price: 40 },
     { id: 'corned-beef', name: 'Corned Beef (Small Can)', keys: ['corned beef'], category: 'other food', unit: 'can', price: 40 },
+    { id: 'salted-egg', name: 'Itlog na Maalat (Salted Egg)', keys: ['salted egg', 'itlog na maalat'], category: 'rice', unit: 'piece', price: 15 },
+    { id: 'upo', name: 'Upo (Bottle Gourd)', keys: ['upo', 'bottle gourd'], category: 'vegetables', unit: 'kg', price: 40 },
+    { id: 'dilis', name: 'Dilis (Dried Anchovies)', keys: ['dilis', 'dried anchovies'], category: 'fish', unit: 'kg', price: 280 },
+    { id: 'canned-tuna', name: 'Canned Tuna (Small Can)', keys: ['canned tuna'], category: 'other food', unit: 'can', price: 40 },
+    { id: 'luncheon-meat', name: 'Luncheon Meat (Small Can)', keys: ['luncheon meat'], category: 'other food', unit: 'can', price: 45 },
+    { id: 'flour', name: 'All-Purpose Flour', keys: ['flour'], category: 'other food', unit: 'kg', price: 60 },
     { id: 'hotdog', name: 'Hotdog', keys: ['hotdog'], category: 'meat', unit: 'kg', price: 180 },
     { id: 'chicken-feet', name: 'Chicken Feet (Paa ng Manok)', keys: ['chicken feet', 'paa ng manok'], category: 'meat', unit: 'kg', price: 100 },
     { id: 'chicken-liver', name: 'Chicken Liver (Atay ng Manok)', keys: ['chicken liver', 'atay'], category: 'meat', unit: 'kg', price: 140 },
