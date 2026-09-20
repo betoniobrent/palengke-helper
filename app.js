@@ -1747,9 +1747,15 @@ function generateFilipinoMealPlan() {
         return subFiltered[Math.floor(Math.random() * subFiltered.length)] || fallbackPool[0];
     };
 
-    const usedRecipeIdsByType = { Breakfast: new Set(), Lunch: new Set(), Dinner: new Set() };
+    const dishKey = recipe => recipe.name.toLowerCase().replace(/\s*\(\d+\s*pax\)\s*/g, '').trim();
+    const weeklyUsage = {};
+    const bumpUsage = (recipe, delta) => {
+        const key = dishKey(recipe);
+        weeklyUsage[key] = Math.max((weeklyUsage[key] || 0) + delta, 0);
+    };
+    const usageOf = recipe => weeklyUsage[dishKey(recipe)] || 0;
 
-    const chooseBudgetFriendlyRecipe = (options, type, excludeIds = new Set()) => {
+    const chooseBudgetFriendlyRecipe = (options, type, excludeKeys = new Set()) => {
         if (options.length === 0) return getSafeRecipe([], RECIPE_DATABASE, type);
 
         const withMatchScore = options.map(recipe => {
@@ -1771,16 +1777,15 @@ function generateFilipinoMealPlan() {
 
         const sortedByScore = withMatchScore.sort((a, b) => a.score - b.score);
 
-        // Pick among the best-fitting candidates, avoiding repeats within the week
-        const used = usedRecipeIdsByType[type] || new Set();
-        const topPool = sortedByScore.slice(0, Math.min(7, sortedByScore.length));
-        const notToday = topPool.filter(entry => !excludeIds.has(entry.recipe.id));
-        const dayPool = notToday.length > 0 ? notToday : topPool;
-        const freshPool = dayPool.filter(entry => !used.has(entry.recipe.id));
-        const pickPool = freshPool.length > 0 ? freshPool : dayPool;
-        const chosen = pickPool[Math.floor(Math.random() * pickPool.length)].recipe;
-        used.add(chosen.id);
-        if (used.size >= topPool.length) used.clear();
+        // Never serve a dish twice in one day; across the week prefer dishes
+        // not yet used, only repeating when every option is exhausted
+        const notToday = sortedByScore.filter(entry => !excludeKeys.has(dishKey(entry.recipe)));
+        const dayPool = notToday.length > 0 ? notToday : sortedByScore;
+        const minUsage = Math.min(...dayPool.map(entry => usageOf(entry.recipe)));
+        const freshPool = dayPool.filter(entry => usageOf(entry.recipe) === minUsage);
+        const topPool = freshPool.slice(0, Math.min(5, freshPool.length));
+        const chosen = topPool[Math.floor(Math.random() * topPool.length)].recipe;
+        bumpUsage(chosen, 1);
         return chosen;
     };
 
@@ -1791,12 +1796,12 @@ function generateFilipinoMealPlan() {
     let totalPlanCostAccumulator = 0;
 
     daysOfWeek.forEach(day => {
-        const todayIds = new Set();
-        const bMeal = chooseBudgetFriendlyRecipe(breakfastOptions, "Breakfast", todayIds);
-        todayIds.add(bMeal.id);
-        const lMeal = chooseBudgetFriendlyRecipe(lunchOptions, "Lunch", todayIds);
-        todayIds.add(lMeal.id);
-        const dMeal = chooseBudgetFriendlyRecipe(dinnerOptions, "Dinner", todayIds);
+        const todayKeys = new Set();
+        const bMeal = chooseBudgetFriendlyRecipe(breakfastOptions, "Breakfast", todayKeys);
+        todayKeys.add(dishKey(bMeal));
+        const lMeal = chooseBudgetFriendlyRecipe(lunchOptions, "Lunch", todayKeys);
+        todayKeys.add(dishKey(lMeal));
+        const dMeal = chooseBudgetFriendlyRecipe(dinnerOptions, "Dinner", todayKeys);
 
         currentMealPlan[day] = {
             Breakfast: bMeal,
@@ -1833,47 +1838,42 @@ function generateFilipinoMealPlan() {
         });
         slots.sort((a, b) => b.cost - a.cost);
 
-        const weeklyUsage = {};
-        daysOfWeek.forEach(day => {
-            ["Breakfast", "Lunch", "Dinner"].forEach(type => {
-                const id = currentMealPlan[day][type].id;
-                weeklyUsage[id] = (weeklyUsage[id] || 0) + 1;
-            });
-        });
+        const swapSlot = (slot, allowRepeats) => {
+            const dayKeys = new Set(["Breakfast", "Lunch", "Dinner"]
+                .filter(t => t !== slot.type)
+                .map(t => dishKey(currentMealPlan[slot.day][t])));
+            const candidate = (cheapestByType[slot.type] || [])
+                .filter(c => !dayKeys.has(dishKey(c.recipe)) && c.cost < slot.cost)
+                .filter(c => allowRepeats || usageOf(c.recipe) === 0)
+                .sort((a, b) => usageOf(a.recipe) - usageOf(b.recipe) || a.cost - b.cost)[0];
+            if (!candidate) return;
+            bumpUsage(currentMealPlan[slot.day][slot.type], -1);
+            bumpUsage(candidate.recipe, 1);
+            totalPlanCostAccumulator -= slot.cost - candidate.cost;
+            currentMealPlan[slot.day][slot.type] = candidate.recipe;
+            slot.cost = candidate.cost;
+        };
 
+        // First swap in cheaper dishes not yet used this week; only if the
+        // budget still doesn't fit, allow the least-repeated cheap dishes.
+        // If repeats still can't make it fit, keep the varied plan (the
+        // "fits N days" notice explains the shortfall instead).
         for (const slot of slots) {
             if (totalPlanCostAccumulator <= targetWeekBudget) break;
-            const dayIds = new Set(["Breakfast", "Lunch", "Dinner"].map(t => currentMealPlan[slot.day][t].id));
-            // Prefer cheaper recipes not yet used this week to keep variety
-            const candidate = (cheapestByType[slot.type] || [])
-                .filter(c => !dayIds.has(c.recipe.id) && c.cost < slot.cost)
-                .sort((a, b) =>
-                    (weeklyUsage[a.recipe.id] || 0) - (weeklyUsage[b.recipe.id] || 0) ||
-                    a.cost - b.cost
-                )[0];
-            if (candidate) {
-                const oldId = currentMealPlan[slot.day][slot.type].id;
-                weeklyUsage[oldId] = Math.max((weeklyUsage[oldId] || 1) - 1, 0);
-                weeklyUsage[candidate.recipe.id] = (weeklyUsage[candidate.recipe.id] || 0) + 1;
-                totalPlanCostAccumulator -= slot.cost - candidate.cost;
-                currentMealPlan[slot.day][slot.type] = candidate.recipe;
-                slot.cost = candidate.cost;
-            }
+            swapSlot(slot, false);
         }
-
-        // Last resort: if still over budget, allow repeats and take the
-        // absolute cheapest alternatives
         if (totalPlanCostAccumulator > targetWeekBudget) {
+            const variedPlan = {};
+            daysOfWeek.forEach(day => { variedPlan[day] = { ...currentMealPlan[day] }; });
+            const variedCost = totalPlanCostAccumulator;
             slots.sort((a, b) => b.cost - a.cost);
             for (const slot of slots) {
                 if (totalPlanCostAccumulator <= targetWeekBudget) break;
-                const dayIds = new Set(["Breakfast", "Lunch", "Dinner"].map(t => currentMealPlan[slot.day][t].id));
-                const candidate = (cheapestByType[slot.type] || []).find(c => !dayIds.has(c.recipe.id) && c.cost < slot.cost);
-                if (candidate) {
-                    totalPlanCostAccumulator -= slot.cost - candidate.cost;
-                    currentMealPlan[slot.day][slot.type] = candidate.recipe;
-                    slot.cost = candidate.cost;
-                }
+                swapSlot(slot, true);
+            }
+            if (totalPlanCostAccumulator > targetWeekBudget) {
+                daysOfWeek.forEach(day => { currentMealPlan[day] = variedPlan[day]; });
+                totalPlanCostAccumulator = variedCost;
             }
         }
     }
