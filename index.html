@@ -12,7 +12,7 @@
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Decoupled Visual Presentation Design Component Layer -->
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-900">
     <div id="authPage" style="background: #f0fdf4; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
@@ -829,15 +829,14 @@
             </div>
 
             <!-- TAB 4: PALENGKE AI -->
-            <div id="view-suggestions" class="tab-content hidden">
-                <h2 class="text-3xl font-bold mb-6 text-gray-800">Palengke AI</h2>
-                <div class="space-y-6 max-w-6xl mx-auto">
-                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+            <div id="view-suggestions" class="tab-content hidden -mx-4 -my-6 md:-mx-6">
+                <div class="w-full">
+                    <div class="bg-white border-b border-slate-300 overflow-hidden flex flex-col h-[calc(100vh-4rem)] md:h-screen">
                         <!-- CHAT HEADER -->
-                        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                        <div class="px-4 md:px-6 py-4 border-b border-slate-200 flex items-center justify-between">
                             <div>
                                 <div class="flex items-center gap-2">
-                                    <h3 class="text-xl font-semibold text-gray-800">Ask Palengke AI</h3>
+                                    <h2 class="text-xl font-semibold text-gray-800">Palengke AI</h2>
                                     <span id="aiStatusIndicator" class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600">ready</span>
                                 </div>
                                 <p class="text-xs text-gray-500 mt-0.5">Meals, budgeting, palengke shopping, groceries, recipes — ask in English or Tagalog.</p>
@@ -846,12 +845,12 @@
                         </div>
 
                         <!-- CHAT MESSAGES -->
-                        <div class="bg-gray-50 h-[500px] overflow-y-auto flex flex-col gap-4 p-4" id="aiChatHistory">
+                        <div class="bg-slate-50 flex-1 min-h-0 overflow-y-auto flex flex-col gap-4 p-4 md:p-6" id="aiChatHistory">
                             <div class="self-start bg-white border border-gray-200 rounded-3xl p-4 text-sm text-gray-500 max-w-[90%]">Hi! Ask me anything about Filipino meals, budgeting, palengke prices, or grocery tips.</div>
                         </div>
 
                         <!-- QUICK PROMPTS + INPUT -->
-                        <div class="border-t border-gray-100 p-4 flex flex-col gap-3">
+                        <div class="border-t border-slate-200 p-4 md:px-6 flex flex-col gap-3">
                             <div class="flex flex-wrap gap-2">
                                 <button onclick="handleQuickPrompt('What should I cook for dinner?')" class="rounded-full border border-gray-200 bg-slate-50 px-3 py-1.5 text-xs text-gray-700 hover:bg-slate-100 transition">What should I cook for dinner?</button>
                                 <button onclick="handleQuickPrompt('How can I save money on groceries?')" class="rounded-full border border-gray-200 bg-slate-50 px-3 py-1.5 text-xs text-gray-700 hover:bg-slate-100 transition">How can I save money on groceries?</button>
@@ -1128,7 +1127,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
     
     <script src="data/recipes.js?v=5"></script>
     <script src="supabase.js?v=3"></script>
-    <script src="app.js?v=26"></script>
+    <script src="app.js?v=27"></script>
     <script>
         function switchTab(tabId) {
             console.log('switchTab called with:', tabId);
