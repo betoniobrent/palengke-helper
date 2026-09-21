@@ -608,8 +608,8 @@
             </div>
 
             <!-- TAB 2: MEAL PLANNER VIEW PANEL -->
-            <div id="view-meal" class="tab-content hidden">
-                <div class="max-w-4xl mx-auto">
+            <div id="view-meal" class="tab-content hidden -mx-4 -my-6 md:-mx-6">
+                <div class="bg-white p-4 md:p-6 border-b border-slate-300 w-full min-h-[calc(100vh-4rem)]">
                     <div class="mb-6">
                         <h2 class="text-3xl font-bold text-gray-800">Meal Planner</h2>
                         <p class="text-sm text-gray-500 mt-1">Create a weekly plan tailored to your budget, household size, and diet — or build your own.</p>
@@ -741,7 +741,7 @@
 <!-- SAVED MEAL PLANS -->
 <!-- ====================================== -->
 
-<div id="savedMealPlansWrapper" class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-md border border-emerald-200 p-6 mb-6 max-w-4xl mx-auto">
+<div id="savedMealPlansWrapper" class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-md border border-emerald-200 p-6 mb-6 w-full">
     <div class="flex justify-between items-center mb-5">
         <h3 class="text-xl font-bold text-emerald-900">Saved Meal Plans</h3>
         <button id="refreshMealPlansBtn" class="text-emerald-700 hover:text-emerald-900 font-semibold">Refresh</button>
@@ -1127,7 +1127,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
     
     <script src="data/recipes.js?v=6"></script>
     <script src="supabase.js?v=3"></script>
-    <script src="app.js?v=30"></script>
+    <script src="app.js?v=31"></script>
     <script>
         function switchTab(tabId) {
             console.log('switchTab called with:', tabId);
