@@ -328,13 +328,41 @@ function showRecipeDetailsByName(name){
     });
 }
 
+const RECIPE_CATEGORY_ORDER = ["Chicken", "Pork", "Beef", "Seafood", "Vegetable", "Quick & Budget", "Noodle & Rice", "Breakfast & Silog", "Merienda & Dessert"];
+
+const RECIPE_CATEGORY_KEYWORDS = [
+    ["Breakfast & Silog", /silog|pandesal|champorado|arroz caldo|lugaw|kape|itlog at sinangag|tortang itlog with rice|omelette/],
+    ["Merienda & Dessert", /leche flan|taho|nilagang kamote/],
+    ["Noodle & Rice", /pancit|pansit|bihon|palabok|sotanghon|fried rice|noodles|misua|canton/],
+    ["Seafood", /bangus|tilapia|tuna|shrimp|hipon|squid|pusit|fish|sardin|tuyo|tinapa|dilis|galunggong|sotong|daing|paksiw/],
+    ["Chicken", /chicken|manok|inasal|pininyahang/],
+    ["Beef", /beef|baka|bistek|pares|kaldereta tagalog|tapsilog/],
+    ["Pork", /pork|baboy|liempo|pata|menudo|kare-kare|sisig|humba|tocino|embutido|longganisa|giniling|hotdog|luncheon|corned beef|lechon|dinuguan|bicol express/],
+    ["Quick & Budget", /egg|itlog|tokwa|tofu|toge|togue|hotsilog|spam/],
+];
+
+function getRecipeCategory(recipe) {
+    if (recipe.category) return recipe.category;
+    const name = (recipe.name || '').toLowerCase();
+    for (const [category, pattern] of RECIPE_CATEGORY_KEYWORDS) {
+        if (pattern.test(name)) return category;
+    }
+    return "Vegetable";
+}
+
 function renderRecipeSelector(){
     const container=document.getElementById("recipeSelectionList");
     const searchTerm = document.getElementById('recipeSearch')?.value.toLowerCase().trim() || '';
     container.innerHTML="";
 
     const availableRecipes = RECIPE_DATABASE.filter(recipe => recipe.mealType.includes(selectedMealSlot.type));
-    const filteredRecipes = availableRecipes.filter(recipe => recipe.name.toLowerCase().includes(searchTerm));
+    const categoryRank = recipe => {
+        const idx = RECIPE_CATEGORY_ORDER.indexOf(getRecipeCategory(recipe));
+        return idx === -1 ? RECIPE_CATEGORY_ORDER.length : idx;
+    };
+    const filteredRecipes = availableRecipes
+        .filter(recipe => recipe.name.toLowerCase().includes(searchTerm) || getRecipeCategory(recipe).toLowerCase().includes(searchTerm))
+        .sort((a, b) => categoryRank(a) - categoryRank(b) || a.name.localeCompare(b.name));
 
     container.innerHTML = `
         <div
@@ -346,7 +374,13 @@ function renderRecipeSelector(){
         </div>
     `;
 
+    let lastCategory = null;
     filteredRecipes.forEach(recipe => {
+        const category = getRecipeCategory(recipe);
+        if (category !== lastCategory) {
+            lastCategory = category;
+            container.innerHTML += `<h4 class="col-span-full text-xs font-bold uppercase tracking-wider text-emerald-700 border-b border-emerald-100 pb-1 mt-4">${category} Ulam</h4>`;
+        }
         container.innerHTML += `
             <div
                 class="bg-white border rounded-xl p-5 hover:shadow cursor-pointer transition"
@@ -2850,7 +2884,7 @@ async function generateAIResponseWithBackend(question) {
 // ==========================================
 
 // Parse ingredient string to extract item name and quantity
-const INGREDIENT_UNIT_PATTERN = /(\d+(?:\.\d+)?)(?:\s*\/\s*(\d+(?:\.\d+)?))?\s*(kg|kilos?|grams?|g|cups?|tbsps?|tsps?|ml|liters?|litro|l|pcs?|pieces?|cloves?|heads?|bunch(?:es)?|bundles?|whole|cans?|packs?|trays?)\b/;
+const INGREDIENT_UNIT_PATTERN = /(\d+(?:\.\d+)?)(?:\s*\/\s*(\d+(?:\.\d+)?))?\s*(kg|kilos?|grams?|g|cups?|tbsps?|tsps?|ml|liters?|litro|l|pcs?|pieces?|cloves?|heads?|bunch(?:es)?|bundles?|whole|cans?|packs?|trays?|stalks?|thumbs?|slices?)\b/;
 
 const INGREDIENT_UNIT_ALIASES = {
     kilo: 'kg', kilos: 'kg',
@@ -2865,7 +2899,8 @@ const INGREDIENT_UNIT_ALIASES = {
     bundles: 'bundle',
     cans: 'can',
     packs: 'pack',
-    trays: 'tray'
+    trays: 'tray',
+    stalks: 'stalk', thumbs: 'thumb', slices: 'slice'
 };
 
 function parseIngredient(ingredientStr) {
@@ -2905,6 +2940,8 @@ function parseIngredient(ingredientStr) {
         'chicken': 'chicken',
         'pork': 'pork',
         'beef': 'beef',
+        'fish fillet': 'cream dory',
+        'cream dory': 'cream dory',
         'fish': 'fish',
         'bangus': 'bangus',
         'tilapia': 'tilapia',
@@ -2965,6 +3002,27 @@ function parseIngredient(ingredientStr) {
         'canned tuna': 'canned tuna',
         'luncheon meat': 'luncheon meat',
         'flour': 'flour',
+        'shrimp': 'shrimp',
+        'hipon': 'shrimp',
+        'prawn': 'shrimp',
+        'squid': 'squid',
+        'pusit': 'squid',
+        'peanut butter': 'peanut butter',
+        'butter': 'butter',
+        'lemongrass': 'lemongrass',
+        'oyster sauce': 'oyster sauce',
+        'spaghetti': 'pasta',
+        'pasta': 'pasta',
+        'sotanghon': 'sotanghon',
+        'bread': 'bread',
+        'cheese': 'cheese',
+        'pineapple': 'pineapple',
+        'mango': 'mango',
+        'ketchup': 'ketchup',
+        'sesame oil': 'sesame oil',
+        'curry powder': 'curry powder',
+        'cornstarch': 'cornstarch',
+        'lemon': 'lemon',
         'squash': 'kalabasa',
         'kalabasa': 'kalabasa',
         'papaya': 'papaya',
@@ -2976,6 +3034,7 @@ function parseIngredient(ingredientStr) {
         'oil': 'oil',
         'sugar': 'sugar',
         'salt': 'salt',
+        'bell pepper': 'bell pepper',
         'pepper': 'pepper',
         'coconut milk': 'coconut milk',
         'gata': 'coconut milk',
@@ -2998,7 +3057,7 @@ function parseIngredient(ingredientStr) {
 const COUNT_PRICED_INGREDIENTS = new Set([
     'egg', 'tokwa', 'tuyo', 'tinapa', 'pandesal', 'coffee', 'sardines',
     'noodles', 'bihon', 'corned beef', 'milk', 'sinigang mix', 'corn', 'puso ng saging', 'lumpia wrapper',
-    'salted egg', 'canned tuna', 'luncheon meat'
+    'salted egg', 'canned tuna', 'luncheon meat', 'butter', 'pasta', 'sotanghon', 'bread', 'cheese', 'pineapple', 'ketchup'
 ]);
 
 // Rough amount (kg or L) a recipe uses when it lists a condiment or aromatic
@@ -3006,7 +3065,7 @@ const COUNT_PRICED_INGREDIENTS = new Set([
 const UNITLESS_DEFAULT_KG = {
     'salt': 0.05, 'pepper': 0.02, 'sugar': 0.1, 'oil': 0.1,
     'soy sauce': 0.1, 'vinegar': 0.1, 'fish sauce': 0.05,
-    'garlic': 0.05, 'onion': 0.15, 'ginger': 0.05, 'tomato': 0.2,
+    'garlic': 0.05, 'onion': 0.15, 'ginger': 0.05, 'tomato': 0.2, 'bell pepper': 0.1,
     'chili': 0.02, 'calamansi': 0.1
 };
 
@@ -3063,7 +3122,10 @@ function resolveIngredientPricing(ingredient) {
             'salt': 25, 'pepper': 200, 'milk': 75, 'coconut milk': 85,
             'ginger': 120, 'calamansi': 80, 'chili': 200, 'bay leaves': 1,
             'salted egg': 15, 'upo': 40, 'dilis': 280, 'canned tuna': 40,
-            'luncheon meat': 45, 'flour': 60
+            'luncheon meat': 45, 'flour': 60, 'shrimp': 380, 'squid': 280, 'butter': 60,
+            'oyster sauce': 150, 'pasta': 45, 'sotanghon': 35, 'bread': 55, 'cheese': 60,
+            'pineapple': 50, 'mango': 120, 'ketchup': 40, 'sesame oil': 400, 'curry powder': 500,
+            'cornstarch': 60, 'lemon': 200, 'cream dory': 220, 'bell pepper': 200
         };
         unitPrice = fallbackPrices[parsed.name] || 50;
         source = 'fallback';
@@ -3076,14 +3138,16 @@ function resolveIngredientPricing(ingredient) {
         'ml': 0.001, 'l': 1, 'pc': 1, 'piece': 1, 'pieces': 1,
         'cloves': 0.02, 'heads': 0.1, 'bunch': 0.2, 'bundle': 0.2,
         'whole': 1, 'can': 1, 'pack': 1, 'packs': 1, 'tray': 1,
-        'litro': 1, 'liter': 1
+        'litro': 1, 'liter': 1, 'stalk': 0.03, 'thumb': 0.03, 'slice': 0.03
     };
 
     // Approximate weights for per-piece produce priced per kilo
     const pieceWeightsKg = {
         'onion': 0.1, 'tomato': 0.12, 'carrot': 0.1, 'potato': 0.15,
         'talong': 0.15, 'papaya': 0.5, 'kalabasa': 0.5, 'patola': 0.25,
-        'labanos': 0.25, 'bell pepper': 0.1, 'chili': 0.005, 'ampalaya': 0.2
+        'labanos': 0.25, 'bell pepper': 0.1, 'chili': 0.005, 'ampalaya': 0.2, 'lemon': 0.1, 'mango': 0.3,
+        'hotdog': 0.04, 'calamansi': 0.01, 'okra': 0.02, 'sayote': 0.3, 'lemongrass': 0.03, 'ginger': 0.03,
+        'kamias': 0.01, 'sitaw': 0.02, 'pineapple': 1
     };
 
     // Units bought by count rather than by weight; everything else is bought per kg
@@ -3136,7 +3200,10 @@ const GROCERY_CATEGORY_BY_INGREDIENT = {
     'chicken': 'meat', 'pork': 'meat', 'beef': 'meat', 'fish': 'meat', 'bangus': 'meat',
     'tilapia': 'meat', 'galunggong': 'meat', 'hotdog': 'meat', 'longganisa': 'meat',
     'giniling': 'meat', 'tinapa': 'meat', 'tuyo': 'meat', 'chicken feet': 'meat', 'chicken liver': 'meat',
-    'dilis': 'meat', 'upo': 'vegetables', 'salted egg': 'rice',
+    'dilis': 'meat', 'upo': 'vegetables', 'salted egg': 'rice', 'shrimp': 'meat', 'squid': 'meat', 'cream dory': 'meat', 'bell pepper': 'vegetables',
+    'butter': 'other food', 'oyster sauce': 'spices', 'pasta': 'rice', 'sotanghon': 'rice', 'bread': 'rice',
+    'cheese': 'other food', 'pineapple': 'other food', 'mango': 'vegetables', 'ketchup': 'spices',
+    'sesame oil': 'spices', 'curry powder': 'spices', 'cornstarch': 'other food', 'lemon': 'vegetables',
     'canned tuna': 'other food', 'luncheon meat': 'other food', 'flour': 'other food',
     'egg': 'rice', 'rice': 'rice', 'monggo': 'rice',
     'garlic': 'vegetables', 'onion': 'vegetables', 'tomato': 'vegetables', 'potato': 'vegetables',
@@ -3325,6 +3392,7 @@ const LOCAL_SUPPLEMENT_PRICES = [
     { id: 'langka', name: 'Langka (Unripe Jackfruit)', keys: ['langka', 'jackfruit'], category: 'vegetables', unit: 'kg', price: 60 },
     { id: 'puso-ng-saging', name: 'Puso ng Saging (Banana Heart)', keys: ['puso ng saging', 'banana heart', 'banana flower'], category: 'vegetables', unit: 'piece', price: 30 },
     { id: 'bell-pepper', name: 'Bell Pepper', keys: ['bell pepper'], category: 'vegetables', unit: 'kg', price: 200 },
+    { id: 'cream-dory', name: 'Cream Dory Fillet', keys: ['cream dory', 'fish fillet'], category: 'meat', unit: 'kg', price: 220 },
     { id: 'baguio-beans', name: 'Baguio Beans', keys: ['baguio beans'], category: 'vegetables', unit: 'kg', price: 90 },
     { id: 'cauliflower', name: 'Cauliflower', keys: ['cauliflower'], category: 'vegetables', unit: 'kg', price: 160 },
     { id: 'singkamas', name: 'Singkamas', keys: ['singkamas'], category: 'vegetables', unit: 'kg', price: 60 },
@@ -3333,7 +3401,18 @@ const LOCAL_SUPPLEMENT_PRICES = [
     { id: 'shrimp', name: 'Hipon (Shrimp)', keys: ['shrimp', 'hipon'], category: 'fish', unit: 'kg', price: 380 },
     { id: 'bagoong', name: 'Bagoong Alamang', keys: ['bagoong', 'shrimp paste'], category: 'spices', unit: 'kg', price: 120 },
     { id: 'peanut-butter', name: 'Peanut Butter', keys: ['peanut butter', 'peanuts'], category: 'other food', unit: 'kg', price: 200 },
-    { id: 'lumpia-wrapper', name: 'Lumpia Wrapper (Fresh)', keys: ['lumpia wrapper'], category: 'other food', unit: 'pack', price: 40 }
+    { id: 'lumpia-wrapper', name: 'Lumpia Wrapper (Fresh)', keys: ['lumpia wrapper'], category: 'other food', unit: 'pack', price: 40 },
+    { id: 'squid', name: 'Pusit (Squid)', keys: ['squid', 'pusit'], category: 'fish', unit: 'kg', price: 280 },
+    { id: 'butter', name: 'Butter (225g)', keys: ['butter'], category: 'other food', unit: 'pack', price: 60 },
+    { id: 'oyster-sauce', name: 'Oyster Sauce', keys: ['oyster sauce'], category: 'spices', unit: 'kg', price: 150 },
+    { id: 'pasta', name: 'Spaghetti / Pasta (400g)', keys: ['pasta', 'spaghetti'], category: 'rice', unit: 'pack', price: 45 },
+    { id: 'sotanghon', name: 'Sotanghon (Glass Noodles)', keys: ['sotanghon'], category: 'rice', unit: 'pack', price: 35 },
+    { id: 'bread', name: 'Tasty Bread (Loaf)', keys: ['bread', 'tasty'], category: 'rice', unit: 'pack', price: 55 },
+    { id: 'cheese', name: 'Cheese (Block)', keys: ['cheese', 'keso'], category: 'other food', unit: 'pack', price: 60 },
+    { id: 'pineapple', name: 'Pineapple Chunks (Can)', keys: ['pineapple'], category: 'other food', unit: 'can', price: 50 },
+    { id: 'mango', name: 'Mangga (Mango)', keys: ['mango', 'mangga'], category: 'vegetables', unit: 'kg', price: 120 },
+    { id: 'ketchup', name: 'Banana Ketchup', keys: ['ketchup'], category: 'spices', unit: 'pack', price: 40 },
+    { id: 'lemon', name: 'Lemon', keys: ['lemon'], category: 'vegetables', unit: 'kg', price: 200 }
 ].map(item => ({
     ...item,
     item_name: item.name,
