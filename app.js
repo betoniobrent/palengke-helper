@@ -3634,6 +3634,7 @@ async function loadLiveMarketPrices() {
             price_avg: row.price_avg,
             price: row.price_avg,
             notes: row.notes,
+            region: row.region,
             source_date: row.source_date,
             reportDate: row.source_date
         })));
@@ -3646,13 +3647,14 @@ async function loadLiveMarketPrices() {
         }
 
         const latestDate = items[0]?.source_date;
+        const reportRegion = items[0]?.region || 'Region not specified';
         if (updatedLabel) {
             updatedLabel.textContent = latestDate
-                ? `Official DA Bantay Presyo rates — Region 4-A (CALABARZON), as of ${new Date(latestDate).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}.`
+                ? `DA Bantay Presyo rates — ${reportRegion}, as of ${new Date(latestDate).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}.`
                 : 'Official DA Bantay Presyo reference rates.';
         }
         if (statusBadge) {
-            statusBadge.textContent = '● Live DA Bantay Presyo (Region 4-A)';
+            statusBadge.textContent = `● Published DA prices (${reportRegion})`;
             statusBadge.className = 'bg-emerald-50 text-emerald-800 font-bold text-xs px-3 py-1.5 rounded-full whitespace-nowrap';
         }
 

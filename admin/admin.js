@@ -2,6 +2,7 @@
 // The shared Supabase client (supabaseClient) is loaded from ../supabase.js.
 let parsedRows = [];
 let currentSession = null;
+let uploadSequence = 0;
 
 // Replace with the URL of your deployed Cloudflare Worker (workers/da-proxy.js)
 const DA_PROXY_URL = 'https://YOUR_DA_PROXY_WORKER.workers.dev';
@@ -17,7 +18,7 @@ document.getElementById('adminPassword').addEventListener('keypress', (e) => {
 
 async function loginAdmin() {
     const email = document.getElementById('adminEmail').value.trim();
-    const password = document.getElementById('adminPassword').value.trim();
+    const password = document.getElementById('adminPassword').value;
     const errorEl = document.getElementById('loginError');
 
     // Clear any leftover session so signInWithPassword returns a fresh JWT
@@ -64,7 +65,7 @@ function showDashboard() {
     document.getElementById('adminDashboard').classList.remove('hidden');
     document.getElementById('logoutBtn').classList.remove('hidden');
     // Default date to today
-    document.getElementById('priceDate').valueAsDate = new Date();
+    // The administrator must enter the date printed on the report.
     loadUsers();
 }
 
@@ -81,6 +82,10 @@ document.getElementById('pdfInput').addEventListener('change', handlePdfUpload);
 async function handlePdfUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
+    const uploadId = ++uploadSequence;
+    document.getElementById('reviewConfirmed').checked = false;
+    parsedRows = [];
+    renderParsedTable();
 
     const progressBar = document.getElementById('progressBar');
     const progressContainer = document.getElementById('uploadProgress');
@@ -93,7 +98,7 @@ async function handlePdfUpload(e) {
     try {
         const arrayBuffer = await file.arrayBuffer();
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer, isEvalSupported: false }).promise;
 
         progressBar.style.width = '50%';
         statusEl.textContent = `Extracting text from ${pdf.numPages} pages...`;
@@ -132,13 +137,16 @@ async function handlePdfUpload(e) {
         progressBar.style.width = '80%';
         statusEl.textContent = 'Parsing prices...';
 
+        if (uploadId !== uploadSequence) return;
         parsedRows = parseBantayPresyoText(fullText);
+        document.getElementById('sourceFile').textContent = file.name;
         renderParsedTable();
 
         progressBar.style.width = '100%';
-        statusEl.textContent = `Parsed ${parsedRows.length} items. Review and publish when ready.`;
+        statusEl.textContent = `Extracted ${parsedRows.length} items. Compare every row, unit, and price with the PDF before publishing.`;
         document.getElementById('publishBtn').disabled = parsedRows.length === 0;
     } catch (err) {
+        if (uploadId !== uploadSequence) return;
         console.error(err);
         statusEl.textContent = 'Error parsing PDF. Try a different file or add rows manually.';
         statusEl.classList.add('text-red-500');
@@ -148,139 +156,13 @@ async function handlePdfUpload(e) {
 // Parser for the DA Bantay Presyo Daily Price Index PDF layout.
 // Detects section headers, reads each commodity line with a trailing single price,
 // and skips header/footer lines, page numbers, and n/a entries.
-function parseBantayPresyoText(text) {
-    const rows = [];
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-
-    const skipPatterns = [
-        /^Page \d+ of \d+/i,
-        /^Department of Agriculture/i,
-        /^DAILY PRICE INDEX/i,
-        /^National Capital Region/i,
-        /^Prevailing Retail Price of Agri-fishery Commodities/i,
-        /^COMMODITY SPECIFICATION/i,
-        /^PREVAILING\b/i,
-        /^RETAIL PRICE PER/i,
-        /^UNIT\b/i,
-        /\b(January|February|March|April|May|June|July|August|September|October|November|December)\b.*\b20\d{2}\b/i
-    ];
-
-    const categoryMap = {
-        'IMPORTED COMMERCIAL RICE': 'rice',
-        'LOCAL COMMERCIAL RICE': 'rice',
-        'NFA RICE': 'rice',
-        'CORN PRODUCTS': 'other food',
-        'LEGUMES': 'other food',
-        'FISH PRODUCTS': 'fish',
-        'BEEF MEAT PRODUCTS': 'meat',
-        'PORK MEAT PRODUCTS': 'meat',
-        'POULTRY MEAT PRODUCTS': 'meat',
-        'OTHER LIVESTOCK MEAT PRODUCTS': 'meat',
-        'VEGETABLES': 'vegetables',
-        'FRUITS': 'fruits',
-        'SPICES': 'spices',
-        'CONDIMENTS': 'spices',
-        'HOUSEHOLD': 'household'
-    };
-
-    const unitRegex = /\b(kg|kilo|kilogram|pc|piece|pieces|tray|litro|liter|bottle|can|pack|sack)\b/i;
-    const trailingPriceRegex = /(\d+(?:\.\d{1,2})?)\s*$/;
-
-    function shouldSkip(line) {
-        return skipPatterns.some(p => p.test(line));
-    }
-
-    function isHeaderFragment(line) {
-        const letters = line.replace(/[^A-Za-z\s]/g, '').trim();
-        return letters.length > 2 && letters === letters.toUpperCase();
-    }
-
-    function normalizeHeader(line) {
-        return line.replace(/[^A-Za-z\s]/g, ' ').toUpperCase().replace(/\s+/g, ' ').trim();
-    }
-
-    function extractUnit(line) {
-        const m = line.match(unitRegex);
-        if (!m) return 'kg';
-        let u = m[1].toLowerCase();
-        if (u === 'kilo' || u === 'kilogram') u = 'kg';
-        if (u === 'piece' || u === 'pieces') u = 'pc';
-        if (u === 'liter') u = 'litro';
-        return u;
-    }
-
-    let currentCategory = 'other food';
-    let pendingHeader = '';
-    let pendingName = '';
-
-    for (let i = 0; i < lines.length; i++) {
-        let line = lines[i];
-
-        // Skip obvious headers/footers immediately
-        if (shouldSkip(line)) {
-            pendingHeader = '';
-            continue;
-        }
-
-        // Accumulate and map uppercase section headers (handles multi-line headers)
-        if (isHeaderFragment(line)) {
-            pendingHeader = (pendingHeader + ' ' + line).trim();
-            continue;
-        }
-
-        if (pendingHeader) {
-            const headerKey = normalizeHeader(pendingHeader);
-            if (categoryMap[headerKey]) {
-                currentCategory = categoryMap[headerKey];
-            }
-            pendingHeader = '';
-        }
-
-        // Skip n/a-only lines while consuming a pending name fragment
-        if (/\bn\/a\b$/i.test(line)) {
-            pendingName = '';
-            continue;
-        }
-
-        const priceMatch = line.match(trailingPriceRegex);
-        if (!priceMatch) {
-            // This is likely a continuation of an item name (e.g., wrapped line)
-            pendingName = (pendingName + ' ' + line).trim();
-            continue;
-        }
-
-        const price = parseFloat(priceMatch[1]);
-        if (isNaN(price)) {
-            pendingName = '';
-            continue;
-        }
-
-        const itemPart = line.substring(0, priceMatch.index).trim();
-        const itemName = (pendingName + ' ' + itemPart).trim().replace(/\s+/g, ' ').replace(/[,;]$/, '');
-        pendingName = '';
-
-        if (!itemName || itemName.length < 2) continue;
-
-        // Ignore leftover page/date fragments that slipped through
-        if (/^Page \d+\b/i.test(itemName) || /^\(.*\d{4}\)/.test(itemName)) continue;
-
-        rows.push({
-            id: crypto.randomUUID(),
-            item_name: itemName,
-            category: currentCategory,
-            unit: extractUnit(itemName),
-            price_min: price,
-            price_max: price,
-            notes: ''
-        });
-    }
-
-    return rows;
-}
+function parseBantayPresyoText(text) { return PricePipeline.parse(text); }
 
 // ================== MANUAL REVIEW TABLE ==================
 
 function renderParsedTable() {
+    document.getElementById('reviewConfirmed').checked = false;
+    document.getElementById('publishBtn').textContent = 'Publish Market Prices';
     const tbody = document.getElementById('parsedDataTable');
     tbody.innerHTML = '';
 
@@ -301,8 +183,8 @@ function renderParsedTable() {
                 </select>
             </td>
             <td class="p-3"><input type="text" data-idx="${index}" data-field="unit" value="${escapeHtml(row.unit)}" class="w-20 border border-gray-200 rounded px-2 py-1 text-sm"></td>
-            <td class="p-3"><input type="number" data-idx="${index}" data-field="price_min" value="${row.price_min}" class="w-24 border border-gray-200 rounded px-2 py-1 text-sm"></td>
-            <td class="p-3"><input type="number" data-idx="${index}" data-field="price_max" value="${row.price_max}" class="w-24 border border-gray-200 rounded px-2 py-1 text-sm"></td>
+            <td class="p-3"><input type="number" data-idx="${index}" data-field="price_min" value="${row.price_min ?? ''}" step="0.01" min="0.01" class="w-24 border border-gray-200 rounded px-2 py-1 text-sm"></td>
+            <td class="p-3"><input type="number" data-idx="${index}" data-field="price_max" value="${row.price_max ?? ''}" step="0.01" min="0.01" class="w-24 border border-gray-200 rounded px-2 py-1 text-sm"></td>
             <td class="p-3"><input type="text" data-idx="${index}" data-field="notes" value="${escapeHtml(row.notes || '')}" class="w-full border border-gray-200 rounded px-2 py-1 text-sm"></td>
             <td class="p-3"><button data-idx="${index}" class="delete-row text-red-500 hover:text-red-700 text-sm">Remove</button></td>
         `;
@@ -315,12 +197,13 @@ function renderParsedTable() {
 
 function attachTableListeners() {
     document.querySelectorAll('#parsedDataTable input, #parsedDataTable select').forEach(el => {
-        el.addEventListener('change', (e) => {
+        el.addEventListener('input', (e) => {
             const idx = parseInt(e.target.dataset.idx);
             const field = e.target.dataset.field;
             let value = e.target.value;
-            if (field === 'price_min' || field === 'price_max') value = parseFloat(value) || 0;
+            if (field === 'price_min' || field === 'price_max') value = value.trim() === '' ? null : Number(value);
             parsedRows[idx][field] = value;
+            document.getElementById('reviewConfirmed').checked = false;
         });
     });
 
@@ -400,10 +283,18 @@ async function fetchDAPrices() {
 // ================== PUBLISH ==================
 
 document.getElementById('publishBtn').addEventListener('click', publishPrices);
+for (const id of ['priceDate', 'priceRegion']) {
+    document.getElementById(id).addEventListener('input', () => {
+        document.getElementById('reviewConfirmed').checked = false;
+        document.getElementById('publishBtn').disabled = parsedRows.length === 0;
+        document.getElementById('publishBtn').textContent = 'Publish Market Prices';
+    });
+}
 
 async function publishPrices() {
     const statusEl = document.getElementById('publishStatus');
-    const date = document.getElementById('priceDate').value || new Date().toISOString().split('T')[0];
+    const date = document.getElementById('priceDate').value;
+    const region = document.getElementById('priceRegion').value;
     const publishBtn = document.getElementById('publishBtn');
 
     if (!currentSession) {
@@ -416,30 +307,12 @@ async function publishPrices() {
     publishBtn.disabled = true;
     publishBtn.textContent = 'Publishing...';
 
-    const validRows = parsedRows.filter(r => r.item_name.trim() && r.price_min > 0 && r.price_max > 0);
-    if (validRows.length === 0) {
-        statusEl.textContent = 'No valid rows to publish.';
-        statusEl.className = 'text-sm mt-3 text-red-500';
-        statusEl.classList.remove('hidden');
-        publishBtn.disabled = false;
-        publishBtn.textContent = 'Publish Market Prices';
-        return;
-    }
-
     try {
-        // Refresh the session so the admin JWT is current before the admin-only RPC
+        if (!document.getElementById('reviewConfirmed').checked) throw new Error('Confirm you reviewed the rows against the source PDF.');
+        const newRows = PricePipeline.validate(parsedRows, date, region);
+        // The RPC checks trusted account metadata again on the server.
         const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
         if (sessionError || !sessionData.session) throw new Error('Admin session expired. Please log in again.');
-
-        const newRows = validRows.map(r => ({
-            source_date: date,
-            item_name: r.item_name.trim(),
-            category: r.category,
-            unit: r.unit,
-            price_min: r.price_min,
-            price_max: r.price_max,
-            notes: r.notes
-        }));
 
         const { data: count, error: publishError } = await supabaseClient
             .rpc('publish_market_prices', { rows: newRows });
@@ -488,9 +361,7 @@ async function loadUsers() {
 }
 
 function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    return String(text ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 }
 
 // Check existing session on load

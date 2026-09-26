@@ -57,10 +57,12 @@
                 <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:bg-gray-50 transition">
                     <input type="file" id="pdfInput" accept=".pdf" class="hidden">
                     <label for="pdfInput" class="cursor-pointer block">
-                        <p class="text-gray-600 mb-2">Click to upload PDF or drag and drop here</p>
+                        <p class="text-gray-600 mb-2">Click to upload PDF</p>
                         <p class="text-xs text-gray-400">Official DA Bantay Presyo PDF</p>
                     </label>
                 </div>
+                <p id="sourceFile" class="text-sm text-gray-600 mt-2"></p>
+                <p class="text-xs text-gray-500 mt-2">Text-based PDFs are supported. Scanned reports may need manual entry. Extraction is a draft: verify all rows and units against the source.</p>
                 <div id="uploadProgress" class="hidden mt-4">
                     <div class="w-full bg-gray-200 rounded-full h-2">
                         <div class="bg-emerald-600 h-2 rounded-full" style="width: 0%" id="progressBar"></div>
@@ -112,6 +114,7 @@
                     <h2 class="text-lg font-semibold">2. Review & Normalize Data</h2>
                     <div class="flex gap-2">
                         <input type="date" id="priceDate" class="border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                        <input id="priceRegion" aria-label="Report region" placeholder="Region on the report (e.g. NCR)" class="border border-gray-200 rounded-lg px-3 py-2 text-sm">
                         <button id="addManualRowBtn" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2 rounded-lg text-sm font-medium transition">+ Add Row</button>
                     </div>
                 </div>
@@ -142,6 +145,7 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <h2 class="text-lg font-semibold mb-4">3. Publish to Production</h2>
                 <p class="text-sm text-gray-600 mb-4">This will unpublish the previous set and make the current data visible to all users.</p>
+                <label class="block mb-4"><input type="checkbox" id="reviewConfirmed"> I checked the report date, region, item names, units, and prices against the PDF.</label>
                 <button id="publishBtn" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>Publish Market Prices</button>
                 <p id="publishStatus" class="text-sm mt-3 hidden"></p>
             </div>
@@ -170,6 +174,7 @@
     </div>
 
     <script src="../supabase.js?v=2"></script>
-    <script src="admin.js?v=5"></script>
+    <script src="price-pipeline.js?v=1"></script>
+    <script src="admin.js?v=6"></script>
 </body>
 </html>
