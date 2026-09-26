@@ -1,0 +1,15 @@
+# Publish only the website. Re-include directories before their files.
+**
+!/index.html
+!/app.js
+!/style.css
+!/supabase.js
+!/sw.js
+!/manifest.json
+!/icon.svg
+!/data/
+!/data/recipes.js
+!/data/prices.json
+!/admin/
+!/admin/index.html
+!/admin/admin.js

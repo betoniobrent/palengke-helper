@@ -66,6 +66,8 @@ CREATE TABLE user_grocery_lists (
 );
 
 -- Create index for faster queries
+CREATE UNIQUE INDEX IF NOT EXISTS idx_user_grocery_lists_user_name ON public.user_grocery_lists(user_id, list_name);
+
 CREATE INDEX idx_user_grocery_lists_user_id ON user_grocery_lists(user_id);
 CREATE INDEX idx_user_grocery_lists_created_at ON user_grocery_lists(created_at DESC);
 
@@ -312,15 +314,13 @@ ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE market_prices ENABLE ROW LEVEL SECURITY;
 
 -- Function to check admin status for RLS
-CREATE OR REPLACE FUNCTION is_admin()
-RETURNS BOOLEAN AS $$
-BEGIN
-    RETURN EXISTS (
-        SELECT 1 FROM profiles
-        WHERE id = auth.uid() AND role = 'admin'
-    );
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN
+LANGUAGE sql STABLE SECURITY INVOKER
+SET search_path = ''
+AS $$
+    SELECT COALESCE(auth.jwt() -> 'app_metadata' ->> 'role', 'user') = 'admin';
+$$;
 
 -- Profiles: users can only manage their own profile
 CREATE POLICY "Users can view own profile"
@@ -329,11 +329,12 @@ CREATE POLICY "Users can view own profile"
 
 CREATE POLICY "Users can insert own profile"
     ON profiles FOR INSERT
-    WITH CHECK (auth.uid() = id);
+    WITH CHECK (auth.uid() = id AND role = COALESCE(auth.jwt() -> 'app_metadata' ->> 'role', 'user'));
 
 CREATE POLICY "Users can update own profile"
     ON profiles FOR UPDATE
-    USING (auth.uid() = id);
+    USING (auth.uid() = id)
+    WITH CHECK (auth.uid() = id AND role = COALESCE(auth.jwt() -> 'app_metadata' ->> 'role', 'user'));
 
 -- Admins can view all user profiles for the admin dashboard
 CREATE POLICY "Admins can view all profiles"
@@ -346,23 +347,23 @@ CREATE POLICY "Published prices are public"
     USING (published = true);
 
 -- Market prices: only authenticated admin users can create/update/delete
--- Admins are identified by profiles.role = 'admin'
+-- Admins are identified by trusted app_metadata in the signed JWT.
 CREATE POLICY "Only admins can insert market prices"
     ON market_prices FOR INSERT
     WITH CHECK (
-        auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+        public.is_admin()
     );
 
 CREATE POLICY "Only admins can update market prices"
     ON market_prices FOR UPDATE
     USING (
-        auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+        public.is_admin()
     );
 
 CREATE POLICY "Only admins can delete market prices"
     ON market_prices FOR DELETE
     USING (
-        auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+        public.is_admin()
     );
 
 -- Create triggers for new tables

@@ -663,11 +663,26 @@ function backFromLoadedMealPlan(){
 
 async function deleteMealPlan(id){
     if (!confirm('Delete this saved meal plan?')) return;
-    const mealPlans = await getMealPlans();
-    const filteredPlans = mealPlans.filter(item => item.id !== id);
-    await setMealPlans(filteredPlans);
-    renderSavedMealPlans();
-    showNotification('Meal plan deleted.', 'success');
+    const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
+    try {
+        if (session.role === 'member' && session.supabaseUserId && !id.startsWith('meal_plan_')) {
+            const { data, error } = await supabaseClient
+                .from('user_meal_plans')
+                .delete()
+                .eq('id', id)
+                .eq('user_id', session.supabaseUserId)
+                .select('id');
+            if (error) throw error;
+            if (!data?.length) throw new Error('Meal plan was not deleted. Please refresh and try again.');
+        }
+        const backup = JSON.parse(localStorage.getItem('palengke_saved_meal_plans') || '[]');
+        await setMealPlans(backup.filter(item => item.id !== id));
+        await renderSavedMealPlans();
+        showNotification('Meal plan deleted.', 'success');
+    } catch (err) {
+        console.error('Error deleting meal plan:', err);
+        showNotification('Could not delete meal plan. Please try again.', 'error');
+    }
 }
 
 function showRecipeDetails(recipe){
@@ -2046,15 +2061,17 @@ async function loadGroceryListFromSupabase() {
     }
 }
 
-function renderGroceryItems(filteredItems = null) {
+function renderGroceryItems() {
     const cartContainer = document.getElementById('groceryCartItems');
     if (!cartContainer) return;
     cartContainer.innerHTML = '';
 
-    const items = filteredItems || getGroceryData();
+    const items = getGroceryData();
+    const query = (document.getElementById('grocerySearchInput')?.value || '').toLowerCase().trim();
     let totalCost = 0;
 
     items.forEach((item, index) => {
+        if (query && !item.name.toLowerCase().includes(query)) return;
         const subtotal = getItemUnitPrice(item) * item.quantity;
         totalCost += subtotal;
         const isChecked = item.checked || false;
@@ -2214,19 +2231,7 @@ function deleteItem(index) {
 }
 
 function searchItems() {
-    const query = document.getElementById('grocerySearchInput').value.toLowerCase().trim();
-    const items = getGroceryData();
-    
-    if (!query) {
-        renderGroceryItems();
-        return;
-    }
-
-    const filtered = items.filter(item => item.name.toLowerCase().includes(query));
-    renderGroceryItems(filtered);
-    
-    // Always update summary with ALL items, not filtered
-    updateCartSummary(items);
+    renderGroceryItems();
 }
 
 // Search with market price integration (reads from Supabase ALL_PRICE_ITEMS)
