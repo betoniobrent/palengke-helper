@@ -1,5 +1,31 @@
 (function (root) {
     const categories = ['rice', 'meat', 'fish', 'vegetables', 'fruits', 'spices', 'other food', 'household'];
+    function extractReportDate(text) {
+        const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+        const month = '(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\\.?';
+        const dates = new Set();
+        const add = (year, monthNumber, day) => {
+            const date = `${year}-${String(monthNumber).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const parsed = new Date(date);
+            if (Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === date) dates.add(date);
+        };
+        const normalized = String(text).replace(/\s+/g, ' ');
+        for (const match of normalized.matchAll(new RegExp('\\b' + month + '\\s+(\\d{1,2})(?:st|nd|rd|th)?\\s*,?\\s*(20\\d{2})\\b', 'gi'))) {
+            add(match[3], months.indexOf(match[1].slice(0, 3).toLowerCase()) + 1, Number(match[2]));
+        }
+        for (const match of normalized.matchAll(new RegExp('\\b(\\d{1,2})(?:st|nd|rd|th)?\\s+' + month + '\\s*,?\\s*(20\\d{2})\\b', 'gi'))) {
+            add(match[3], months.indexOf(match[2].slice(0, 3).toLowerCase()) + 1, Number(match[1]));
+        }
+        for (const match of normalized.matchAll(/\b(20\d{2})-(\d{2})-(\d{2})\b/g)) add(match[1], Number(match[2]), Number(match[3]));
+        // Accept numeric dates only when the day/month order is unambiguous.
+        for (const match of normalized.matchAll(/\b(\d{1,2})\/(\d{1,2})\/(20\d{2})\b/g)) {
+            const first = Number(match[1]), second = Number(match[2]);
+            if (first > 12) add(match[3], second, first);
+            else if (second > 12 || first === second) add(match[3], first, second);
+            else return null;
+        }
+        return dates.size === 1 ? [...dates][0] : null;
+    }
     function categoryFor(header) {
         if (/RICE/.test(header)) return 'rice';
         if (/MEAT|POULTRY/.test(header)) return 'meat';
@@ -19,6 +45,7 @@
         for (const raw of text.split('\n')) {
             const line = raw.trim().replace(/\s+/g, ' ');
             if (!line) continue;
+            if (extractReportDate(line)) { pending = ''; continue; }
             if (/^(page\s+\d|department of agriculture|daily price|national capital|region\b|prevailing|commodity\b|specification\b|retail price|unit\b|source:)/i.test(line) || /\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\b.*20\d{2}/i.test(line)) { pending = ''; continue; }
             if (line === line.toUpperCase() && !/\d/.test(line) && /RICE|PRODUCTS|VEGETABLES|FRUITS|SPICES|CONDIMENTS|LEGUMES|HOUSEHOLD|COMMODITIES/.test(line)) {
                 category = categoryFor(line); pending = ''; continue;
@@ -59,7 +86,7 @@
             return { ...row, item_name: row.item_name.trim(), unit: row.unit.trim(), source_date: date, region: region.trim() };
         });
     }
-    const api = { parse, validate, categories };
+    const api = { parse, validate, categories, extractReportDate };
     if (typeof module !== 'undefined') module.exports = api;
     root.PricePipeline = api;
 })(typeof window !== 'undefined' ? window : globalThis);

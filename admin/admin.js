@@ -83,6 +83,8 @@ async function handlePdfUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
     const uploadId = ++uploadSequence;
+    document.getElementById('priceDate').value = '';
+    document.getElementById('dateDetectionStatus').textContent = 'Reading the report date…';
     document.getElementById('reviewConfirmed').checked = false;
     parsedRows = [];
     renderParsedTable();
@@ -138,6 +140,11 @@ async function handlePdfUpload(e) {
         statusEl.textContent = 'Parsing prices...';
 
         if (uploadId !== uploadSequence) return;
+        const reportDate = PricePipeline.extractReportDate(fullText);
+        document.getElementById('priceDate').value = reportDate || '';
+        document.getElementById('dateDetectionStatus').textContent = reportDate
+            ? `Report date detected: ${reportDate}. You can correct it below.`
+            : 'No single clear report date found. Enter the date printed on the PDF.';
         parsedRows = parseBantayPresyoText(fullText);
         document.getElementById('sourceFile').textContent = file.name;
         renderParsedTable();
@@ -148,6 +155,7 @@ async function handlePdfUpload(e) {
     } catch (err) {
         if (uploadId !== uploadSequence) return;
         console.error(err);
+        document.getElementById('dateDetectionStatus').textContent = 'Could not read the report date. Enter it manually or upload another PDF.';
         statusEl.textContent = 'Error parsing PDF. Try a different file or add rows manually.';
         statusEl.classList.add('text-red-500');
     }

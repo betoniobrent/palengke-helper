@@ -113,11 +113,12 @@
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-semibold">2. Review & Normalize Data</h2>
                     <div class="flex gap-2">
-                        <input type="date" id="priceDate" class="border border-gray-200 rounded-lg px-3 py-2 text-sm">
+                        <input type="date" id="priceDate" aria-label="Report date" class="border border-gray-200 rounded-lg px-3 py-2 text-sm">
                         <input id="priceRegion" aria-label="Report region" placeholder="Region on the report (e.g. NCR)" class="border border-gray-200 rounded-lg px-3 py-2 text-sm">
                         <button id="addManualRowBtn" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2 rounded-lg text-sm font-medium transition">+ Add Row</button>
                     </div>
                 </div>
+                <p id="dateDetectionStatus" class="text-sm text-gray-600 mb-2">The report date will be filled from the uploaded PDF.</p>
                 <p class="text-xs text-gray-500 mb-3">Edit item names, categories, units, and prices before publishing. Rows marked for deletion will not be published.</p>
                 <div class="overflow-x-auto max-h-[60vh] overflow-y-auto custom-scrollbar rounded-lg border border-gray-100">
                     <table class="w-full text-sm">
@@ -174,7 +175,7 @@
     </div>
 
     <script src="../supabase.js?v=2"></script>
-    <script src="price-pipeline.js?v=1"></script>
-    <script src="admin.js?v=6"></script>
+    <script src="price-pipeline.js?v=2"></script>
+    <script src="admin.js?v=7"></script>
 </body>
 </html>

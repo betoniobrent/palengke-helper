@@ -4,6 +4,20 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const pipeline = require('../admin/price-pipeline.js');
 
+test('reads report dates from PDF text in common written and unambiguous numeric formats', () => {
+    for (const text of ['September 26, 2026', 'SEPT. 26 2026', '26 September 2026', 'As of September\n26, 2026', '2026-09-26', '09/26/2026', '26/09/2026']) {
+        assert.equal(pipeline.extractReportDate(text), '2026-09-26', text);
+    }
+    assert.equal(pipeline.extractReportDate('September 26, 2026\nPage 2\nSeptember 26, 2026'), '2026-09-26');
+});
+
+test('missing, conflicting, invalid and ambiguous report dates require manual entry', () => {
+    for (const text of ['No date', 'February 30, 2026', '2026-02-30', '09/10/2026', 'September 25, 2026\nSeptember 26, 2026']) {
+        assert.equal(pipeline.extractReportDate(text), null, text);
+    }
+    assert.equal(pipeline.parse('26 September 2026\nFISH PRODUCTS\nTilapia 150.00')[0].item_name, 'Tilapia');
+});
+
 test('DA draft handles categories, uppercase commodities, commas, ranges, eggs and unavailable rows', () => {
     const rows = pipeline.parse(`DAILY PRICE INDEX
 National Capital Region
@@ -75,4 +89,24 @@ test('RPC failures show an error and allow retry', async () => {
     await context.publishPrices();
     assert.match(el('publishStatus').textContent, /Error publishing/);
     assert.equal(el('publishBtn').disabled, false);
+});
+
+test('PDF upload fills its date and clears the prior date when the next PDF has none', async () => {
+    const { context, el } = controller();
+    let lines = ['September 26, 2026'];
+    context.document.querySelectorAll = () => [];
+    el('progressBar').style = {};
+    context.pdfjsLib = {
+        GlobalWorkerOptions: {},
+        getDocument: () => ({ promise: Promise.resolve({ numPages: 1, getPage: async () => ({
+            getTextContent: async () => ({ items: lines.map((str, i) => ({ str, transform: [1, 0, 0, 1, 0, 500 - i * 15] })) })
+        }) }) })
+    };
+    const event = { target: { files: [{ name: 'report.pdf', arrayBuffer: async () => new ArrayBuffer(0) }] } };
+    await context.handlePdfUpload(event);
+    assert.equal(el('priceDate').value, '2026-09-26');
+    lines = ['DAILY PRICE INDEX'];
+    await context.handlePdfUpload(event);
+    assert.equal(el('priceDate').value, '');
+    assert.match(el('dateDetectionStatus').textContent, /No single clear report date/);
 });
