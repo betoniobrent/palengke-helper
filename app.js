@@ -3581,9 +3581,9 @@ function renderFilteredPriceRows() {
 
     tbody.innerHTML = pageItems.map(item => `
         <tr class="hover:bg-gray-50 transition">
-            <td class="p-3 font-medium">${guessPriceEmoji(item)} ${item.name}</td>
-            <td class="p-3 text-right font-mono font-bold text-gray-800">${formatPriceValue(item)}</td>
-            <td class="p-3 text-right text-xs text-gray-500">${escapeHtml([item.source_agency === 'DTI' ? 'DTI SRP' : 'DA market price', item.region, item.reportDate, item.notes].filter(Boolean).join(' · '))}</td>
+            <td class="p-3 font-medium">${guessPriceEmoji(item)} ${escapeHtml(item.name)}</td>
+            <td class="p-3 text-right font-mono font-bold text-gray-800">${escapeHtml(formatPriceValue(item))}</td>
+            <td class="p-3 text-right text-xs text-gray-500">${escapeHtml([item.source_agency === 'DTI' ? 'DTI SRP' : item.source_agency === 'DA' ? 'DA market price' : 'Supplemental reference', item.region, item.reportDate, item.notes].filter(Boolean).join(' · '))}</td>
         </tr>
     `).join('');
 }
