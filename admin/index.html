@@ -124,7 +124,8 @@
                     <table class="w-full text-sm">
                         <thead class="bg-gray-50 text-gray-600 text-left">
                             <tr>
-                                <th class="p-3 rounded-tl-lg">Item Name</th>
+                                <th class="p-3 rounded-tl-lg">#</th>
+                                <th class="p-3">Item Name</th>
                                 <th class="p-3">Category</th>
                                 <th class="p-3">Unit</th>
                                 <th class="p-3">Min Price</th>
@@ -135,7 +136,7 @@
                         </thead>
                         <tbody id="parsedDataTable" class="divide-y divide-gray-100">
                             <tr>
-                                <td colspan="7" class="p-8 text-center text-gray-400">Upload a PDF to see parsed data, or add rows manually.</td>
+                                <td colspan="8" class="p-8 text-center text-gray-400">Upload a PDF to see parsed data, or add rows manually.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -147,6 +148,7 @@
                 <h2 class="text-lg font-semibold mb-4">3. Publish to Production</h2>
                 <p class="text-sm text-gray-600 mb-4">This will unpublish the previous set and make the current data visible to all users.</p>
                 <label class="block mb-4"><input type="checkbox" id="reviewConfirmed"> I checked the report date, region, item names, units, and prices against the PDF.</label>
+                <p class="text-xs text-gray-500 mb-3">Weekly reports use the last day of the reporting period. After editing, check the review box again.</p>
                 <button id="publishBtn" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>Publish Market Prices</button>
                 <p id="publishStatus" class="text-sm mt-3 hidden"></p>
             </div>
@@ -175,7 +177,7 @@
     </div>
 
     <script src="../supabase.js?v=2"></script>
-    <script src="price-pipeline.js?v=2"></script>
-    <script src="admin.js?v=7"></script>
+    <script src="price-pipeline.js?v=3"></script>
+    <script src="admin.js?v=8"></script>
 </body>
 </html>

@@ -4,6 +4,37 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const pipeline = require('../admin/price-pipeline.js');
 
+test('weekly DA report preserves distinct rice varieties, selling units and report metadata', () => {
+    const text = fs.readFileSync(require('node:path').join(__dirname, 'fixtures/weekly-september-21-27-2026.txt'), 'utf8');
+    assert.equal(pipeline.extractReportDate(text), '2026-09-27');
+    assert.equal(pipeline.extractReportPeriod(text).start, '2026-09-21');
+    assert.equal(pipeline.extractReportRegion(text), 'NCR');
+    const rows = pipeline.parse(text);
+    assert.equal(rows.length, 100);
+    assert.equal(rows.filter(r => r.price_min === null).length, 7);
+    assert.equal(pipeline.validate(rows, '2026-09-27', 'NCR').length, 100);
+    assert.equal(rows.find(r => r.item_name === 'Glutinous (Imported)').price_min, 61.24);
+    assert.equal(rows.find(r => r.item_name === 'Glutinous (Local)').price_min, 77.09);
+    assert.ok(rows.filter(r => r.category === 'fish').every(r => r.unit === 'kg'));
+    assert.ok(rows.some(r => r.unit === '350 ml bottle' && r.price_min === 40.29));
+    assert.ok(rows.some(r => r.unit === '1 L bottle' && r.price_min === 101.25));
+    assert.ok(rows.filter(r => /^Beef/.test(r.item_name)).every(r => r.category === 'meat'));
+    assert.ok(rows.every(r => r.notes.includes('September 21–27, 2026')));
+});
+
+test('PDF line grouping tolerates slightly different price baselines without mixing rows', () => {
+    assert.deepEqual(pipeline.linesFromPdfItems([
+        { str: '120.00', x: 400, y: 500.6 }, { str: 'Tilapia', x: 20, y: 500.36 },
+        { str: '4-6 pcs/kg', x: 200, y: 500.36 }, { str: 'kg', x: 350, y: 500.36 },
+        { str: 'Bangus', x: 20, y: 485 }, { str: '150.00', x: 400, y: 485.24 }
+    ]), ['Tilapia 4-6 pcs/kg kg 120.00', 'Bangus 150.00']);
+});
+
+test('duplicate errors identify both rows and the commodity', () => {
+    const r = { item_name: 'Tilapia', category: 'fish', unit: 'kg', price_min: 120, price_max: 120 };
+    assert.throws(() => pipeline.validate([r, r], '2026-09-27', 'NCR'), /Row 2: "Tilapia" duplicates row 1/);
+});
+
 test('reads report dates from PDF text in common written and unambiguous numeric formats', () => {
     for (const text of ['September 26, 2026', 'SEPT. 26 2026', '26 September 2026', 'As of September\n26, 2026', '2026-09-26', '09/26/2026', '26/09/2026']) {
         assert.equal(pipeline.extractReportDate(text), '2026-09-26', text);

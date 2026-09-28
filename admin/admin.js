@@ -84,6 +84,7 @@ async function handlePdfUpload(e) {
     if (!file) return;
     const uploadId = ++uploadSequence;
     document.getElementById('priceDate').value = '';
+    document.getElementById('priceRegion').value = '';
     document.getElementById('dateDetectionStatus').textContent = 'Reading the report date…';
     document.getElementById('reviewConfirmed').checked = false;
     parsedRows = [];
@@ -110,28 +111,7 @@ async function handlePdfUpload(e) {
             const page = await pdf.getPage(i);
             const textContent = await page.getTextContent();
 
-            // pdf.js returns individual text fragments. Reassemble them into
-            // horizontal lines by grouping on the Y coordinate, so trailing
-            // prices and wrapped item names parse correctly.
-            const textItems = textContent.items
-                .filter(item => typeof item.str === 'string')
-                .map(item => ({
-                    str: item.str,
-                    x: item.transform[4],
-                    y: Math.round(item.transform[5])
-                }));
-
-            const linesByY = new Map();
-            textItems.forEach(item => {
-                if (!linesByY.has(item.y)) linesByY.set(item.y, []);
-                linesByY.get(item.y).push(item);
-            });
-
-            const sortedYs = Array.from(linesByY.keys()).sort((a, b) => b - a);
-            const pageLines = sortedYs.map(y => {
-                const lineItems = linesByY.get(y).sort((a, b) => a.x - b.x);
-                return lineItems.map(i => i.str).join(' ').replace(/\s+/g, ' ').trim();
-            }).filter(line => line);
+            const pageLines = PricePipeline.linesFromPdfItems(textContent.items);
 
             fullText += pageLines.join('\n') + '\n';
         }
@@ -141,8 +121,12 @@ async function handlePdfUpload(e) {
 
         if (uploadId !== uploadSequence) return;
         const reportDate = PricePipeline.extractReportDate(fullText);
+        const period = PricePipeline.extractReportPeriod(fullText);
+        document.getElementById('priceRegion').value = PricePipeline.extractReportRegion(fullText);
         document.getElementById('priceDate').value = reportDate || '';
-        document.getElementById('dateDetectionStatus').textContent = reportDate
+        document.getElementById('dateDetectionStatus').textContent = period
+            ? `Weekly report: ${period.label}. Using week ending ${period.end}. Check the date and region below.`
+            : reportDate
             ? `Report date detected: ${reportDate}. You can correct it below.`
             : 'No single clear report date found. Enter the date printed on the PDF.';
         parsedRows = parseBantayPresyoText(fullText);
@@ -175,7 +159,7 @@ function renderParsedTable() {
     tbody.innerHTML = '';
 
     if (parsedRows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-gray-400">Upload a PDF to see parsed data, or add rows manually.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-gray-400">Upload a PDF to see parsed data, or add rows manually.</td></tr>`;
         document.getElementById('publishBtn').disabled = true;
         return;
     }
@@ -184,6 +168,7 @@ function renderParsedTable() {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-gray-50';
         tr.innerHTML = `
+            <td class="p-3">${index + 1}</td>
             <td class="p-3"><input type="text" data-idx="${index}" data-field="item_name" value="${escapeHtml(row.item_name)}" class="w-full border border-gray-200 rounded px-2 py-1 text-sm"></td>
             <td class="p-3">
                 <select data-idx="${index}" data-field="category" class="w-full border border-gray-200 rounded px-2 py-1 text-sm">
@@ -312,12 +297,21 @@ async function publishPrices() {
         return;
     }
 
+    let newRows;
+    try {
+        newRows = PricePipeline.validate(parsedRows, date, region);
+        if (!document.getElementById('reviewConfirmed').checked) throw new Error('Confirm you reviewed the rows against the source PDF. Editing a row, date, or region resets this confirmation.');
+    } catch (err) {
+        statusEl.textContent = 'Please review: ' + err.message;
+        statusEl.className = 'text-sm mt-3 text-red-500';
+        statusEl.classList.remove('hidden');
+        return;
+    }
+
     publishBtn.disabled = true;
     publishBtn.textContent = 'Publishing...';
 
     try {
-        if (!document.getElementById('reviewConfirmed').checked) throw new Error('Confirm you reviewed the rows against the source PDF.');
-        const newRows = PricePipeline.validate(parsedRows, date, region);
         // The RPC checks trusted account metadata again on the server.
         const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
         if (sessionError || !sessionData.session) throw new Error('Admin session expired. Please log in again.');
