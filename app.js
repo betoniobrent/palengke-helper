@@ -3583,7 +3583,7 @@ function renderFilteredPriceRows() {
         <tr class="hover:bg-gray-50 transition">
             <td class="p-3 font-medium">${guessPriceEmoji(item)} ${item.name}</td>
             <td class="p-3 text-right font-mono font-bold text-gray-800">${formatPriceValue(item)}</td>
-            <td class="p-3 text-right text-xs text-gray-500">${item.notes ? escapeHtml(item.notes) : '-'}</td>
+            <td class="p-3 text-right text-xs text-gray-500">${escapeHtml([item.source_agency === 'DTI' ? 'DTI SRP' : 'DA market price', item.region, item.reportDate, item.notes].filter(Boolean).join(' · '))}</td>
         </tr>
     `).join('');
 }
@@ -3634,6 +3634,8 @@ async function loadLiveMarketPrices() {
             price_avg: row.price_avg,
             price: row.price_avg,
             notes: row.notes,
+            source_agency: row.source_agency || 'DA',
+            price_type: row.price_type || 'market',
             region: row.region,
             source_date: row.source_date,
             reportDate: row.source_date
@@ -3646,15 +3648,10 @@ async function loadLiveMarketPrices() {
             MARKET_PRICE_REFERENCE = liveReference;
         }
 
-        const latestDate = items[0]?.source_date;
-        const reportRegion = items[0]?.region || 'Region not specified';
-        if (updatedLabel) {
-            updatedLabel.textContent = latestDate
-                ? `DA Bantay Presyo rates — ${reportRegion}, as of ${new Date(latestDate).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}.`
-                : 'Official DA Bantay Presyo reference rates.';
-        }
+        const reports = [...new Set(rows.map(row => `${row.source_agency || 'DA'} ${row.source_agency === 'DTI' ? 'SRP' : 'market prices'}: ${row.source_date}`))];
+        if (updatedLabel) updatedLabel.textContent = reports.join(' · ') + '. DTI SRPs are suggested prices per pack; regional exceptions appear on each item.';
         if (statusBadge) {
-            statusBadge.textContent = `● Published DA prices (${reportRegion})`;
+            statusBadge.textContent = '● Published government prices';
             statusBadge.className = 'bg-emerald-50 text-emerald-800 font-bold text-xs px-3 py-1.5 rounded-full whitespace-nowrap';
         }
 

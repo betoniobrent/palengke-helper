@@ -95,7 +95,7 @@ function controller({ reviewed = true, fail = false } = {}) {
     el('priceDate').value = '2026-09-26';
     el('priceRegion').value = 'NCR';
     el('reviewConfirmed').checked = reviewed;
-    const context = { PricePipeline: pipeline, console: { error() {} }, document: { getElementById: el },
+    const context = { crypto: require('node:crypto').webcrypto, PricePipeline: pipeline, console: { error() {} }, document: { getElementById: el },
         supabaseClient: { auth: { getSession: async () => ({ data: { session: { user: { app_metadata: { role: 'member' } } } } }) },
             rpc: async (name, args) => { calls.push({ name, args }); return fail ? { error: new Error('Publish failed') } : { data: args.rows.length }; } } };
     vm.createContext(context);

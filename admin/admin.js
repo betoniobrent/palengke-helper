@@ -3,6 +3,8 @@
 let parsedRows = [];
 let currentSession = null;
 let uploadSequence = 0;
+let reportAgency = 'DA';
+let reportHash = null;
 
 // Replace with the URL of your deployed Cloudflare Worker (workers/da-proxy.js)
 const DA_PROXY_URL = 'https://YOUR_DA_PROXY_WORKER.workers.dev';
@@ -83,6 +85,8 @@ async function handlePdfUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
     const uploadId = ++uploadSequence;
+    reportAgency = 'DA';
+    reportHash = null;
     document.getElementById('priceDate').value = '';
     document.getElementById('priceRegion').value = '';
     document.getElementById('dateDetectionStatus').textContent = 'Reading the report date…';
@@ -100,6 +104,7 @@ async function handlePdfUpload(e) {
 
     try {
         const arrayBuffer = await file.arrayBuffer();
+        const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', arrayBuffer))).map(b => b.toString(16).padStart(2, '0')).join('');
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
         const pdf = await pdfjsLib.getDocument({ data: arrayBuffer, isEvalSupported: false }).promise;
 
@@ -107,12 +112,15 @@ async function handlePdfUpload(e) {
         statusEl.textContent = `Extracting text from ${pdf.numPages} pages...`;
 
         let fullText = '';
+        const pages = [];
+        let detectedAgency = 'DA';
         for (let i = 1; i <= pdf.numPages; i++) {
             const page = await pdf.getPage(i);
             const textContent = await page.getTextContent();
 
             const pageLines = PricePipeline.linesFromPdfItems(textContent.items);
-
+            if (i === 1 && /SUGGESTED RETAIL PRICES/i.test(pageLines.join(' '))) detectedAgency = 'DTI';
+            if (detectedAgency === 'DTI') pages.push({ items: textContent.items, boxes: DtiPipeline.boxesFromOperators(await page.getOperatorList(), pdfjsLib.OPS) });
             fullText += pageLines.join('\n') + '\n';
         }
 
@@ -120,16 +128,19 @@ async function handlePdfUpload(e) {
         statusEl.textContent = 'Parsing prices...';
 
         if (uploadId !== uploadSequence) return;
+        reportAgency = detectedAgency;
+        reportHash = hash;
         const reportDate = PricePipeline.extractReportDate(fullText);
         const period = PricePipeline.extractReportPeriod(fullText);
-        document.getElementById('priceRegion').value = PricePipeline.extractReportRegion(fullText);
+        document.getElementById('priceRegion').value = reportAgency === 'DTI' ? 'Nationwide' : PricePipeline.extractReportRegion(fullText);
         document.getElementById('priceDate').value = reportDate || '';
         document.getElementById('dateDetectionStatus').textContent = period
             ? `Weekly report: ${period.label}. Using week ending ${period.end}. Check the date and region below.`
             : reportDate
             ? `Report date detected: ${reportDate}. You can correct it below.`
             : 'No single clear report date found. Enter the date printed on the PDF.';
-        parsedRows = parseBantayPresyoText(fullText);
+        parsedRows = reportAgency === 'DTI' ? DtiPipeline.parse(pages) : parseBantayPresyoText(fullText);
+        document.getElementById('reportAgencyStatus').textContent = reportAgency === 'DTI' ? 'DTI suggested retail prices. Regional exceptions are kept per product.' : 'DA market prices.';
         document.getElementById('sourceFile').textContent = file.name;
         renderParsedTable();
 
@@ -178,7 +189,7 @@ function renderParsedTable() {
             <td class="p-3"><input type="text" data-idx="${index}" data-field="unit" value="${escapeHtml(row.unit)}" class="w-20 border border-gray-200 rounded px-2 py-1 text-sm"></td>
             <td class="p-3"><input type="number" data-idx="${index}" data-field="price_min" value="${row.price_min ?? ''}" step="0.01" min="0.01" class="w-24 border border-gray-200 rounded px-2 py-1 text-sm"></td>
             <td class="p-3"><input type="number" data-idx="${index}" data-field="price_max" value="${row.price_max ?? ''}" step="0.01" min="0.01" class="w-24 border border-gray-200 rounded px-2 py-1 text-sm"></td>
-            <td class="p-3"><input type="text" data-idx="${index}" data-field="notes" value="${escapeHtml(row.notes || '')}" class="w-full border border-gray-200 rounded px-2 py-1 text-sm"></td>
+            <td class="p-3"><input type="text" data-idx="${index}" data-field="notes" value="${escapeHtml(row.notes || '')}" class="w-full border border-gray-200 rounded px-2 py-1 text-sm">${row.region ? `<small>${escapeHtml(row.region)}</small>` : ''}</td>
             <td class="p-3"><button data-idx="${index}" class="delete-row text-red-500 hover:text-red-700 text-sm">Remove</button></td>
         `;
         tbody.appendChild(tr);
@@ -299,7 +310,7 @@ async function publishPrices() {
 
     let newRows;
     try {
-        newRows = PricePipeline.validate(parsedRows, date, region);
+        newRows = PricePipeline.validate(parsedRows, date, region, reportAgency);
         if (!document.getElementById('reviewConfirmed').checked) throw new Error('Confirm you reviewed the rows against the source PDF. Editing a row, date, or region resets this confirmation.');
     } catch (err) {
         statusEl.textContent = 'Please review: ' + err.message;
@@ -317,7 +328,7 @@ async function publishPrices() {
         if (sessionError || !sessionData.session) throw new Error('Admin session expired. Please log in again.');
 
         const { data: count, error: publishError } = await supabaseClient
-            .rpc('publish_market_prices', { rows: newRows });
+            .rpc('publish_market_prices', { rows: newRows, agency: reportAgency, document_hash: reportHash });
 
         if (publishError) throw publishError;
 

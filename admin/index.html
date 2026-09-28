@@ -35,7 +35,7 @@
         <header class="mb-8 flex items-center justify-between">
             <div>
                 <h1 class="text-3xl font-bold text-emerald-700">Palengke Helper+ Admin</h1>
-                <p class="text-gray-500">Upload DA Bantay Presyo PDF and publish market prices.</p>
+                <p class="text-gray-500">Upload DA or DTI price PDF and publish market prices.</p>
             </div>
             <button id="logoutBtn" class="hidden bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition">Logout</button>
         </header>
@@ -53,12 +53,12 @@
         <div id="adminDashboard" class="hidden space-y-6">
             <!-- Step 1: Upload -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <h2 class="text-lg font-semibold mb-4">1. Upload DA Bantay Presyo PDF</h2>
+                <h2 class="text-lg font-semibold mb-4">1. Upload DA or DTI price PDF</h2>
                 <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:bg-gray-50 transition">
                     <input type="file" id="pdfInput" accept=".pdf" class="hidden">
                     <label for="pdfInput" class="cursor-pointer block">
                         <p class="text-gray-600 mb-2">Click to upload PDF</p>
-                        <p class="text-xs text-gray-400">Official DA Bantay Presyo PDF</p>
+                        <p class="text-xs text-gray-400">DA Bantay Presyo or DTI BNPC SRP bulletin</p>
                     </label>
                 </div>
                 <p id="sourceFile" class="text-sm text-gray-600 mt-2"></p>
@@ -118,6 +118,7 @@
                         <button id="addManualRowBtn" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2 rounded-lg text-sm font-medium transition">+ Add Row</button>
                     </div>
                 </div>
+                <p id="reportAgencyStatus" class="text-sm text-emerald-700 mb-2"></p>
                 <p id="dateDetectionStatus" class="text-sm text-gray-600 mb-2">The report date will be filled from the uploaded PDF.</p>
                 <p class="text-xs text-gray-500 mb-3">Edit item names, categories, units, and prices before publishing. Rows marked for deletion will not be published.</p>
                 <div class="overflow-x-auto max-h-[60vh] overflow-y-auto custom-scrollbar rounded-lg border border-gray-100">
@@ -146,7 +147,7 @@
             <!-- Step 3: Publish -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <h2 class="text-lg font-semibold mb-4">3. Publish to Production</h2>
-                <p class="text-sm text-gray-600 mb-4">This will unpublish the previous set and make the current data visible to all users.</p>
+                <p class="text-sm text-gray-600 mb-4">This replaces only the detected agency's prices. DA and DTI prices remain available together.</p>
                 <label class="block mb-4"><input type="checkbox" id="reviewConfirmed"> I checked the report date, region, item names, units, and prices against the PDF.</label>
                 <p class="text-xs text-gray-500 mb-3">Weekly reports use the last day of the reporting period. After editing, check the review box again.</p>
                 <button id="publishBtn" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>Publish Market Prices</button>
@@ -177,7 +178,8 @@
     </div>
 
     <script src="../supabase.js?v=2"></script>
-    <script src="price-pipeline.js?v=3"></script>
-    <script src="admin.js?v=8"></script>
+    <script src="price-pipeline.js?v=4"></script>
+    <script src="dti-pipeline.js?v=1"></script>
+    <script src="admin.js?v=9"></script>
 </body>
 </html>

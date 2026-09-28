@@ -7,6 +7,7 @@ This is the admin interface for managing market prices.
 ### 1. Supabase Credentials
 
 The publisher uses the main site's `../supabase.js` public client configuration.
+Automatic government updates are configured separately; see [GOVERNMENT-IMPORTS.md](../GOVERNMENT-IMPORTS.md).
 Only existing accounts with trusted `app_metadata.role = admin` can publish.
 The local demo account in the separate admin app cannot publish.
 
@@ -31,16 +32,17 @@ Replace `ADMIN_USER_ID` with the actual UUID.
 ### 3. Deploy
 
 This page deploys with the main Cloudflare site at `/admin/`. Apply
-`migrations/20260927_pdf_price_publishing.sql` before deploying. It validates all
-rows and replaces the active price batch atomically, keeping older rows unpublished.
+`migrations/20260927_pdf_price_publishing.sql` and then
+`migrations/20260928_government_imports.sql` before deploying. It validates all
+rows and replaces only that agency's active price batch atomically, keeping older rows unpublished.
 
 ## How to Use
 
 1. **Login** with the admin email and password.
-2. **Upload** the official DA Bantay Presyo PDF.
+2. **Upload** the official DA Bantay Presyo or DTI BNPC SRP PDF.
 3. **Review** the parsed items. Edit names, categories, units, and prices. Remove incorrect rows. Add missing rows manually.
 4. **Check the detected date and enter the region** exactly as printed on the report, then check the review confirmation. The date is read from PDF text and stays editable. If no clear date is found or multiple dates conflict, enter it manually. Each upload clears the previous date.
-5. **Click "Publish Market Prices"** to make the complete report visible to users. The previous published set will be unpublished automatically. Reload the website's Market Prices page to fetch the update. No GitHub push is needed for price changes.
+5. **Click "Publish Market Prices"** to make the complete report visible to users. The previous published set for the detected agency will be unpublished automatically. The other agency remains published. Reload the website's Market Prices page to fetch the update. No GitHub push is needed for price changes.
 
 ## PDF Parsing Notes
 

@@ -1,0 +1,32 @@
+name: Government price imports
+on:
+  schedule:
+    # Daily at 09:17 Philippine time. GitHub may delay scheduled runs.
+    - cron: '17 1 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: government-price-imports
+  cancel-in-progress: false
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        agency: [DA, DTI]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts --omit=optional
+      - run: node --test tests/*.test.cjs
+      - name: Validate and publish official report
+        env:
+          GOVERNMENT_IMPORT_TOKEN: ${{ secrets.GOVERNMENT_IMPORT_TOKEN }}
+          AGENCY: ${{ matrix.agency }}
+        run: node scripts/import-government-prices.cjs "$AGENCY"

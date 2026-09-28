@@ -4,14 +4,20 @@
         return String(text).split(/\bCOMMODITY\s+SPECIFICATION\b|Markets Covered:|Source:|\bNote:/i)[0];
     }
     function extractReportPeriod(text) {
-        const match = reportHeader(text).match(/\b(?:For the period of\s+)?(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2})\s*[-–—]\s*(\d{1,2}),?\s+(20\d{2})\b/i);
+        const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const names = '(' + months.join('|') + ')';
+        const pattern = new RegExp('\\b' + names + '\\s+(\\d{1,2})(?:,?\\s+(20\\d{2}))?\\s*[-–—]\\s*(?:' + names + '\\s+)?(\\d{1,2}),?\\s+(20\\d{2})\\b', 'i');
+        const match = reportHeader(text).match(pattern);
         if (!match) return null;
-        const month = ['january','february','march','april','may','june','july','august','september','october','november','december'].indexOf(match[1].toLowerCase()) + 1;
-        const iso = day => `${match[4]}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-        const start = iso(match[2]), end = iso(match[3]);
-        if (start > end || ![start,end].every(d => Number.isFinite(Date.parse(d)) && new Date(d).toISOString().slice(0,10) === d)) return null;
-        return { start, end, label: `${match[1]} ${Number(match[2])}–${Number(match[3])}, ${match[4]}` };
+        const monthNumber = name => months.findIndex(m => m.toLowerCase() === name.toLowerCase()) + 1;
+        const iso = (year, month, day) => `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        const start = iso(match[3] || match[6], monthNumber(match[1]), match[2]);
+        const end = iso(match[6], monthNumber(match[4] || match[1]), match[5]);
+        if (start > end || Date.parse(end)-Date.parse(start)>7*86400000 || ![start,end].every(d => Number.isFinite(Date.parse(d)) && new Date(d).toISOString().slice(0,10) === d)) return null;
+        const label = match[4] || match[3] ? match[0] : `${match[1]} ${Number(match[2])}–${Number(match[5])}, ${match[6]}`;
+        return { start, end, label };
     }
+
     function extractReportRegion(text) {
         const header = reportHeader(text);
         if (/\bNCR\b|National Capital Region/i.test(header)) return 'NCR';
@@ -107,9 +113,9 @@
         }
         return rows;
     }
-    function validate(rows, date, region) {
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date)) || new Date(date).toISOString().slice(0, 10) !== date) throw new Error('Enter the date printed on the DA report.');
-        if (typeof region !== 'string' || !region.trim()) throw new Error('Enter the region printed on the DA report.');
+    function validate(rows, date, region, agency = 'DA') {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date)) || new Date(date).toISOString().slice(0, 10) !== date) throw new Error('Enter the date printed on the government report.');
+        if (typeof region !== 'string' || !region.trim()) throw new Error('Enter the region printed on the government report.');
         if (!Array.isArray(rows) || !rows.length) throw new Error('Add or upload at least one price row.');
         const seen = new Map();
         return rows.map((row, index) => {
@@ -121,10 +127,10 @@
             }
             if ((row.price_min === null) !== (row.price_max === null)) fail('enter both prices, or leave both blank.');
             if (row.price_min > row.price_max) fail('minimum price cannot exceed maximum price.');
-            const key = [row.item_name.trim().toLowerCase(), row.category, row.unit.trim().toLowerCase()].join('|');
+            const key = [row.item_name.trim().toLowerCase(), row.category, row.unit.trim().toLowerCase(), agency === 'DTI' ? (row.region || region).trim().toLowerCase() : region.trim().toLowerCase()].join('|');
             if (seen.has(key)) fail(`"${row.item_name.trim()}" duplicates row ${seen.get(key)} (${row.category}, ${row.unit}). Keep distinct varieties in their names; remove a row only if it is truly repeated.`);
             seen.set(key, index + 1);
-            return { ...row, item_name: row.item_name.trim(), unit: row.unit.trim(), source_date: date, region: region.trim() };
+            return { ...row, item_name: row.item_name.trim(), unit: row.unit.trim(), source_date: date, region: agency === 'DTI' ? (row.region || region).trim() : region.trim() };
         });
     }
     const api = { parse, validate, categories, extractReportDate, extractReportPeriod, extractReportRegion, linesFromPdfItems };
