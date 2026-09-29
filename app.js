@@ -12,6 +12,9 @@ let activeSpecificationFilter = 'all';
 
 // Palengke AI backend thread ID (preserves conversation)
 let palengkeAIThreadId = localStorage.getItem('palengke_ai_thread') || '';
+let aiRequestPending = false;
+let aiConversationVersion = 0;
+let aiRequestController = null;
 
 // Set this to your deployed Bo Sar backend URL (Replit, Render, etc.)
 const BO_SAR_BACKEND_URL = 'https://palengke-helper-gemini.onrender.com';
@@ -2418,6 +2421,7 @@ function evaluateDynamicContextualAISuggestions() {
 }
 
 async function processAISuggestionQuery() {
+    if (aiRequestPending) return;
     const questionInput = document.getElementById('aiQuestionInput');
     const chatHistory = document.getElementById('aiChatHistory');
     if (!questionInput || !chatHistory) return;
@@ -2433,26 +2437,33 @@ async function processAISuggestionQuery() {
     appendChatMessage('user', question);
     questionInput.value = '';
 
-    const typingId = 'ai-typing-' + Date.now();
-    appendChatMessage('ai', '<span id="' + typingId + '">Typing...</span>', true);
+    const version = aiConversationVersion;
+    aiRequestPending = true;
+    updateAIChatInputState();
+    const typingMessage = appendChatMessage('ai', 'Thinking…');
     chatHistory.scrollTop = chatHistory.scrollHeight;
 
     try {
         const responseText = await generateAIResponse(question);
-        const typingEl = document.getElementById(typingId);
-        if (typingEl) typingEl.parentElement.remove();
+        if (version !== aiConversationVersion) return;
         appendChatMessage('ai', responseText);
     } catch (error) {
         console.error('AI response error:', error);
-        const typingEl = document.getElementById(typingId);
-        if (typingEl) typingEl.parentElement.remove();
+        if (version !== aiConversationVersion) return;
         appendChatMessage('ai', 'Palengke AI error: ' + (error.message || 'Please try again later.'));
+    } finally {
+        typingMessage?.remove();
+        if (version === aiConversationVersion) {
+            aiRequestPending = false;
+            updateAIChatInputState();
+        }
     }
 
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
 
 function handleQuickPrompt(prompt) {
+    if (aiRequestPending) return;
     const questionInput = document.getElementById('aiQuestionInput');
     if (!questionInput) return;
     questionInput.value = prompt;
@@ -2486,6 +2497,7 @@ function appendChatMessage(sender, text, raw = false) {
         message.innerHTML = `<div class="flex items-center justify-between gap-3"><strong class="text-xs text-emerald-700">Palengke AI</strong><span class="text-[10px] text-gray-400">${time}</span></div><p class="mt-2">${content}</p>`;
     }
     chatHistory.appendChild(message);
+    return message;
 }
 
 function renderAIWelcomeMessage() {
@@ -2516,8 +2528,9 @@ function updateAIChatInputState() {
     } else {
         input.disabled = false;
         input.placeholder = 'Ask about meals, budgeting, palengke, or groceries...';
-        btn.disabled = false;
-        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        btn.disabled = aiRequestPending;
+        btn.classList.toggle('opacity-50', aiRequestPending);
+        btn.classList.toggle('cursor-not-allowed', aiRequestPending);
     }
 }
 
@@ -2765,15 +2778,34 @@ function buildMealPlanContext() {
     return context;
 }
 
-function buildMarketPriceContext() {
+function buildMarketPriceContext(question = '') {
     const liveItems = (ALL_PRICE_ITEMS || []).length > 0 ? ALL_PRICE_ITEMS : MARKET_PRICE_REFERENCE;
     if (liveItems.length === 0) return 'MARKET PRICES: Not available';
 
-    let context = 'CURRENT MARKET PRICES (latest published from Supabase):\n';
+    let context = 'SELECTED PRICE REFERENCES (not the full catalog): Respect report dates, regions and units. DTI SRP is suggested retail, not observed market price. Supplemental prices are estimates. Do not invent prices for unlisted items.\n';
     if (ALL_PRICE_ITEMS && ALL_PRICE_ITEMS.length > 0) {
-        ALL_PRICE_ITEMS.slice(0, 20).forEach(item => {
-            const avg = item.price_avg || item.price_min || item.price_max || 0;
-            context += `- ${item.item_name}: ₱${parseFloat(avg).toFixed(2)}/${item.unit || 'unit'}\n`;
+        const terms = question.toLowerCase().match(/[\p{L}\p{N}]+/gu) || [];
+        const aliases = { bigas: 'rice', manok: 'chicken', baboy: 'pork', baka: 'beef', isda: 'fish', itlog: 'egg', sabon: 'soap', gatas: 'milk', asukal: 'sugar', asin: 'salt' };
+        const keywords = terms.filter(term => term.length > 2).flatMap(term => [term, aliases[term]].filter(Boolean));
+        const ranked = ALL_PRICE_ITEMS.map((item, index) => {
+            const label = `${item.item_name || item.name} ${item.category || ''}`.toLowerCase();
+            return { item, index, score: keywords.reduce((score, term) => score + (label.includes(term) ? 1 : 0), 0) };
+        }).sort((a, b) => b.score - a.score || a.index - b.index);
+        const selected = ranked.filter(row => row.score > 0).slice(0, 18);
+        const categories = new Set(selected.map(row => row.item.category));
+        for (const row of ranked) {
+            if (selected.length >= 18) break;
+            if (!categories.has(row.item.category)) { selected.push(row); categories.add(row.item.category); }
+        }
+        for (const row of ranked) {
+            if (selected.length >= 18) break;
+            if (!selected.includes(row)) selected.push(row);
+        }
+        selected.forEach(({ item }) => {
+            const avg = item.price_avg || item.price_min || item.price_max || item.price;
+            const price = Number.isFinite(Number(avg)) && Number(avg) > 0 ? `₱${Number(avg).toFixed(2)}/${item.unit || 'unit'}` : 'unavailable';
+            const line = `- ${item.item_name || item.name}: ${price}; ${item.source_agency || 'Supplemental estimate'}; ${item.region || 'region unspecified'}; ${item.source_date || item.reportDate || 'date unspecified'}; ${item.notes || ''}\n`;
+            if (context.length + line.length <= 4500) context += line;
         });
     } else {
         MARKET_PRICE_REFERENCE.slice(0, 10).forEach(item => {
@@ -2864,14 +2896,21 @@ async function generateAIResponseWithBackend(question) {
         return 'Palengke AI backend is not configured. The developer needs to set BO_SAR_BACKEND_URL in app.js.';
     }
 
-    const context = [buildMealPlanContext(), buildMarketPriceContext(), buildRecipeContext()].join('\n\n');
+    const preferences = `USER SETTINGS: Weekly budget PHP ${document.getElementById('plannerBudget')?.value || 'not set'}; people ${document.getElementById('plannerPax')?.value || 'not set'}; diet ${document.getElementById('plannerDiet')?.value || 'anything'}.`;
+    const context = [preferences, buildMarketPriceContext(question), buildMealPlanContext(), buildRecipeContext()].join('\n\n').slice(0, 6500);
+    const version = aiConversationVersion;
+    const controller = new AbortController();
+    aiRequestController = controller;
+    const timeout = setTimeout(() => controller.abort(), 60000);
     try {
         const response = await fetch(BO_SAR_BACKEND_URL.replace(/\/$/, '') + '/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            signal: controller.signal,
             body: JSON.stringify({ message: question, thread_id: palengkeAIThreadId, context: context })
         });
-        const data = await response.json();
+        const data = await response.json().catch(() => ({ error: `AI service unavailable (HTTP ${response.status}). Please try again later.` }));
+        if (version !== aiConversationVersion) return '';
         if (!response.ok || data.error) return 'Palengke AI error: ' + (data.error || `HTTP ${response.status}`);
         if (data.thread_id) {
             palengkeAIThreadId = data.thread_id;
@@ -2880,7 +2919,11 @@ async function generateAIResponseWithBackend(question) {
         return data.reply || 'No response from Palengke AI.';
     } catch (error) {
         console.error('Palengke AI backend error:', error);
-        return 'Palengke AI error: ' + (error.message || 'Please try again later.');
+        if (version !== aiConversationVersion) return '';
+        return error.name === 'AbortError' ? 'Palengke AI took too long to respond. Please try again.' : 'Palengke AI could not connect. Please try again later.';
+    } finally {
+        clearTimeout(timeout);
+        if (aiRequestController === controller) aiRequestController = null;
     }
 }
 
@@ -4127,9 +4170,16 @@ function hasActiveMealPlan() {
 }
 
 function clearAIChatHistory() {
+    aiConversationVersion++;
+    aiRequestController?.abort();
+    aiRequestController = null;
+    aiRequestPending = false;
+    palengkeAIThreadId = '';
+    localStorage.removeItem('palengke_ai_thread');
     const chatHistory = document.getElementById('aiChatHistory');
     if (!chatHistory) return;
     chatHistory.innerHTML = '';
+    renderAIWelcomeMessage();
 }
 
 // PWA install helpers and service worker registration
