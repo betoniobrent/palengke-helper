@@ -122,6 +122,7 @@ const DAYS_OF_WEEK = [
 
 let currentMealPlan = {};
 let selectedMealSlot = null;
+let plannerDetailsRecipe = null;
 function initializeMealPlanner() {
 
     DAYS_OF_WEEK.forEach(day => {
@@ -159,7 +160,8 @@ function renderMealSlot(day, type) {
                 <span class="text-xs font-semibold text-gray-500">${type}</span>
                 <button onclick="openRecipeSelector('${day}','${type}')" class="text-[11px] font-semibold text-emerald-700 hover:text-emerald-900">Change</button>
             </div>
-            <button onclick="showRecipeDetailsById(${meal.id})" class="text-left mt-2 font-semibold text-gray-800 hover:text-emerald-800">${meal.name}</button>
+            <button onclick="showRecipeDetailsById(${meal.id})" class="text-left mt-2 font-semibold text-gray-800 hover:text-emerald-800">${escapeHtml(meal.name)}</button>
+            <p class="text-xs text-emerald-700 mt-2">${plannerPriceLabel(meal)}</p>
         </div>`;
 }
 function openRecipeSelector(day,type){
@@ -282,9 +284,10 @@ function renderPlannerSummaryFromCurrentPlan(showSummary = true){
     });
 
     summaryCostNode.innerText = `₱${totalCost.toFixed(0)}`;
+    calculatePlanMetrics();
     const budgetValue = parseFloat(document.getElementById('plannerBudget').value);
     const hasValidBudget = !isNaN(budgetValue) && budgetValue > 0;
-    summaryWarning.innerText = hasValidBudget && totalCost > budgetValue ? 'This plan exceeds your budget.' : '';
+    summaryWarning.innerText = (hasValidBudget && totalCost > budgetValue ? 'This planning estimate exceeds your budget. ' : '') + 'Planning estimates use the saved recipe allowance where verified ingredient prices are incomplete. They are not confirmed shopping totals. Open a meal for its price breakdown.';
     if (showSummary) {
         summarySection.classList.remove('hidden');
     } else {
@@ -390,8 +393,8 @@ function renderRecipeSelector(){
                 data-recipe-id="${recipe.id}"
                 onclick="selectRecipe(${recipe.id})">
                 <h4 class="font-bold text-lg text-gray-800 mb-1">${recipe.name}</h4>
-                <p class="text-emerald-600 font-semibold mb-2">₱${recipe.estimatedCost}</p>
-                <p class="text-sm text-gray-500 mb-1">${recipe.servings} pax · ${recipe.difficulty} · ${recipe.prepTime} prep / ${recipe.cookTime} cook</p>
+                <p class="text-emerald-600 font-semibold mb-2">${plannerPriceLabel(recipe)}</p>
+                <p class="text-sm text-gray-500 mb-1">${getPlannerPax()} pax · ${recipe.difficulty} · ${recipe.prepTime} prep / ${recipe.cookTime} cook</p>
                 <p class="text-xs text-gray-400 mt-1">${(recipe.ingredients || []).slice(0, 4).join(', ')}${(recipe.ingredients || []).length > 4 ? '...' : ''}</p>
                 <p class="text-xs text-emerald-600 mt-2 font-medium uppercase tracking-wide">${recipe.mealType.join(' · ')}</p>
             </div>
@@ -692,32 +695,23 @@ function showRecipeDetails(recipe){
     const modal = document.getElementById('recipeDetailsModal');
     const content = document.getElementById('recipeDetailsContent');
     if (!modal || !content) return;
-
+    plannerDetailsRecipe = recipe;
+    const pax = getPlannerPax();
+    const pricing = getPlannerRecipePricing(recipe, pax);
     content.innerHTML = `
         <div class="max-w-2xl mx-auto">
-            <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 mb-6">
-                <h3 class="text-2xl font-bold text-gray-800 mb-2">${recipe.name}</h3>
-                <p class="text-emerald-700 font-semibold text-lg mb-1">₱${recipe.estimatedCost}</p>
-                <p class="text-sm text-gray-600 mb-3">${recipe.servings} pax · ${recipe.difficulty} · ${recipe.prepTime} prep · ${recipe.cookTime} cook</p>
-                <p class="text-sm text-gray-600">Base estimate for ${recipe.servings} pax is ₱${recipe.estimatedCost} (₱${(recipe.estimatedCost / recipe.servings).toFixed(2)} per pax).</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                    <h4 class="font-semibold text-gray-800 mb-2">Ingredients</h4>
-                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                        ${recipe.ingredients.map(item => `<li>${item}</li>`).join('')}
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-semibold text-gray-800 mb-2">Instructions</h4>
-                    <ol class="list-decimal list-inside text-sm text-gray-700 space-y-2">
-                        ${recipe.instructions.map(item => `<li>${item}</li>`).join('')}
-                    </ol>
-                </div>
-            </div>
-        </div>
-    `;
-
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">${escapeHtml(recipe.name)}</h3>
+            <p class="text-emerald-700 font-semibold mb-2">${plannerPriceLabel(recipe)} · ₱${(pricing.amount / pax).toFixed(2)} per person</p>
+            <label for="recipePax" class="text-sm font-semibold">People for this plan</label>
+            <input id="recipePax" aria-label="People for this plan" type="number" min="1" max="100" step="1" value="${pax}" onchange="setPlannerPax(this.value)" class="border rounded-lg p-2 w-20 ml-2">
+            <div class="flex flex-wrap gap-2 my-3">${[1,2,4,6,8].map(n => '<button type="button" onclick="setPlannerPax(' + n + ')" class="px-3 py-2 rounded-lg border ' + (n === pax ? 'bg-emerald-700 text-white' : 'bg-white text-emerald-700') + '">' + n + ' pax</button>').join('')}</div>
+            <p class="text-xs text-gray-500 mb-3">Changing people updates this entire plan. Cooking times may change for larger batches.</p>
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4">${[1,2,4,6,8].map(n => '<div class="rounded-lg bg-emerald-50 p-2 text-sm">' + n + ' pax<br>₱' + calculateRecipeCostFromMarket(recipe,n).toFixed(2) + '</div>').join('')}</div>
+            <p class="text-xs text-gray-500 mb-4">${pricing.estimated ? 'Comparison uses a planning estimate, not a verified total. The saved recipe allowance is scaled per person, or increased to cover the verified subtotal if higher.' : 'Comparison uses priced ingredient amounts; whole-package purchases can cost more.'}</p>
+            <div class="whitespace-pre-line text-sm text-gray-700 bg-gray-50 rounded-xl p-4 mb-4">${escapeHtml(MealCosting.format(pricing.quote))}</div>
+            <h4 class="font-semibold mb-2">Cooking steps</h4>
+            <ol class="list-decimal list-inside text-sm space-y-2">${(recipe.instructions || []).map(item=>'<li>'+escapeHtml(item)+'</li>').join('')}</ol>
+        </div>`;
     modal.classList.remove('hidden');
 }
 
@@ -850,8 +844,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
     if (plannerPax) {
-        plannerPax.addEventListener('change', calculatePlanMetrics);
+        plannerPax.addEventListener('change', refreshPlannerPax);
         plannerPax.addEventListener('input', function() {
+            refreshPlannerPax();
             this.classList.remove('border-rose-500', 'border-red-500');
             const paxError = document.getElementById('paxError');
             if (paxError) paxError.classList.add('hidden');
@@ -1729,7 +1724,7 @@ function generateFilipinoMealPlan() {
     }
 
     const targetWeekBudget = parseFloat(budgetValue);
-    const targetPaxCount = parseInt(paxValue, 10);
+    const targetPaxCount = Number(paxValue);
 
     if (isNaN(targetWeekBudget) || targetWeekBudget <= 0) {
         budgetInput.classList.add('border-rose-500');
@@ -1740,10 +1735,10 @@ function generateFilipinoMealPlan() {
         return;
     }
     
-    if (isNaN(targetPaxCount) || targetPaxCount <= 0) {
+    if (!Number.isInteger(targetPaxCount) || targetPaxCount < 1 || targetPaxCount > 100) {
         paxInput.classList.add('border-rose-500');
         if (paxError) {
-            paxError.textContent = 'Family members must be greater than 0';
+            paxError.textContent = 'Enter a whole number from 1 to 100.';
             paxError.classList.remove('hidden');
         }
         return;
@@ -1979,19 +1974,8 @@ function generateFilipinoMealPlan() {
         console.log('Save button not found');
     }
     
-    const summaryWarning = document.getElementById('plannerSummaryWarning');
-    if (summaryWarning) {
-        if (totalPlanCostAccumulator > targetWeekBudget) {
-            const avgDayCost = totalPlanCostAccumulator / 7;
-            const daysCovered = Math.max(1, Math.floor(targetWeekBudget / avgDayCost));
-            summaryWarning.innerText =
-                `Heads up: even the cheapest 7-day plan for ${targetPaxCount} pax costs about ₱${totalPlanCostAccumulator.toFixed(0)} ` +
-                `(₱${avgDayCost.toFixed(0)}/day). Your ₱${targetWeekBudget} budget fits about ${daysCovered} day${daysCovered === 1 ? '' : 's'} of this plan — ` +
-                `we still generated the full week so you can pick which days to follow.`;
-        } else {
-            summaryWarning.innerText = `Great — this plan fits your ₱${targetWeekBudget} weekly budget for ${targetPaxCount} pax (est. ₱${totalPlanCostAccumulator.toFixed(0)}).`;
-        }
-    }
+    renderPlannerSummaryFromCurrentPlan();
+
 }
 
 // ==========================================
@@ -3249,23 +3233,44 @@ function getMarketPriceForIngredient(ingredient) {
 }
 
 // Calculate recipe cost based on market prices, scaled for target pax
+function getPlannerPax() {
+    const value = Number(document.getElementById('plannerPax')?.value);
+    return Number.isInteger(value) && value >= 1 && value <= 100 ? value : 4;
+}
+
+function getPlannerRecipePricing(recipe, pax = getPlannerPax()) {
+    const quote = MealCosting.quote(recipe, ALL_PRICE_ITEMS || [], pax);
+    const baseEstimate = Number(recipe.estimatedCost) / Math.max(Number(recipe.servings) || 1, 1) * pax;
+    // An incomplete subtotal cannot be used as the price of a whole meal.
+    const amount = quote.complete ? quote.subtotal : Math.max(quote.subtotal, Number.isFinite(baseEstimate) ? baseEstimate : 0);
+    return {quote, amount:Math.round(amount * 100) / 100, estimated:!quote.complete};
+}
+
 function calculateRecipeCostFromMarket(recipe, pax = 0) {
-    if (!recipe.ingredients || recipe.ingredients.length === 0) {
-        if (pax) {
-            return (recipe.estimatedCost / Math.max(recipe.servings, 1)) * pax;
-        }
-        return recipe.estimatedCost || 0;
-    }
+    return getPlannerRecipePricing(recipe, pax || getPlannerPax()).amount;
+}
 
-    let baseCost = 0;
-    recipe.ingredients.forEach(ingredient => {
-        baseCost += getMarketPriceForIngredient(ingredient);
-    });
+function plannerPriceLabel(recipe, pax = getPlannerPax()) {
+    const pricing = getPlannerRecipePricing(recipe, pax);
+    return (pricing.estimated ? 'Planning estimate' : 'Priced ingredients') + ': ₱' + pricing.amount.toFixed(2) + ' · ' + pax + ' pax';
+}
 
-    if (pax > 0) {
-        return (baseCost / Math.max(recipe.servings, 1)) * pax;
-    }
-    return Math.round(baseCost);
+function setPlannerPax(value) {
+    const pax = Number(value);
+    if (!Number.isInteger(pax) || pax < 1 || pax > 100) return;
+    document.getElementById('plannerPax').value = pax;
+    document.getElementById('paxError')?.classList.add('hidden');
+    refreshPlannerPax();
+}
+
+function refreshPlannerPax() {
+    const value = Number(document.getElementById('plannerPax')?.value);
+    if (!Number.isInteger(value) || value < 1 || value > 100) return;
+    calculatePlanMetrics();
+    if (Object.values(currentMealPlan).some(day => day && Object.values(day).some(Boolean))) renderPlannerSummaryFromCurrentPlan();
+    const selector = document.getElementById('recipeSelectorModal');
+    if (selector && !selector.classList.contains('hidden') && selectedMealSlot) renderRecipeSelector();
+    if (plannerDetailsRecipe && !document.getElementById('recipeDetailsModal')?.classList.contains('hidden')) showRecipeDetails(plannerDetailsRecipe);
 }
 
 // ==========================================
@@ -3728,6 +3733,7 @@ async function loadLiveMarketPrices() {
 
         // Update home page price movements
         updateHomePagePriceMovements(items);
+        refreshPlannerPax();
     } catch (error) {
         console.warn('Live price feed unavailable, using fallback prices:', error);
         renderMarketPricesTable(mergeSupplementalPrices(MARKET_PRICE_FALLBACK.map(entry => ({
