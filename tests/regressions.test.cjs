@@ -40,6 +40,7 @@ function groceryContext() {
             getElementById: id => id === 'groceryCartItems' ? cart : search,
             createElement: () => ({})
         },
+        renderGroceryPriceList: () => {},
         updateCartSummary: items => { summary = items; },
         saveGroceryListToSupabase: () => {},
         showNotification: () => {}
@@ -158,4 +159,18 @@ test('last missing local price removes partial status and summary labels estimat
  c.updateCartSummary([{price:null,priceMissing:true,quantity:250}]);assert.match(nodes.totalCost.innerText,/partial/);
  c.updateCartSummary([{basePrice:0.12,localPrice:true,priceMissing:false,quantity:250}]);
  assert.equal(nodes.totalCost.innerText,'₱30.00');assert.equal(nodes.budgetWarning.innerText,'');assert.match(nodes.groceryLocalPriceNote.innerText,/local price estimates/);
+});
+
+test('grocery price browser filters categories and search while retaining original feed indices',()=>{
+ const nodes={groceryPriceList:{},groceryPriceSearch:{value:'milk'},groceryPriceCategory:{value:'other food'},groceryPriceCount:{}};
+ const c=loadFunctions({document:{getElementById:id=>nodes[id],createElement:()=>({textContent:'',get innerHTML(){return this.textContent.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}})},ALL_PRICE_ITEMS:[{name:'Rice',category:'rice',price_avg:50,unit:'kg'},{name:'Milk <Special>',category:'other food',price_avg:30,unit:'200ml',source_agency:'DTI',source_date:'2026-05-11',region:'Nationwide'}]},['escapeHtml','groceryCatalogPrice','renderGroceryPriceList']);
+ c.renderGroceryPriceList();assert.match(nodes.groceryPriceList.innerHTML,/addGroceryPriceItem\(1\)/);assert.match(nodes.groceryPriceList.innerHTML,/Milk &lt;Special&gt;/);assert.match(nodes.groceryPriceList.innerHTML,/DTI SRP/);assert.equal(nodes.groceryPriceCount.innerText,'1 items');
+ nodes.groceryPriceSearch.value='absent';c.renderGroceryPriceList();assert.match(nodes.groceryPriceList.innerHTML,/No matching items/);
+});
+
+test('price catalog additions preserve unit, provenance, whole packs and missing prices',()=>{
+ let items=[],saved=0;const c=loadFunctions({ALL_PRICE_ITEMS:[{name:'Milk',price_avg:30,unit:'200ml',source_agency:'DTI',source_date:'2026-05-11',region:'Nationwide'},{name:'Unknown',unit:'kg',price_avg:null}],MealCosting:require('../meal-costing'),getGroceryData:()=>items,setGroceryData:value=>{items=value},document:{getElementById:()=>({value:'old search'})},renderGroceryItems:()=>{},saveGroceryListToSupabase:()=>saved++,showNotification:()=>{}},['groceryCatalogPrice','addGroceryPriceItem']);
+ c.addGroceryPriceItem(0);assert.equal(items[0].price,30);assert.equal(items[0].unit,'200ml');assert.equal(items[0].quantity,1);assert.equal(items[0].indivisible,true);assert.match(items[0].notes,/DTI SRP.*2026-05-11.*Nationwide/);assert.equal(items[0].fromMealPlan,undefined);
+ c.addGroceryPriceItem(1);assert.equal(items[1].price,null);assert.equal(items[1].priceMissing,true);assert.equal(saved,2);
+ assert.equal(c.groceryCatalogPrice({price_min:20,price_max:30}),25);assert.equal(c.groceryCatalogPrice({price_avg:0,price_min:null,price_max:null}),null);
 });

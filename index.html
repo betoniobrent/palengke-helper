@@ -879,6 +879,15 @@
             <!-- TAB 5: GROCERY LIST TRACKER -->
             <div id="view-grocery" class="tab-content hidden">
                 <h2 class="text-3xl font-bold mb-6 text-gray-800">Grocery List Tracker</h2>
+                <section class="bg-white border border-emerald-200 rounded-xl p-4 mb-6" aria-label="Grocery price list">
+                    <div class="flex justify-between gap-3 mb-2"><h3 class="text-lg font-bold text-emerald-900">Price list</h3><span id="groceryPriceCount" class="text-sm text-gray-500"></span></div>
+                    <p class="text-sm text-gray-600 mb-3">Browse the same prices shown in Prices. Add one selling unit, then adjust its quantity below. These are reference prices; shop prices may differ. Where only a price range is available, its midpoint is used.</p>
+                    <div class="flex flex-col sm:flex-row gap-2 mb-3">
+                        <input id="groceryPriceSearch" type="search" aria-label="Search grocery prices" placeholder="Search rice, chicken, milk…" oninput="renderGroceryPriceList()" class="border rounded-lg p-3 flex-1">
+                        <select id="groceryPriceCategory" aria-label="Price list category" onchange="renderGroceryPriceList()" class="border rounded-lg p-3"><option value="">All categories</option></select>
+                    </div>
+                    <div id="groceryPriceList" class="max-h-80 overflow-y-auto" aria-live="polite"></div>
+                </section>
                 
                 <div class="grid lg:grid-cols-3 gap-6">
                     <!-- Shopping Cart Section -->
@@ -1138,7 +1147,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
     <script src="data/recipes.js?v=9"></script>
     <script src="supabase.js?v=3"></script>
     <script src="meal-costing.js?v=3"></script>
-    <script src="app.js?v=42"></script>
+    <script src="app.js?v=43"></script>
     <script>
         function switchTab(tabId) {
             console.log('switchTab called with:', tabId);

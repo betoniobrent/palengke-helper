@@ -2051,7 +2051,59 @@ async function loadGroceryListFromSupabase() {
     }
 }
 
+function groceryCatalogPrice(item) {
+    const positive = value => value !== null && value !== '' && Number.isFinite(Number(value)) && Number(value) > 0;
+    if (positive(item.price_avg)) return Number(item.price_avg);
+    if (positive(item.price_min) && positive(item.price_max)) return (Number(item.price_min) + Number(item.price_max)) / 2;
+    if (positive(item.price)) return Number(item.price);
+    return null;
+}
+
+function renderGroceryPriceList() {
+    const list = document.getElementById('groceryPriceList');
+    if (!list) return;
+    const query = (document.getElementById('groceryPriceSearch')?.value || '').trim().toLowerCase();
+    const categoryNode = document.getElementById('groceryPriceCategory');
+    const category = categoryNode?.value || '';
+    const feed = ALL_PRICE_ITEMS || [];
+    if (categoryNode) {
+        categoryNode.innerHTML = '<option value="">All categories</option>' + [...new Set(feed.map(i => i.category || 'other food'))].sort().map(c => '<option value="' + escapeHtml(c).replace(/"/g, '&quot;') + '">' + escapeHtml(c) + '</option>').join('');
+        categoryNode.value = category;
+    }
+    const matches = feed.map((item,index)=>({item,index})).filter(({item}) => (!category || (item.category || 'other food') === category) && (item.name || item.item_name || '').toLowerCase().includes(query));
+    list.innerHTML = matches.length ? matches.map(({item,index}) => {
+        const price = groceryCatalogPrice(item);
+        const source = item.source_agency === 'DTI' ? 'DTI SRP' : item.source_agency === 'DA' ? 'DA market price' : 'Supplemental reference';
+        const provenance = [source,item.source_date || item.reportDate,item.region,item.notes].filter(Boolean).join(' · ');
+        return '<div class="p-3 border-b flex flex-wrap items-center justify-between gap-3"><div class="min-w-0 flex-1"><p class="font-semibold text-sm">' + escapeHtml(item.name || item.item_name) + '</p><p class="text-sm text-emerald-800">' + (price === null ? 'Price unavailable' : '₱' + price.toFixed(2)) + ' / ' + escapeHtml(item.unit || 'unit unspecified') + '</p><p class="text-xs text-gray-500">' + escapeHtml(provenance) + '</p></div><button type="button" onclick="addGroceryPriceItem(' + index + ')" class="bg-emerald-700 text-white px-3 py-2 rounded-lg text-sm">Add to grocery</button></div>';
+    }).join('') : '<p class="p-4 text-sm text-gray-500">' + (feed.length ? 'No matching items. Try another search or category.' : 'No price list is available yet. You can still add items manually below.') + '</p>';
+    const count = document.getElementById('groceryPriceCount');
+    if (count) count.innerText = matches.length + ' items';
+}
+
+function addGroceryPriceItem(index) {
+    const row = ALL_PRICE_ITEMS[index];
+    if (!row) return;
+    const price = groceryCatalogPrice(row);
+    const source = row.source_agency === 'DTI' ? 'DTI SRP' : row.source_agency === 'DA' ? 'DA market reference' : 'Supplemental reference';
+    const unit = row.unit || 'unit unspecified';
+    const measure = MealCosting.sellingUnit(unit);
+    const item = {name:row.name || row.item_name, unit, price, basePrice:price, quantity:1,
+        priceMissing:price === null, category:row.category || 'other food', checked:false,
+        notes:[source,row.source_date || row.reportDate,row.region,row.notes].filter(Boolean).join(' · '),
+        indivisible:!!(measure && (measure.packaged || measure.dimension === 'count'))};
+    const items = getGroceryData();
+    items.push(item);
+    setGroceryData(items);
+    const search = document.getElementById('grocerySearchInput');
+    if (search) search.value = '';
+    renderGroceryItems();
+    saveGroceryListToSupabase();
+    showNotification('Added 1 ' + unit + ' of ' + item.name + '. Adjust the quantity in your list.', 'success');
+}
+
 function renderGroceryItems() {
+    renderGroceryPriceList();
     const cartContainer = document.getElementById('groceryCartItems');
     if (!cartContainer) return;
     cartContainer.innerHTML = '';
@@ -2084,7 +2136,7 @@ function renderGroceryItems() {
                     </div>
                     <p class="text-xs text-gray-500">${escapeHtml(item.notes || '')}</p>
                     ${item.priceMissing || item.localPrice ? '<div class="mt-3 p-3 bg-amber-50 rounded-lg"><p class="text-sm font-semibold">Your local price estimate</p><div class="flex flex-wrap gap-2 items-end"><label class="text-xs">Price (₱)<input id="localPrice-' + index + '" aria-label="Local price for ' + escapeHtml(item.name) + '" type="number" min="0.01" step="0.01" value="' + (item.localPriceAmount || '') + '" class="block w-28 border rounded p-2"></label><label class="text-xs">Covers how many ' + escapeHtml(item.unit || 'pc') + '?<input id="localPriceQuantity-' + index + '" aria-label="Priced quantity for ' + escapeHtml(item.name) + '" type="number" min="0.001" step="any" value="' + (item.localPriceQuantity || item.quantity) + '" class="block w-28 border rounded p-2"></label><button type="button" onclick="setGroceryLocalPrice(' + index + ', document.getElementById(\'localPrice-' + index + '\').value, document.getElementById(\'localPriceQuantity-' + index + '\').value)" class="px-3 py-2 bg-emerald-700 text-white rounded">Save local price</button>' + (item.localPrice ? '<button type="button" onclick="clearGroceryLocalPrice(' + index + ')" class="px-3 py-2 border rounded">Remove local price</button>' : '') + '</div><p class="text-xs mt-2">Enter the amount and quantity quoted by your shop. This estimate applies to this grocery list only.</p></div>' : ''}
-                    ${item.indivisible ? '<p class="text-xs text-gray-500">Recipe needs ' + Number(item.requiredUnits).toFixed(3) + ' selling units; shopping quantity rounds up to whole packs or pieces.</p>' : ''}
+                    ${item.indivisible && Number.isFinite(item.requiredUnits) ? '<p class="text-xs text-gray-500">Recipe needs ' + Number(item.requiredUnits).toFixed(3) + ' selling units; shopping quantity rounds up to whole packs or pieces.</p>' : ''}
                     <div class='flex flex-wrap items-center gap-2 mt-2'>
                         <button onclick="updateGroceryQuantity(${index}, -1)" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">-</button>
                         <input type="number" step="${item.indivisible ? 1 : 0.001}" min="${item.indivisible ? 1 : 0.001}" value="${item.quantity}" onchange="setGroceryQuantity(${index}, this.value)" class="w-16 text-center font-medium border border-gray-300 rounded p-1 mx-1">
@@ -3690,6 +3742,7 @@ function renderMarketPricesTable(items) {
     }
     renderPriceCategoryTabs(ALL_PRICE_ITEMS);
     renderFilteredPriceRows();
+    renderGroceryPriceList();
 }
 
 function buildMarketPriceReferenceFromFeed(items) {
