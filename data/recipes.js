@@ -10,13 +10,14 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "45 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested measured version for the listed servings; adjust seasoning to taste. Rice and sides are separate unless listed.",
         ingredients: [
             "1 kg Chicken",
-            "1/2 cup Soy Sauce",
-            "1/3 cup Vinegar",
-            "6 cloves Garlic",
-            "2 Bay Leaves",
-            "1 tsp Peppercorn"
+            "120 ml Soy Sauce",
+            "80 ml Vinegar",
+            "25 g Garlic",
+            "2 g Bay Leaves",
+            "3 g Peppercorn"
         ],
         instructions: [
             "Marinate chicken in soy sauce and garlic for 30 minutes.",
@@ -38,13 +39,16 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "40 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested measured version for the listed servings; adjust seasoning to taste. Rice and sides are separate unless listed.",
         ingredients: [
-            "Chicken",
-            "Papaya",
-            "Malunggay",
-            "Ginger",
-            "Onion",
-            "Fish Sauce"
+            "1 kg Chicken",
+            "500 g Green Papaya",
+            "60 g Malunggay Leaves",
+            "40 g Ginger",
+            "100 g Onion",
+            "30 ml Fish Sauce",
+            "15 ml Cooking Oil",
+            "1.5 l Water"
         ],
         instructions: [
             "Saute ginger and onion.",
@@ -66,11 +70,13 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested measured version for the listed servings; adjust seasoning to taste. Rice and sides are separate unless listed.",
         ingredients: [
-            "Rice",
-            "Tablea",
-            "Sugar",
-            "Milk"
+            "250 g Glutinous Rice",
+            "60 g Tablea",
+            "80 g Sugar",
+            "200 ml Evaporated Milk",
+            "1.2 l Water"
         ],
         instructions: [
             "Cook rice.",
@@ -116,13 +122,15 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested measured version for the listed servings; adjust seasoning to taste. Rice and sides are separate unless listed.",
         ingredients: [
-            "2 Eggplants",
-            "2 Eggs",
-            "Onion",
-            "Tomato",
-            "Salt",
-            "Pepper"
+            "450 g Eggplant",
+            "3 pc Eggs",
+            "60 g Onion",
+            "100 g Tomato",
+            "3 g Salt",
+            "1 g Pepper",
+            "30 ml Cooking Oil"
         ],
         instructions: [
             "Grill the eggplants until soft.",
@@ -167,13 +175,16 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "40 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested measured version for the listed servings; adjust seasoning to taste. Rice and sides are separate unless listed.",
         ingredients: [
-            "Mung beans",
-            "Garlic",
-            "Onion",
-            "Tomato",
-            "Spinach",
-            "Pork or tinapa"
+            "250 g Mung Beans",
+            "20 g Garlic",
+            "100 g Onion",
+            "200 g Tomato",
+            "100 g Spinach",
+            "200 g Pork",
+            "15 ml Cooking Oil",
+            "1.2 l Water"
         ],
         instructions: [
             "Boil mung beans until soft.",
@@ -299,13 +310,16 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "40 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested measured version for the listed servings; adjust seasoning to taste. Rice and sides are separate unless listed.",
         ingredients: [
-            "Rice",
-            "Chicken",
-            "Ginger",
-            "Garlic",
-            "Onion",
-            "Fish sauce"
+            "250 g Rice",
+            "600 g Chicken",
+            "40 g Ginger",
+            "25 g Garlic",
+            "100 g Onion",
+            "30 ml Fish Sauce",
+            "15 ml Cooking Oil",
+            "1.5 l Water"
         ],
         instructions: [
             "Sauté garlic, onion, and ginger.",
@@ -351,13 +365,15 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "40 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested measured version for the listed servings; adjust seasoning to taste. Rice and sides are separate unless listed.",
         ingredients: [
-            "Pork",
-            "Tamarind",
-            "Radish",
-            "Kangkong",
-            "Tomato",
-            "Okra"
+            "1 kg Pork",
+            "40 g Tamarind Paste",
+            "250 g Radish",
+            "150 g Kangkong",
+            "200 g Tomato",
+            "150 g Okra",
+            "1.5 l Water"
         ],
         instructions: [
             "Boil pork until tender.",
@@ -585,13 +601,14 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested measured version for the listed servings; adjust seasoning to taste. Rice and sides are separate unless listed.",
         ingredients: [
-            "Bangus",
-            "Vinegar",
-            "Garlic",
-            "Pepper",
-            "Salt",
-            "Oil"
+            "900 g Bangus",
+            "100 ml Vinegar",
+            "25 g Garlic",
+            "3 g Pepper",
+            "4 g Salt",
+            "45 ml Cooking Oil"
         ],
         instructions: [
             "Marinate bangus in vinegar and spices.",
@@ -610,13 +627,14 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested measured version for the listed servings; adjust seasoning to taste. Rice and sides are separate unless listed.",
         ingredients: [
-            "Eggs",
-            "Tomato",
-            "Onion",
-            "Salt",
-            "Pepper",
-            "Oil"
+            "4 pc Eggs",
+            "150 g Tomato",
+            "60 g Onion",
+            "2 g Salt",
+            "1 g Pepper",
+            "15 ml Cooking Oil"
         ],
         instructions: [
             "Beat eggs and season.",
@@ -683,13 +701,16 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "30 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested measured version for the listed servings; adjust seasoning to taste. Rice and sides are separate unless listed.",
         ingredients: [
-            "Mung beans",
-            "Garlic",
-            "Onion",
-            "Tomato",
-            "Spinach",
-            "Fish sauce"
+            "250 g Mung Beans",
+            "20 g Garlic",
+            "100 g Onion",
+            "200 g Tomato",
+            "100 g Spinach",
+            "30 ml Fish Sauce",
+            "15 ml Cooking Oil",
+            "1.2 l Water"
         ],
         instructions: [
             "Boil mung beans until soft.",
@@ -886,13 +907,15 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "30 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested measured version for the listed servings; adjust seasoning to taste. Rice and sides are separate unless listed.",
         ingredients: [
-            "Bangus",
-            "Vinegar",
-            "Garlic",
-            "Ginger",
-            "Soy sauce",
-            "Bay leaves"
+            "1 kg Bangus",
+            "120 ml Vinegar",
+            "25 g Garlic",
+            "30 g Ginger",
+            "30 ml Soy Sauce",
+            "2 g Bay Leaves",
+            "250 ml Water"
         ],
         instructions: [
             "Place bangus in a pot.",
@@ -964,13 +987,17 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "35 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested measured version for the listed servings; adjust seasoning to taste. Rice and sides are separate unless listed.",
         ingredients: [
-            "Chicken",
-            "Tomato sauce",
-            "Potato",
-            "Carrot",
-            "Bell pepper",
-            "Garlic"
+            "800 g Chicken",
+            "250 g Tomato Sauce",
+            "300 g Potato",
+            "200 g Carrot",
+            "100 g Green Bell Pepper",
+            "20 g Garlic",
+            "100 g Onion",
+            "15 ml Cooking Oil",
+            "250 ml Water"
         ],
         instructions: [
             "Sauté garlic until fragrant.",

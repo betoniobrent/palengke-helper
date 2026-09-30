@@ -520,8 +520,8 @@ async function saveCurrentMealPlan(){
     Object.values(currentMealPlan).forEach(dayPlan => {
         if (dayPlan) {
             Object.values(dayPlan).forEach(meal => {
-                if (meal && meal.estimatedCost) {
-                    totalCost += meal.estimatedCost;
+                if (meal) {
+                    totalCost += calculateRecipeCostFromMarket(meal, getPlannerPax());
                 }
             });
         }
@@ -711,6 +711,7 @@ function showRecipeDetails(recipe){
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4">${[1,2,4,6,8].map(n => '<div class="rounded-lg bg-emerald-50 p-2 text-sm">' + n + ' pax<br>₱' + calculateRecipeCostFromMarket(recipe,n).toFixed(2) + '</div>').join('')}</div>
             <p class="text-xs text-gray-500 mb-4">${pricing.estimated ? 'Comparison uses a planning estimate, not a verified total. The saved recipe allowance is scaled per person, or increased to cover the verified subtotal if higher.' : 'Comparison uses priced ingredient amounts; whole-package purchases can cost more.'}</p>
             <div class="whitespace-pre-line text-sm text-gray-700 bg-gray-50 rounded-xl p-4 mb-4">${escapeHtml(MealCosting.format(pricing.quote))}</div>
+            <p class="text-xs text-gray-500 mb-3">${escapeHtml(recipe.quantityNote || "")}</p>
             <h4 class="font-semibold mb-2">Cooking steps</h4>
             <ol class="list-decimal list-inside text-sm space-y-2">${(recipe.instructions || []).map(item=>'<li>'+escapeHtml(item)+'</li>').join('')}</ol>
         </div>`;
@@ -2073,17 +2074,19 @@ function renderGroceryItems() {
                 <div class='flex-1'>
                     <div class='flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2'>
                         <div>
-                            <h4 class="font-semibold text-gray-800 ${isChecked ? 'line-through text-gray-500' : ''}">${item.name}</h4>
-                            <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">${item.category}</span>
+                            <h4 class="font-semibold text-gray-800 ${isChecked ? 'line-through text-gray-500' : ''}">${escapeHtml(item.name)}</h4>
+                            <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">${escapeHtml(item.category || "other food")}</span>
                         </div>
                         <div class="text-right">
-                            <p class="font-bold text-emerald-700">₱${subtotal.toFixed(2)}</p>
-                            <p class="text-xs text-gray-500">₱${getItemUnitPrice(item).toFixed(2)}/${item.unit || 'pc'} × ${item.quantity}</p>
+                            <p class="font-bold text-emerald-700">${item.priceMissing ? "Price needed" : "₱" + subtotal.toFixed(2)}</p>
+                            <p class="text-xs text-gray-500">${item.priceMissing ? "Unpriced" : "₱" + getItemUnitPrice(item).toFixed(2)} / ${escapeHtml(item.unit || "pc")} × ${item.quantity}</p>
                         </div>
                     </div>
+                    <p class="text-xs text-gray-500">${escapeHtml(item.notes || '')}</p>
+                    ${item.indivisible ? '<p class="text-xs text-gray-500">Recipe needs ' + Number(item.requiredUnits).toFixed(3) + ' selling units; shopping quantity rounds up to whole packs or pieces.</p>' : ''}
                     <div class='flex flex-wrap items-center gap-2 mt-2'>
                         <button onclick="updateGroceryQuantity(${index}, -1)" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">-</button>
-                        <input type="number" step="0.01" min="0.01" value="${item.quantity}" onchange="setGroceryQuantity(${index}, this.value)" class="w-16 text-center font-medium border border-gray-300 rounded p-1 mx-1">
+                        <input type="number" step="${item.indivisible ? 1 : 0.001}" min="${item.indivisible ? 1 : 0.001}" value="${item.quantity}" onchange="setGroceryQuantity(${index}, this.value)" class="w-16 text-center font-medium border border-gray-300 rounded p-1 mx-1">
                         <button onclick="updateGroceryQuantity(${index}, 1)" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">+</button>
                         <button onclick='deleteItem(${index})' class='ml-auto text-rose-600 hover:text-rose-800 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-rose-50 transition'>Delete</button>
                     </div>
@@ -2111,6 +2114,13 @@ function updateCartSummary(items) {
     document.getElementById('remainingTotal').innerText = `₱${remainingCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
     
     checkGroceryBudgetConstraints(totalCost);
+    if (items.some(i => i.priceMissing)) {
+        document.getElementById('totalCost').innerText += ' (partial)';
+        const warning = document.getElementById('budgetWarning');
+        if (warning) warning.innerText = items.filter(i => i.priceMissing).length + ' ingredients still need prices. Totals exclude these items; the budget is not confirmed.';
+    }
+    if (checkedItems.some(i => i.priceMissing)) document.getElementById('checkedTotal').innerText += ' (partial)';
+    if (remainingItems.some(i => i.priceMissing)) document.getElementById('remainingTotal').innerText += ' (partial)';
 }
 
 function toggleGroceryItemCheck(index) {
@@ -2137,8 +2147,8 @@ function updateGroceryQuantity(index, change) {
 function setGroceryQuantity(index, value) {
     const items = getGroceryData();
     const quantity = parseFloat(value);
-    if (isNaN(quantity) || quantity <= 0) {
-        showNotification('Quantity must be a positive number.', 'error');
+    if (!Number.isFinite(quantity) || quantity <= 0 || (items[index].indivisible && !Number.isInteger(quantity))) {
+        showNotification('Enter a positive quantity; packs and pieces must be whole numbers.', 'error');
         renderGroceryItems();
         return;
     }
@@ -3322,54 +3332,8 @@ function formatIngredientLabel(name) {
 // Aggregate every ingredient in the current weekly plan (scaled to pax) into
 // one line per ingredient, in the unit you'd actually buy it at the palengke.
 function buildGroceryItemsFromMealPlan(pax) {
-    const totals = {};
-
-    DAYS_OF_WEEK.forEach(day => {
-        const dayPlan = currentMealPlan[day];
-        if (!dayPlan) return;
-        ['Breakfast', 'Lunch', 'Dinner'].forEach(type => {
-            const recipe = dayPlan[type];
-            if (!recipe || !recipe.ingredients) return;
-            const scale = pax > 0 ? pax / Math.max(recipe.servings, 1) : 1;
-
-            recipe.ingredients.forEach(ingredient => {
-                const pricing = resolveIngredientPricing(ingredient);
-                if (!pricing) return;
-                const { parsed, unitPrice, multiplier, purchaseUnit } = pricing;
-                const key = `${parsed.name}|${purchaseUnit}`;
-                const purchaseQty = purchaseUnit === 'kg'
-                    ? parsed.quantity * multiplier * scale
-                    : parsed.quantity * scale;
-
-                if (!totals[key]) {
-                    totals[key] = { name: parsed.name, unit: purchaseUnit, quantity: 0, cost: 0 };
-                }
-                totals[key].quantity += purchaseQty;
-                totals[key].cost += unitPrice * parsed.quantity * multiplier * scale;
-            });
-        });
-    });
-
-    return Object.values(totals)
-        .filter(t => t.quantity > 0)
-        .map(t => {
-            const quantity = t.unit === 'kg'
-                ? Math.max(0.05, Math.ceil(t.quantity * 20) / 20)
-                : Math.max(1, Math.ceil(t.quantity));
-            const unitPrice = t.cost / quantity;
-            return {
-                name: formatIngredientLabel(t.name),
-                price: unitPrice,
-                basePrice: unitPrice,
-                piecesPerKg: null,
-                quantity,
-                unit: t.unit === 'kg' && LIQUID_INGREDIENTS.has(t.name) ? 'L' : t.unit,
-                category: GROCERY_CATEGORY_BY_INGREDIENT[t.name] || 'other food',
-                checked: false,
-                fromMealPlan: true
-            };
-        })
-        .sort((a, b) => CATEGORY_TAB_ORDER.indexOf(a.category) - CATEGORY_TAB_ORDER.indexOf(b.category) || a.name.localeCompare(b.name));
+    const recipes = DAYS_OF_WEEK.flatMap(day => ['Breakfast', 'Lunch', 'Dinner'].map(type => currentMealPlan[day]?.[type]).filter(recipe => recipe?.ingredients));
+    return MealCosting.groceries(recipes, ALL_PRICE_ITEMS, pax || getPlannerPax());
 }
 
 function addMealPlanToGroceryList() {
@@ -3398,7 +3362,7 @@ function addMealPlanToGroceryList() {
     saveGroceryListToSupabase();
 
     const total = planItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    showNotification(`Added ${planItems.length} ingredients (≈₱${total.toFixed(0)}) to your Grocery List`, 'success');
+    showNotification(`Added ${planItems.length} ingredients. Priced subtotal: ₱${total.toFixed(2)}. ${planItems.filter(i => i.priceMissing).length} need prices.`, 'success');
     if (typeof switchTab === 'function') switchTab('grocery');
 }
 

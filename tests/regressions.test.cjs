@@ -43,7 +43,7 @@ function groceryContext() {
         updateCartSummary: items => { summary = items; },
         saveGroceryListToSupabase: () => {},
         showNotification: () => {}
-    }, ['getGroceryData', 'setGroceryData', 'getItemUnitPrice', 'renderGroceryItems',
+    }, ['escapeHtml', 'getGroceryData', 'setGroceryData', 'getItemUnitPrice', 'renderGroceryItems',
         'searchItems', 'deleteItem', 'toggleGroceryItemCheck', 'updateGroceryQuantity', 'setGroceryQuantity']);
     context.searchItems();
     return { context, cards, search, summary: () => summary };
@@ -120,4 +120,14 @@ test('guest and member fallback plans delete locally without a database request'
         assert.deepEqual(backup(), [{ id: 'remote-1' }]);
         assert.deepEqual(notices, ['success']);
     }
+});
+
+test('unpriced groceries display incomplete totals instead of free ingredients',()=>{
+ const {context,cards,search}=groceryContext();search.value='';
+ context.setGroceryData([{name:'Bay leaves',price:null,basePrice:null,priceMissing:true,quantity:2,unit:'g'}]);
+ context.renderGroceryItems();assert.match(cards[0].innerHTML,/Price needed/);assert.doesNotMatch(cards[0].innerHTML,/₱0.00/);
+ const nodes=Object.fromEntries(['totalCost','totalItems','checkedItems','remainingItems','checkedTotal','remainingTotal','budgetWarning'].map(k=>[k,{}]));
+ const summary=loadFunctions({document:{getElementById:id=>nodes[id]},checkGroceryBudgetConstraints:()=>{}},['getItemUnitPrice','updateCartSummary']);
+ summary.updateCartSummary([{price:null,priceMissing:true,quantity:2}]);
+ assert.match(nodes.totalCost.innerText,/partial/);assert.match(nodes.budgetWarning.innerText,/1 ingredients still need prices/);
 });

@@ -35,3 +35,28 @@ test('fractions use declared liquid measures and do not infer density',()=>{
  assert.equal(q.subtotal,7.20);assert.match(cost.format(q),/1 cup = 240 ml/);
  assert.equal(cost.ingredient('1 1/2 kg Chicken').quantity,1500);
 });
+
+test('groceries pool package needs before rounding without discounting unit price',()=>{
+ const r=recipe(['60 ml Soy Sauce','300 g Chicken']);
+ const rows=[row('SOY SAUCE – DOY PACK / REFILL PACK — Silver Swan Doy Pack','200ml',12,{source_agency:'DTI'}),row('Whole Chicken, Local Fully Dressed','kg',200)];
+ const g=cost.groceries([r,r],rows,2);
+ assert.equal(g[0].quantity,1);assert.equal(g[0].price,12);assert.equal(g[0].requiredUnits,0.6);
+ assert.equal(g[1].quantity,0.6);assert.equal(g[1].price,200);
+ assert.equal(cost.groceries([r,r],rows,4)[0].quantity,2);
+});
+test('groceries keep unknown prices and measures explicit and exclude household water',()=>{
+ const g=cost.groceries([recipe(['50 g Green Papaya','Bay Leaves','1 l Water'])],[row('Papaya Solo, Ripe','kg',50)],4);
+ assert.equal(g.length,2);assert.equal(g[0].price,null);assert.equal(g[0].quantity,100);assert.equal(g[0].unit,'g');
+ assert.equal(g[1].unit,'recipe portion');assert.equal(g[1].priceMissing,true);
+ assert.match(cost.format(cost.quote(recipe(['1 l Water']),[])),/household water, excluded/);
+});
+test('counted groceries round once across meals and liter bottles retain their selling unit',()=>{
+ const g=cost.groceries([recipe(['3 pc Eggs','15 ml Cooking Oil']),recipe(['3 pc Eggs','15 ml Cooking Oil'])],[row('Chicken Egg (White, Medium)','pc',8),row('Cooking Oil (Palm) 1 Liter/bottle','1 L bottle',100)],1);
+ assert.equal(g[0].quantity,3);assert.equal(g[0].price,8);assert.equal(g[1].quantity,1);assert.equal(g[1].price,100);
+});
+test('all twelve measured recipes have parseable quantities and disclosure',()=>{
+ const fs=require('node:fs'),vm=require('node:vm');const c={};vm.createContext(c);
+ vm.runInContext(fs.readFileSync(require.resolve('../data/recipes.js'),'utf8')+';globalThis.recipes=RECIPE_DATABASE;',c);
+ const measured=c.recipes.filter(r=>r.quantityNote);assert.equal(measured.length,12);
+ for(const r of measured) for(const i of r.ingredients) assert.ok(cost.ingredient(i),r.name+': '+i);
+});

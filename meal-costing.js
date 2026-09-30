@@ -20,7 +20,13 @@
         talong: /^eggplant\b/, sayote: /^chayote\b/,
         squash: /^squash\b/, kalabasa: /^squash\b/,
         ginger: /^ginger local/, munggo: /^mungbean\b/, monggo: /^mungbean\b/,
-        'mung beans': /^mungbean\b/, cabbage: /^cabbage rare ball/
+        'mung beans': /^mungbean\b/, cabbage: /^cabbage rare ball/,
+        'glutinous rice': /^glutinous local/,
+        'green bell pepper': /^bell pepper green local/,
+        salt: /^salt iodized$/, sugar: /^sugar refined$/,
+        'fish sauce': /^patis.*silver swan special/,
+        'cooking oil': /^cooking oil palm 1 liter bottle$/,
+        'evaporated milk': /^evaporated milk angel filled milk$/
     };
     const measures = {kg:['mass',1000],g:['mass',1],gram:['mass',1],grams:['mass',1],
         ml:['volume',1],l:['volume',1000],liter:['volume',1000],liters:['volume',1000],
@@ -47,7 +53,7 @@
         return {name, quantity:quantity * measure[1], dimension:measure[0], volumeConvention:/^(cup|tbsp|tsp)/.test(unit)};
     }
     function sellingUnit(unit) {
-        const match = String(unit).trim().toLowerCase().match(/^(\d+(?:\.\d+)?)?\s*(kg|g|ml|l|pc|pcs|piece|pieces)$/);
+        const match = String(unit).trim().toLowerCase().match(/^(\d+(?:\.\d+)?)?\s*(kg|g|ml|l|pc|pcs|piece|pieces)(?:\s*(?:bottle|pack))?$/);
         if (!match) return null;
         const measure = measures[match[2]];
         return {dimension:measure[0], quantity:Number(match[1] || 1) * measure[1], packaged:!!match[1]};
@@ -59,6 +65,7 @@
             const display = String(text).replace(/^(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:\.\d+)?)/, value => String(Math.round(amount(value) * scale * 1000) / 1000));
             const parsed = ingredient(text);
             if (!parsed) return {ingredient:display, missing:'quantity_or_unit'};
+            if (parsed.name === 'water') return {ingredient:display, excluded:true, cost:0, purchaseCost:0};
             const candidates = rows.filter(row => {
                 if (!['DA','DTI'].includes(row.source_agency) || !/^\d{4}-\d{2}-\d{2}$/.test(row.source_date || '')) return false;
                 const name = normalize(row.item_name || row.name);
@@ -75,8 +82,9 @@
             const units = parsed.quantity * scale / unit.quantity;
             const cents = Math.round(Number(value) * units * 100);
             return {ingredient:display, product:row.item_name || row.name, price:Number(value), unit:row.unit,
+                requiredUnits:units, indivisible:unit.packaged || unit.dimension === 'count', category:row.category || 'other food',
                 agency:row.source_agency, date:row.source_date, region:row.region || 'unspecified',
-                cost:cents / 100, purchaseCost:Math.round(Number(value) * (unit.packaged ? Math.ceil(units - 1e-10) : units) * 100) / 100,
+                cost:cents / 100, purchaseCost:Math.round(Number(value) * (unit.packaged || unit.dimension === 'count' ? Math.ceil(units - 1e-10) : units) * 100) / 100,
                 volumeConvention:parsed.volumeConvention};
         });
         const priced = lines.filter(line => !line.missing);
@@ -92,7 +100,7 @@
         const out = [filipino ? `Kuwenta para sa ${quote.name} sa app (${quote.servings} tao):` : `App recipe calculation: ${quote.name} (${quote.servings} servings):`,
             filipino ? 'Naka-scale ang sangkap at gastos sa bilang ng kakain.' : 'Ingredient amounts and costs are scaled to the serving count.'];
         for (const line of quote.lines) {
-            out.push(line.missing ? `• ${line.ingredient}: ${reasons[line.missing]}.` :
+            out.push(line.excluded ? `• ${line.ingredient}: ${filipino ? 'tubig sa bahay, hindi kasama sa gastos' : 'household water, excluded from cost'}.` : line.missing ? `• ${line.ingredient}: ${reasons[line.missing]}.` :
                 `• ${line.ingredient}: ${money(line.cost)} (${line.product}, ${money(line.price)}/${line.unit}; ${line.agency === 'DTI' ? 'DTI SRP' : 'DA'}, ${line.date}, ${line.region}).`);
         }
         out.push(quote.complete ? `${filipino ? 'Kabuuang halaga ng sangkap' : 'Ingredient total'}: ${money(quote.subtotal)}.` :
@@ -102,5 +110,36 @@
         out.push(filipino ? 'Presyo sa ulat lang ito, hindi live na presyo sa tindahan. Hindi kasama ang gas at mga dagdag na wala sa listahan, gaya ng kanin.' : 'Report-based references, not live shop prices. Excludes cooking fuel and extras not listed, such as rice.');
         return out.join('\n');
     }
-    return {ingredient,sellingUnit,quote,format};
+    function groceries(recipes, rows, servings) {
+        const totals = new Map();
+        for (const recipe of recipes) {
+            const result = quote(recipe, rows, servings || recipe.servings);
+            result.lines.forEach((line, index) => {
+                const parsed = ingredient(recipe.ingredients[index]);
+                const scale = result.servings / recipe.servings;
+                // Water is part of the recipe, but not a priced grocery purchase.
+                if (parsed?.name === 'water') return;
+                const unit = parsed ? {mass:'g',volume:'ml',count:'pc'}[parsed.dimension] : 'recipe portion';
+                const key = line.missing ? JSON.stringify(['missing',parsed?.name || recipe.ingredients[index],unit]) :
+                    JSON.stringify([line.product,line.unit,line.agency,line.date,line.region,line.price]);
+                if (!totals.has(key)) totals.set(key, line.missing ? {
+                    name:parsed?.name || recipe.ingredients[index], unit, price:null,basePrice:null,
+                    quantity:0,requiredUnits:0,priceMissing:true, category:'other food',
+                    notes:parsed ? 'No compatible verified price. Check the price before buying.' : 'Unmeasured recipe ingredient. Confirm the amount before buying.'
+                } : {
+                    name:line.product,unit:line.unit,price:line.price,basePrice:line.price,
+                    quantity:0,requiredUnits:0,priceMissing:false,category:line.category,
+                    indivisible:line.indivisible,
+                    notes:`${line.agency === 'DTI' ? 'DTI SRP' : 'DA market reference'} · ${line.date} · ${line.region}`
+                });
+                const item = totals.get(key);
+                item.requiredUnits += line.missing ? (parsed ? parsed.quantity * scale : scale) : line.requiredUnits;
+            });
+        }
+        return [...totals.values()].map(item => ({...item,
+            quantity:item.indivisible ? Math.ceil(item.requiredUnits - 1e-10) : Math.ceil(item.requiredUnits * 1000 - 1e-8) / 1000,
+            checked:false,fromMealPlan:true
+        }));
+    }
+    return {ingredient,sellingUnit,quote,format,groceries};
 });
