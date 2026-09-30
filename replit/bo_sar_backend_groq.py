@@ -72,7 +72,7 @@ def chat():
         history = threads.get(thread_id, [])[-4:]
         recent = [{"role": "system", "content": ASSISTANT_INSTRUCTIONS}]
         if data.get("meal_cost_mode") is True:
-            recent[0]["content"] += "\nMEAL COST MODE: The app appends its own calculated price breakdown. Give only brief cooking advice; do not provide prices, costs, totals, price tables, budget comparisons, or affordability claims. If a catalog recipe is provided, use that exact recipe, state its name, and do not add ingredients. If quantities are for original servings, avoid restating them; the app shows how costs scale. Do not say the meal is within budget."
+            recent[0]["content"] += "\nMEAL COST MODE: Override the usual recipe format. Give ONLY one or two brief cooking-tip sentences for the named recipe. Never list ingredients, quantities, serving counts, numbered steps, prices, costs, totals, budget comparisons, or affordability claims. The app appends the exact scaled ingredient list and calculated price breakdown. Do not mention the app, calculations, catalog, or software in your reply. Do not say the meal is within budget."
         recent.extend({"role": turn["role"], "content": turn["content"][:1500]} for turn in history)
         recent.append({"role": "user", "content": f"Context:\n{context}\n\nQuestion:\n{message}"})
 

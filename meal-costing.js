@@ -56,8 +56,9 @@
         const scale = Number(servings) / Number(recipe.servings);
         if (!Number.isFinite(scale) || scale <= 0) throw new Error('Invalid serving count');
         const lines = (recipe.ingredients || []).map(text => {
+            const display = String(text).replace(/^(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:\.\d+)?)/, value => String(Math.round(amount(value) * scale * 1000) / 1000));
             const parsed = ingredient(text);
-            if (!parsed) return {ingredient:text, missing:'quantity_or_unit'};
+            if (!parsed) return {ingredient:display, missing:'quantity_or_unit'};
             const candidates = rows.filter(row => {
                 if (!['DA','DTI'].includes(row.source_agency) || !/^\d{4}-\d{2}-\d{2}$/.test(row.source_date || '')) return false;
                 const name = normalize(row.item_name || row.name);
@@ -65,15 +66,15 @@
                 return name === parsed.name || choices[parsed.name]?.test(name);
             });
             // Never silently choose between regions or product variants.
-            if (candidates.length !== 1) return {ingredient:text, missing:candidates.length ? 'ambiguous_product' : 'no_verified_price'};
+            if (candidates.length !== 1) return {ingredient:display, missing:candidates.length ? 'ambiguous_product' : 'no_verified_price'};
             const row = candidates[0];
             const unit = sellingUnit(row.unit);
-            if (!unit || unit.dimension !== parsed.dimension) return {ingredient:text, missing:'incompatible_unit'};
+            if (!unit || unit.dimension !== parsed.dimension) return {ingredient:display, missing:'incompatible_unit'};
             const value = row.price_avg ?? (row.price_min === row.price_max ? row.price_min : null);
-            if (value === null || value === '' || !Number.isFinite(Number(value)) || Number(value) <= 0) return {ingredient:text, missing:'no_verified_price'};
+            if (value === null || value === '' || !Number.isFinite(Number(value)) || Number(value) <= 0) return {ingredient:display, missing:'no_verified_price'};
             const units = parsed.quantity * scale / unit.quantity;
             const cents = Math.round(Number(value) * units * 100);
-            return {ingredient:text, product:row.item_name || row.name, price:Number(value), unit:row.unit,
+            return {ingredient:display, product:row.item_name || row.name, price:Number(value), unit:row.unit,
                 agency:row.source_agency, date:row.source_date, region:row.region || 'unspecified',
                 cost:cents / 100, purchaseCost:Math.round(Number(value) * (unit.packaged ? Math.ceil(units - 1e-10) : units) * 100) / 100,
                 volumeConvention:parsed.volumeConvention};
@@ -89,7 +90,7 @@
         const reasons = filipino ? {quantity_or_unit:'kailangan ang eksaktong dami o sukat',ambiguous_product:'kailangan pumili ng produkto o rehiyon',no_verified_price:'walang beripikadong presyo',incompatible_unit:'kailangan ang timbang o tamang sukat'} :
             {quantity_or_unit:'exact quantity or measure needed',ambiguous_product:'choose a product or region',no_verified_price:'no verified price',incompatible_unit:'weight or compatible measure needed'};
         const out = [filipino ? `Kuwenta para sa ${quote.name} sa app (${quote.servings} tao):` : `App recipe calculation: ${quote.name} (${quote.servings} servings):`,
-            filipino ? `Ang dami sa ibaba ay para sa orihinal na ${quote.baseServings} tao; naka-scale ang gastos sa ${quote.servings}.` : `Ingredient amounts below are for the original ${quote.baseServings} servings; costs are scaled to ${quote.servings}.`];
+            filipino ? 'Naka-scale ang sangkap at gastos sa bilang ng kakain.' : 'Ingredient amounts and costs are scaled to the serving count.'];
         for (const line of quote.lines) {
             out.push(line.missing ? `• ${line.ingredient}: ${reasons[line.missing]}.` :
                 `• ${line.ingredient}: ${money(line.cost)} (${line.product}, ${money(line.price)}/${line.unit}; ${line.agency === 'DTI' ? 'DTI SRP' : 'DA'}, ${line.date}, ${line.region}).`);

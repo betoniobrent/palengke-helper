@@ -2910,7 +2910,7 @@ function buildAIMealQuote(question) {
     }
     if (!recipe) return {text:unavailable,context:'No matching catalog recipe. Do not claim a meal total or that the meal fits a budget.'};
     const quote = MealCosting.quote(recipe, ALL_PRICE_ITEMS || [], servings || recipe.servings);
-    return {text:MealCosting.format(quote, filipino),context:JSON.stringify({recipe:recipe.name,servings:quote.servings,ingredients:recipe.ingredients,instructions:recipe.instructions,complete:quote.complete,rule:'Describe this catalog recipe only. Its original ingredient list is for ' + recipe.servings + ' servings. The app will append the scaled, deterministic calculation. Never claim it fits a budget when incomplete.'})};
+    return {text:MealCosting.format(quote, filipino),context:JSON.stringify({recipe:recipe.name,servings:quote.servings,instructions:recipe.instructions,complete:quote.complete,rule:'Give a brief cooking tip for this recipe. Do not list ingredients, quantities, servings, prices, or instructions mentioning quantities. The app appends the scaled ingredient list and calculation. Never claim it fits a budget when incomplete.'})};
 }
 
 async function generateAIResponseWithBackend(question) {
