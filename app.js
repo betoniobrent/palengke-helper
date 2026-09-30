@@ -2923,6 +2923,8 @@ async function generateAIResponseWithBackend(question) {
 
     const preferences = `USER SETTINGS: Weekly budget PHP ${document.getElementById('plannerBudget')?.value || 'not set'}; people ${document.getElementById('plannerPax')?.value || 'not set'}; diet ${document.getElementById('plannerDiet')?.value || 'anything'}.`;
     const mealQuote = buildAIMealQuote(question);
+    // Price and budget answers are calculations, not generated prose.
+    if (mealQuote && /cost|budget|magkano|kasya|presyo|pesos|₱|\bphp\b|price|how much/i.test(question)) return mealQuote.text;
     const context = [preferences, mealQuote ? mealQuote.context : buildMarketPriceContext(question), buildMealPlanContext(), buildRecipeContext()].join('\n\n').slice(0, 6500);
     const version = aiConversationVersion;
     const controller = new AbortController();
