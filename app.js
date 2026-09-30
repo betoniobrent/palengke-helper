@@ -2083,6 +2083,7 @@ function renderGroceryItems() {
                         </div>
                     </div>
                     <p class="text-xs text-gray-500">${escapeHtml(item.notes || '')}</p>
+                    ${item.priceMissing || item.localPrice ? '<div class="mt-3 p-3 bg-amber-50 rounded-lg"><p class="text-sm font-semibold">Your local price estimate</p><div class="flex flex-wrap gap-2 items-end"><label class="text-xs">Price (₱)<input id="localPrice-' + index + '" aria-label="Local price for ' + escapeHtml(item.name) + '" type="number" min="0.01" step="0.01" value="' + (item.localPriceAmount || '') + '" class="block w-28 border rounded p-2"></label><label class="text-xs">Covers how many ' + escapeHtml(item.unit || 'pc') + '?<input id="localPriceQuantity-' + index + '" aria-label="Priced quantity for ' + escapeHtml(item.name) + '" type="number" min="0.001" step="any" value="' + (item.localPriceQuantity || item.quantity) + '" class="block w-28 border rounded p-2"></label><button type="button" onclick="setGroceryLocalPrice(' + index + ', document.getElementById(\'localPrice-' + index + '\').value, document.getElementById(\'localPriceQuantity-' + index + '\').value)" class="px-3 py-2 bg-emerald-700 text-white rounded">Save local price</button>' + (item.localPrice ? '<button type="button" onclick="clearGroceryLocalPrice(' + index + ')" class="px-3 py-2 border rounded">Remove local price</button>' : '') + '</div><p class="text-xs mt-2">Enter the amount and quantity quoted by your shop. This estimate applies to this grocery list only.</p></div>' : ''}
                     ${item.indivisible ? '<p class="text-xs text-gray-500">Recipe needs ' + Number(item.requiredUnits).toFixed(3) + ' selling units; shopping quantity rounds up to whole packs or pieces.</p>' : ''}
                     <div class='flex flex-wrap items-center gap-2 mt-2'>
                         <button onclick="updateGroceryQuantity(${index}, -1)" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">-</button>
@@ -2113,6 +2114,10 @@ function updateCartSummary(items) {
     document.getElementById('checkedTotal').innerText = `₱${checkedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     document.getElementById('remainingTotal').innerText = `₱${remainingCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     
+    const localPriceNote = document.getElementById('groceryLocalPriceNote');
+    if (localPriceNote) localPriceNote.innerText = items.some(i => i.localPrice) ? 'Totals include your local price estimates, not verified government prices for those items.' : '';
+    const priorWarning = document.getElementById('budgetWarning');
+    if (priorWarning) priorWarning.innerText = '';
     checkGroceryBudgetConstraints(totalCost);
     if (items.some(i => i.priceMissing)) {
         document.getElementById('totalCost').innerText += ' (partial)';
@@ -2155,6 +2160,40 @@ function setGroceryQuantity(index, value) {
         return;
     }
     items[index].quantity = quantity;
+    setGroceryData(items);
+    renderGroceryItems();
+    saveGroceryListToSupabase();
+}
+
+function setGroceryLocalPrice(index, amountValue, quantityValue) {
+    const items = getGroceryData();
+    const item = items[index];
+    if (!item || !(item.priceMissing || item.localPrice)) return;
+    const amount = Number(amountValue), quantity = Number(quantityValue);
+    const rate = amount / quantity;
+    if (!Number.isFinite(amount) || amount < 0.01 || !Number.isFinite(quantity) || quantity <= 0 || !Number.isFinite(rate) || !Number.isFinite(rate * item.quantity)) {
+        showNotification('Enter a positive price and the quantity it covers.', 'error');
+        return;
+    }
+    item.localPriceAmount = Math.round(amount * 100) / 100;
+    item.localPriceQuantity = quantity;
+    item.price = item.basePrice = item.localPriceAmount / quantity;
+    item.priceMissing = false;
+    item.localPrice = true;
+    setGroceryData(items);
+    renderGroceryItems();
+    saveGroceryListToSupabase();
+}
+
+function clearGroceryLocalPrice(index) {
+    const items = getGroceryData();
+    const item = items[index];
+    if (!item?.localPrice) return;
+    item.price = item.basePrice = null;
+    item.priceMissing = true;
+    delete item.localPrice;
+    delete item.localPriceAmount;
+    delete item.localPriceQuantity;
     setGroceryData(items);
     renderGroceryItems();
     saveGroceryListToSupabase();

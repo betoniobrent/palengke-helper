@@ -131,3 +131,31 @@ test('unpriced groceries display incomplete totals instead of free ingredients',
  summary.updateCartSummary([{price:null,priceMissing:true,quantity:2}]);
  assert.match(nodes.totalCost.innerText,/partial/);assert.match(nodes.budgetWarning.innerText,/1 ingredients still need prices/);
 });
+
+test('local grocery price converts a quoted pack amount and persists without changing other items',()=>{
+ const {context,cards,search}=groceryContext();
+ loadFunctions(context,['setGroceryLocalPrice','clearGroceryLocalPrice']);
+ context.setGroceryData([{name:'Rice',price:50,quantity:1,unit:'kg'},{name:'Fish',price:null,basePrice:null,priceMissing:true,quantity:250,unit:'g',notes:'No verified price'}]);
+ context.renderGroceryItems();assert.match(cards[0].innerHTML,/setGroceryLocalPrice\(1,/);
+ context.setGroceryLocalPrice(1,'120','1000');
+ let items=context.getGroceryData();assert.equal(items[1].price,0.12);assert.equal(items[1].basePrice,0.12);assert.equal(items[1].priceMissing,false);assert.equal(items[1].localPrice,true);assert.equal(items[1].quantity,250);assert.equal(context.getItemUnitPrice(items[1])*items[1].quantity,30);assert.equal(items[0].price,50);
+ assert.match(cards[0].innerHTML,/Your local price estimate/);assert.match(cards[0].innerHTML,/Remove local price/);
+ context.setGroceryLocalPrice(1,'200','1000');assert.equal(context.getGroceryData()[1].price,0.2);
+ context.clearGroceryLocalPrice(1);items=context.getGroceryData();assert.equal(items[1].price,null);assert.equal(items[1].priceMissing,true);assert.equal(items[1].localPrice,undefined);assert.equal(items[1].notes,'No verified price');
+});
+
+test('local price rejects invalid values and cannot overwrite government reference items',()=>{
+ const {context}=groceryContext();loadFunctions(context,['setGroceryLocalPrice','clearGroceryLocalPrice']);
+ context.setGroceryData([{name:'Missing',price:null,priceMissing:true,quantity:10,unit:'g'},{name:'Official',price:100,quantity:1,unit:'kg'}]);
+ for(const [a,q] of [['',100],[-1,100],[0,100],['abc',100],[Infinity,100],[10,0],[10,-1],[10,''],[10,Infinity],[10,'100x']])context.setGroceryLocalPrice(0,a,q);
+ assert.equal(context.getGroceryData()[0].price,null);
+ context.setGroceryLocalPrice(1,2,1);context.clearGroceryLocalPrice(1);assert.equal(context.getGroceryData()[1].price,100);
+});
+
+test('last missing local price removes partial status and summary labels estimates',()=>{
+ const nodes=Object.fromEntries(['totalCost','totalItems','checkedItems','remainingItems','checkedTotal','remainingTotal','budgetWarning','groceryLocalPriceNote'].map(k=>[k,{}]));
+ const c=loadFunctions({document:{getElementById:id=>nodes[id]},checkGroceryBudgetConstraints:()=>{}},['getItemUnitPrice','updateCartSummary']);
+ c.updateCartSummary([{price:null,priceMissing:true,quantity:250}]);assert.match(nodes.totalCost.innerText,/partial/);
+ c.updateCartSummary([{basePrice:0.12,localPrice:true,priceMissing:false,quantity:250}]);
+ assert.equal(nodes.totalCost.innerText,'₱30.00');assert.equal(nodes.budgetWarning.innerText,'');assert.match(nodes.groceryLocalPriceNote.innerText,/local price estimates/);
+});
