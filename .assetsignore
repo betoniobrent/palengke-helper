@@ -16,3 +16,5 @@
 !/admin/admin.js
 !/admin/price-pipeline.js
 !/admin/dti-pipeline.js
+
+!/tutorial.js

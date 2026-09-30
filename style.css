@@ -185,3 +185,5 @@ nav .tab-link.active {
     border-color: #cbd5e1;
     box-shadow: none;
 }
+
+#appTutorial::backdrop { background: rgba(15, 23, 42, 0.6); }
