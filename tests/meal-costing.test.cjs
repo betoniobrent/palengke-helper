@@ -54,9 +54,29 @@ test('counted groceries round once across meals and liter bottles retain their s
  const g=cost.groceries([recipe(['3 pc Eggs','15 ml Cooking Oil']),recipe(['3 pc Eggs','15 ml Cooking Oil'])],[row('Chicken Egg (White, Medium)','pc',8),row('Cooking Oil (Palm) 1 Liter/bottle','1 L bottle',100)],1);
  assert.equal(g[0].quantity,3);assert.equal(g[0].price,8);assert.equal(g[1].quantity,1);assert.equal(g[1].price,100);
 });
-test('all twelve measured recipes have parseable quantities and disclosure',()=>{
+test('entire catalog has measured ingredients, unique dishes and stable retained IDs',()=>{
  const fs=require('node:fs'),vm=require('node:vm');const c={};vm.createContext(c);
  vm.runInContext(fs.readFileSync(require.resolve('../data/recipes.js'),'utf8')+';globalThis.recipes=RECIPE_DATABASE;',c);
- const measured=c.recipes.filter(r=>r.quantityNote);assert.equal(measured.length,12);
+ const measured=c.recipes.filter(r=>r.quantityNote);assert.equal(measured.length,172);assert.equal(measured.length,c.recipes.length);
+ assert.equal(new Set(c.recipes.map(r=>r.id)).size,c.recipes.length);
+ assert.equal(new Set(c.recipes.map(r=>r.name.toLowerCase())).size,c.recipes.length);
+ assert.ok(c.recipes.every(r=>! /\(\d+\s*pax\)/i.test(r.name)));
+ assert.ok(c.recipes.some(r=>r.id===84 && r.name==='Tortang Talong with Rice'));
+ assert.ok(c.recipes.some(r=>r.id===10));assert.ok(!c.recipes.some(r=>r.id===19));
  for(const r of measured) for(const i of r.ingredients) assert.ok(cost.ingredient(i),r.name+': '+i);
+});
+
+test('catalog quantities scale across pax without introducing fallback prices',()=>{
+ const fs=require('node:fs'),vm=require('node:vm');const c={};vm.createContext(c);
+ vm.runInContext(fs.readFileSync(require.resolve('../data/recipes.js'),'utf8')+';globalThis.recipes=RECIPE_DATABASE;',c);
+ for(const r of c.recipes) for(const pax of [1,2,4,6,8]) {
+  const q=cost.quote(r,[],pax);assert.equal(q.subtotal,0);assert.equal(q.complete,false);
+  const g=cost.groceries([r],[],pax);assert.ok(g.length>0,r.name);
+  for(const i of g){assert.equal(i.price,null);assert.ok(Number.isFinite(i.quantity)&&i.quantity>0);assert.notEqual(i.unit,'recipe portion');}
+ }
+ const fried=c.recipes.find(r=>r.id===49);assert.ok(fried.ingredients.includes('600 g Cooked Rice'));
+ const q=cost.quote(fried,[row('Regular Milled 20-40% bran streak (Local)','kg',50)]);
+ assert.equal(q.subtotal,0,'cooked rice cannot borrow uncooked rice pricing');
+ const silog=c.recipes.find(r=>r.id===6);assert.match(silog.instructions[0],/dry rice/);
+ assert.ok(silog.ingredients.includes('225 g Rice'));
 });

@@ -96,13 +96,17 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "25 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Pansit Canton noodles",
-            "Mixed vegetables",
-            "Soy Sauce",
-            "Garlic",
-            "Onion",
-            "Chicken broth"
+            "250 g Pancit Canton Noodles",
+            "200 g Cabbage",
+            "150 g Carrot",
+            "100 g Baguio Beans",
+            "45 ml Soy Sauce",
+            "20 g Garlic",
+            "100 g Onion",
+            "500 ml Chicken Broth",
+            "30 ml Cooking Oil"
         ],
         instructions: [
             "Sauté garlic and onion.",
@@ -150,14 +154,17 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Daing na Bangus",
-            "Rice",
-            "Eggs",
-            "Garlic",
-            "Tomato"
+            "600 g Daing na Bangus",
+            "225 g Rice",
+            "3 pc Eggs",
+            "20 g Garlic",
+            "150 g Tomato",
+            "30 ml Cooking Oil"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Marinate bangus in vinegar and garlic.",
             "Fry the fish until crisp.",
             "Cook rice and fry eggs.",
@@ -204,13 +211,14 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Tofu",
-            "Cornstarch",
-            "Oil",
-            "Soy sauce",
-            "Vinegar",
-            "Chili"
+            "450 g Firm Tofu",
+            "30 g Cornstarch",
+            "120 ml Cooking Oil",
+            "30 ml Soy Sauce",
+            "30 ml Vinegar",
+            "5 g Chili"
         ],
         instructions: [
             "Slice tofu and coat with cornstarch.",
@@ -230,13 +238,15 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "500g firm tofu",
-            "1/2 cup soy sauce",
-            "1/4 cup vinegar",
-            "6 cloves garlic",
-            "2 bay leaves",
-            "1 tsp pepper"
+            "500 g Firm Tofu",
+            "120 ml Soy Sauce",
+            "60 ml Vinegar",
+            "20 g Garlic",
+            "2 g Bay Leaves",
+            "2 g Pepper",
+            "15 ml Cooking Oil"
         ],
         instructions: [
             "Fry cubes of tofu until golden brown.",
@@ -257,13 +267,18 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "30 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Bitter melon",
-            "Eggplant",
-            "Okra",
-            "Squash",
-            "Tomato",
-            "Bagoong"
+            "150 g Bitter Melon",
+            "200 g Eggplant",
+            "150 g Okra",
+            "300 g Squash",
+            "150 g Tomato",
+            "30 g Bagoong",
+            "100 g Onion",
+            "15 g Garlic",
+            "15 ml Cooking Oil",
+            "250 ml Water"
         ],
         instructions: [
             "Sauté garlic and onion.",
@@ -284,13 +299,15 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "35 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Glutinous rice",
-            "Garlic",
-            "Ginger",
-            "Chicken broth",
-            "Tofu",
-            "Pork belly"
+            "250 g Glutinous Rice",
+            "20 g Garlic",
+            "30 g Ginger",
+            "1.5 l Chicken Broth",
+            "300 g Firm Tofu",
+            "300 g Pork Belly",
+            "30 ml Cooking Oil"
         ],
         instructions: [
             "Toast garlic and ginger.",
@@ -339,13 +356,17 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "1 hr",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Beef chunks",
-            "Potato",
-            "Carrot",
-            "Tomato sauce",
-            "Bell pepper",
-            "Garlic"
+            "800 g Beef",
+            "300 g Potato",
+            "150 g Carrot",
+            "250 g Tomato Sauce",
+            "100 g Green Bell Pepper",
+            "20 g Garlic",
+            "100 g Onion",
+            "15 ml Cooking Oil",
+            "500 ml Water"
         ],
         instructions: [
             "Sear beef until browned.",
@@ -393,13 +414,17 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "45 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Pork",
-            "Liver",
-            "Potato",
-            "Carrot",
-            "Tomato sauce",
-            "Garlic"
+            "600 g Pork",
+            "150 g Pork Liver",
+            "250 g Potato",
+            "150 g Carrot",
+            "250 g Tomato Sauce",
+            "20 g Garlic",
+            "100 g Onion",
+            "15 ml Cooking Oil",
+            "250 ml Water"
         ],
         instructions: [
             "Sauté garlic and onion.",
@@ -419,13 +444,14 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "30 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Chicken thighs",
-            "Vinegar",
-            "Soy sauce",
-            "Garlic",
-            "Lemon grass",
-            "Annatto oil"
+            "1 kg Chicken Thighs",
+            "80 ml Vinegar",
+            "60 ml Soy Sauce",
+            "25 g Garlic",
+            "30 g Lemongrass",
+            "30 ml Annatto Oil"
         ],
         instructions: [
             "Marinate chicken with spices.",
@@ -445,45 +471,19 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Pork belly",
-            "Soy sauce",
-            "Brown sugar",
-            "Garlic",
-            "Banana ketchup",
-            "Oil"
+            "800 g Pork Belly",
+            "80 ml Soy Sauce",
+            "40 g Brown Sugar",
+            "25 g Garlic",
+            "80 g Banana Ketchup",
+            "30 ml Cooking Oil"
         ],
         instructions: [
             "Marinate pork in sauce.",
             "Skewer and grill until charred.",
             "Baste regularly.",
-            "Serve with rice."
-        ]
-    },
-    {
-        id: 19,
-        name: "Adobong Tokwa",
-        mealType: ["Lunch", "Dinner"],
-        diet: ["anything", "protein", "healthy", "tipid", "nopork"],
-        image: "assets/recipes/adobong-tokwa.jpg",
-        servings: 4,
-        estimatedCost: 110,
-        prepTime: "10 mins",
-        cookTime: "25 mins",
-        difficulty: "Easy",
-        ingredients: [
-            "500g firm tofu",
-            "1/2 cup soy sauce",
-            "1/4 cup vinegar",
-            "6 cloves garlic",
-            "2 bay leaves",
-            "1 tsp pepper"
-        ],
-        instructions: [
-            "Fry cubes of tofu until golden brown.",
-            "Sauté garlic until fragrant.",
-            "Add soy sauce, vinegar, bay leaves, and pepper.",
-            "Return tofu to the pan and simmer for 10 minutes.",
             "Serve with rice."
         ]
     },
@@ -498,13 +498,15 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "25 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Beef sirloin",
-            "Soy sauce",
-            "Calamansi juice",
-            "Onion",
-            "Garlic",
-            "Black pepper"
+            "800 g Beef Sirloin",
+            "80 ml Soy Sauce",
+            "60 ml Calamansi Juice",
+            "250 g Onion",
+            "20 g Garlic",
+            "2 g Pepper",
+            "30 ml Cooking Oil"
         ],
         instructions: [
             "Marinate beef in soy sauce and calamansi.",
@@ -524,13 +526,14 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Canned corned beef",
-            "Potato",
-            "Onion",
-            "Garlic",
-            "Oil",
-            "Salt"
+            "300 g Canned Corned Beef",
+            "250 g Potato",
+            "100 g Onion",
+            "15 g Garlic",
+            "15 ml Cooking Oil",
+            "2 g Salt"
         ],
         instructions: [
             "Sauté garlic and onion.",
@@ -550,15 +553,18 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Beef tapa",
-            "Rice",
-            "Eggs",
-            "Garlic",
-            "Soy sauce",
-            "Calamansi"
+            "450 g Beef Tapa",
+            "225 g Rice",
+            "3 pc Eggs",
+            "20 g Garlic",
+            "30 ml Soy Sauce",
+            "30 ml Calamansi Juice",
+            "30 ml Cooking Oil"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Marinate beef tapa.",
             "Fry beef until cooked.",
             "Cook rice and fry eggs.",
@@ -576,14 +582,17 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Longganisa",
-            "Rice",
-            "Eggs",
-            "Garlic",
-            "Tomato"
+            "450 g Longganisa",
+            "225 g Rice",
+            "3 pc Eggs",
+            "20 g Garlic",
+            "150 g Tomato",
+            "30 ml Cooking Oil"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Cook longganisa until browned.",
             "Fry rice with garlic.",
             "Cook eggs sunny-side up.",
@@ -654,14 +663,16 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Dried fish",
-            "Rice",
-            "Garlic",
-            "Oil",
-            "Salt"
+            "150 g Dried Fish",
+            "225 g Rice",
+            "20 g Garlic",
+            "30 ml Cooking Oil",
+            "2 g Salt"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Fry dried fish until crispy.",
             "Saute garlic and mix with rice.",
             "Serve with fish."
@@ -678,10 +689,11 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "0 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Pandesal",
-            "Cheese slices",
-            "Butter"
+            "8 pc Pandesal",
+            "120 g Cheese",
+            "30 g Butter"
         ],
         instructions: [
             "Slice pandesal.",
@@ -730,12 +742,14 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "5 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Soft tofu",
-            "Arnibal",
-            "Sago pearls"
+            "600 g Soft Tofu",
+            "120 ml Arnibal",
+            "60 g Dry Sago Pearls"
         ],
         instructions: [
+            "Cook the dry sago pearls according to their package directions, then drain.",
             "Prepare soft tofu.",
             "Add arnibal and sago.",
             "Serve warm."
@@ -752,12 +766,13 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "45 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Egg yolks",
-            "Milk",
-            "Condensed milk",
-            "Sugar",
-            "Vanilla"
+            "8 pc Egg Yolks",
+            "200 ml Evaporated Milk",
+            "200 g Condensed Milk",
+            "80 g Sugar",
+            "5 ml Vanilla Extract"
         ],
         instructions: [
             "Make caramel sauce.",
@@ -777,13 +792,15 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "1 hr",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Oxtail",
-            "Peanut butter",
-            "Banana blossom",
-            "Eggplant",
-            "Bagoong",
-            "Ground rice"
+            "1 kg Oxtail",
+            "120 g Peanut Butter",
+            "250 g Banana Blossom",
+            "250 g Eggplant",
+            "60 g Bagoong",
+            "30 g Ground Rice",
+            "1.5 l Water"
         ],
         instructions: [
             "Boil oxtail until tender.",
@@ -803,13 +820,18 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "1 hr",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Beef",
-            "Potato",
-            "Carrot",
-            "Bell pepper",
-            "Tomato sauce",
-            "Cheese"
+            "800 g Beef",
+            "300 g Potato",
+            "150 g Carrot",
+            "100 g Green Bell Pepper",
+            "250 g Tomato Sauce",
+            "60 g Cheese",
+            "20 g Garlic",
+            "100 g Onion",
+            "15 ml Cooking Oil",
+            "500 ml Water"
         ],
         instructions: [
             "Brown beef.",
@@ -829,13 +851,15 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "45 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Beef brisket",
-            "Soy sauce",
-            "Garlic",
-            "Onion",
-            "Star anise",
-            "Brown sugar"
+            "800 g Beef Brisket",
+            "80 ml Soy Sauce",
+            "25 g Garlic",
+            "100 g Onion",
+            "2 g Star Anise",
+            "40 g Brown Sugar",
+            "1 l Water"
         ],
         instructions: [
             "Sear beef.",
@@ -855,13 +879,16 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "30 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Sotanghon noodles",
-            "Chicken",
-            "Mushrooms",
-            "Garlic",
-            "Onion",
-            "Carrot"
+            "200 g Sotanghon Noodles",
+            "400 g Chicken",
+            "100 g Mushrooms",
+            "20 g Garlic",
+            "100 g Onion",
+            "150 g Carrot",
+            "1.5 l Water",
+            "15 ml Cooking Oil"
         ],
         instructions: [
             "Cook chicken broth.",
@@ -881,13 +908,16 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "35 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Chicken",
-            "Pineapple",
-            "Carrots",
-            "Bell pepper",
-            "Cream",
-            "Garlic"
+            "800 g Chicken",
+            "250 g Pineapple",
+            "150 g Carrot",
+            "100 g Green Bell Pepper",
+            "200 ml Cream",
+            "20 g Garlic",
+            "100 g Onion",
+            "15 ml Cooking Oil"
         ],
         instructions: [
             "Sauté garlic and chicken.",
@@ -935,13 +965,15 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Kangkong",
-            "Eggplant",
-            "Malunggay",
-            "Coconut milk",
-            "Garlic",
-            "Onion"
+            "200 g Kangkong",
+            "300 g Eggplant",
+            "60 g Malunggay Leaves",
+            "400 ml Coconut Milk",
+            "20 g Garlic",
+            "100 g Onion",
+            "15 ml Cooking Oil"
         ],
         instructions: [
             "Sauté garlic and onion.",
@@ -961,19 +993,20 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "30 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Dried taro leaves",
-            "Coconut milk",
-            "Garlic",
-            "Onion",
-            "Ginger",
-            "Shrimp paste"
+            "100 g Dried Taro Leaves",
+            "600 ml Coconut Milk",
+            "20 g Garlic",
+            "100 g Onion",
+            "30 g Ginger",
+            "30 g Shrimp Paste"
         ],
         instructions: [
             "Sauté garlic, onion, and ginger.",
             "Add coconut milk and simmer.",
             "Stir in taro leaves and simmer until tender.",
-            "Season with shrimp paste and serve." 
+            "Season with shrimp paste and serve."
         ]
     },
     {
@@ -1003,7 +1036,7 @@ const RECIPE_DATABASE = [
             "Sauté garlic until fragrant.",
             "Add chicken and brown lightly.",
             "Add tomato sauce and simmer.",
-            "Add vegetables and cook until tender." 
+            "Add vegetables and cook until tender."
         ]
     },
     {
@@ -1017,19 +1050,21 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "1 hr",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Beef shank",
-            "Cabbage",
-            "Potato",
-            "Corn",
-            "Onion",
-            "Peppercorn"
+            "1 kg Beef Shank",
+            "400 g Cabbage",
+            "400 g Potato",
+            "400 g Sweet Corn",
+            "150 g Onion",
+            "3 g Peppercorn",
+            "2 l Water"
         ],
         instructions: [
             "Boil beef until tender.",
             "Add vegetables and cook until soft.",
             "Season with salt and pepper.",
-            "Serve hot with rice." 
+            "Serve hot with rice."
         ]
     },
     {
@@ -1043,19 +1078,22 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "25 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Rice noodles",
-            "Shrimp",
-            "Smoked fish flakes",
-            "Garlic",
-            "Annatto oil",
-            "Egg" 
+            "400 g Rice Noodles",
+            "300 g Shrimp",
+            "80 g Smoked Fish Flakes",
+            "20 g Garlic",
+            "30 ml Annatto Oil",
+            "4 pc Eggs",
+            "500 ml Water",
+            "30 g Cornstarch"
         ],
         instructions: [
             "Cook noodles until tender.",
             "Prepare sauce with stock, garlic, and annatto oil.",
             "Top noodles with shrimp, egg, and smoked fish flakes.",
-            "Serve with calamansi." 
+            "Serve with calamansi."
         ]
     },
     {
@@ -1069,19 +1107,21 @@ const RECIPE_DATABASE = [
         prepTime: "30 mins",
         cookTime: "1 hr 30 mins",
         difficulty: "Hard",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Pork leg",
-            "Garlic",
-            "Bay leaves",
-            "Salt",
-            "Pepper",
-            "Oil" 
+            "1.5 kg Pork Leg",
+            "30 g Garlic",
+            "3 g Bay Leaves",
+            "12 g Salt",
+            "3 g Pepper",
+            "1 l Cooking Oil",
+            "2 l Water"
         ],
         instructions: [
             "Boil pork leg until fork-tender.",
             "Dry the skin thoroughly.",
             "Deep-fry until golden and crispy.",
-            "Serve with soy-vinegar dipping sauce." 
+            "Serve with soy-vinegar dipping sauce."
         ]
     },
     {
@@ -1095,19 +1135,21 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "15 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Bangus belly",
-            "Onion",
-            "Chili",
-            "Calamansi",
-            "Mayonnaise",
-            "Garlic"
+            "600 g Bangus Belly",
+            "150 g Onion",
+            "10 g Chili",
+            "40 ml Calamansi Juice",
+            "60 g Mayonnaise",
+            "20 g Garlic",
+            "15 ml Cooking Oil"
         ],
         instructions: [
             "Fry bangus belly until crispy.",
             "Chop and mix with onions, garlic, chili, and mayonnaise.",
             "Squeeze calamansi before serving.",
-            "Serve on a sizzling plate." 
+            "Serve on a sizzling plate."
         ]
     },
     {
@@ -1121,19 +1163,21 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "40 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Pork",
-            "Tamarind broth mix",
-            "Radish",
-            "Sitaw",
-            "Kangkong",
-            "Tomato"
+            "1 kg Pork",
+            "40 g Tamarind Broth Mix",
+            "250 g Radish",
+            "150 g Sitaw",
+            "150 g Kangkong",
+            "200 g Tomato",
+            "1.5 l Water"
         ],
         instructions: [
             "Boil pork until tender.",
             "Add tamarind broth and vegetables.",
             "Simmer until vegetables are cooked.",
-            "Serve with rice." 
+            "Serve with rice."
         ]
     },
     {
@@ -1147,19 +1191,20 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "25 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Pork belly",
-            "Soy sauce",
-            "Calamansi",
-            "Garlic",
-            "Brown sugar",
-            "Oil" 
+            "800 g Pork Belly",
+            "80 ml Soy Sauce",
+            "60 ml Calamansi Juice",
+            "25 g Garlic",
+            "30 g Brown Sugar",
+            "30 ml Cooking Oil"
         ],
         instructions: [
             "Marinate pork belly.",
             "Grill until cooked and slightly charred.",
             "Baste with marinade while grilling.",
-            "Serve with rice and atchara." 
+            "Serve with rice and atchara."
         ]
     },
     {
@@ -1173,19 +1218,21 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Sayote",
-            "Shrimp",
-            "Garlic",
-            "Onion",
-            "Tomato",
-            "Fish sauce" 
+            "600 g Sayote",
+            "250 g Shrimp",
+            "20 g Garlic",
+            "100 g Onion",
+            "150 g Tomato",
+            "30 ml Fish Sauce",
+            "15 ml Cooking Oil"
         ],
         instructions: [
             "Sauté garlic and onion.",
             "Add shrimp and cook briefly.",
             "Add sayote and tomatoes.",
-            "Season and simmer until tender." 
+            "Season and simmer until tender."
         ]
     },
     {
@@ -1199,24 +1246,26 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "20 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Squid",
-            "Soy sauce",
-            "Vinegar",
-            "Garlic",
-            "Onion",
-            "Black pepper" 
+            "800 g Squid",
+            "60 ml Soy Sauce",
+            "60 ml Vinegar",
+            "25 g Garlic",
+            "100 g Onion",
+            "2 g Pepper",
+            "15 ml Cooking Oil"
         ],
         instructions: [
             "Sauté garlic and onion.",
             "Add squid and cook until firm.",
             "Add soy sauce and vinegar.",
-            "Simmer until sauce thickens." 
+            "Simmer until sauce thickens."
         ]
     },
     {
         id: 48,
-        name: "Gising-Gising",
+        name: "Gising-Gising with Tofu",
         mealType: ["Lunch", "Dinner"],
         diet: ["anything", "healthy", "tipid", "nopork"],
         image: "assets/recipes/gising-gising.jpg",
@@ -1225,19 +1274,21 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Winged beans",
-            "Coconut milk",
-            "Ground pork or tofu",
-            "Garlic",
-            "Onion",
-            "Chili" 
+            "400 g Winged Beans",
+            "400 ml Coconut Milk",
+            "250 g Firm Tofu",
+            "20 g Garlic",
+            "100 g Onion",
+            "10 g Chili",
+            "15 ml Cooking Oil"
         ],
         instructions: [
             "Sauté garlic and onion.",
-            "Add ground pork or tofu.",
+            "Add tofu.",
             "Stir in vegetables and coconut milk.",
-            "Simmer until cooked." 
+            "Simmer until cooked."
         ]
     },
     {
@@ -1251,19 +1302,21 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Leftover rice",
-            "Tinapa flakes",
-            "Garlic",
-            "Eggs",
-            "Spring onion",
-            "Soy sauce" 
+            "600 g Cooked Rice",
+            "150 g Tinapa Flakes",
+            "25 g Garlic",
+            "3 pc Eggs",
+            "30 g Spring Onion",
+            "30 ml Soy Sauce",
+            "30 ml Cooking Oil"
         ],
         instructions: [
             "Sauté garlic until fragrant.",
             "Add tinapa flakes.",
             "Stir in rice and season.",
-            "Make a well for eggs and scramble them together." 
+            "Make a well for eggs and scramble them together."
         ]
     },
     {
@@ -1277,225 +1330,21 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "25 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "Squid",
-            "Bok choy",
-            "Garlic",
-            "Onion",
-            "Tomato",
-            "Fish sauce" 
+            "600 g Squid",
+            "400 g Bok Choy",
+            "20 g Garlic",
+            "100 g Onion",
+            "150 g Tomato",
+            "30 ml Fish Sauce",
+            "15 ml Cooking Oil"
         ],
         instructions: [
             "Sauté garlic and onion.",
             "Add squid and cook briefly.",
             "Add vegetables and cook until tender.",
-            "Season with fish sauce." 
-        ]
-    },
-    {
-        id: 51,
-        name: "Chicken Adobo (1 Pax)",
-        mealType: ["Lunch", "Dinner"],
-        diet: ["anything", "protein"],
-        image: "assets/recipes/adobo.jpg",
-        servings: 1,
-        estimatedCost: 90,
-        prepTime: "10 mins",
-        cookTime: "30 mins",
-        difficulty: "Easy",
-        ingredients: [
-            "250g Chicken",
-            "2 tbsp Soy Sauce",
-            "1 tbsp Vinegar",
-            "3 cloves Garlic",
-            "1 Bay Leaf",
-            "Pepper"
-        ],
-        instructions: [
-            "Marinate chicken in soy sauce and garlic.",
-            "Brown garlic and sear the chicken.",
-            "Add vinegar and bay leaf, simmer until cooked.",
-            "Serve with rice."
-        ]
-    },
-    {
-        id: 52,
-        name: "Chicken Adobo (2 Pax)",
-        mealType: ["Lunch", "Dinner"],
-        diet: ["anything", "protein"],
-        image: "assets/recipes/adobo.jpg",
-        servings: 2,
-        estimatedCost: 170,
-        prepTime: "10 mins",
-        cookTime: "30 mins",
-        difficulty: "Easy",
-        ingredients: [
-            "500g Chicken",
-            "1/4 cup Soy Sauce",
-            "2 tbsp Vinegar",
-            "5 cloves Garlic",
-            "2 Bay Leaves",
-            "Pepper"
-        ],
-        instructions: [
-            "Marinate chicken in soy sauce and garlic.",
-            "Brown garlic and sear the chicken.",
-            "Add vinegar and bay leaves, simmer until cooked.",
-            "Serve with rice."
-        ]
-    },
-    {
-        id: 53,
-        name: "Chicken Adobo (3 Pax)",
-        mealType: ["Lunch", "Dinner"],
-        diet: ["anything", "protein"],
-        image: "assets/recipes/adobo.jpg",
-        servings: 3,
-        estimatedCost: 240,
-        prepTime: "10 mins",
-        cookTime: "30 mins",
-        difficulty: "Easy",
-        ingredients: [
-            "750g Chicken",
-            "1/3 cup Soy Sauce",
-            "3 tbsp Vinegar",
-            "6 cloves Garlic",
-            "2 Bay Leaves",
-            "Pepper"
-        ],
-        instructions: [
-            "Marinate chicken in soy sauce and garlic.",
-            "Brown garlic and sear the chicken.",
-            "Add vinegar and bay leaves, simmer until cooked.",
-            "Serve with rice."
-        ]
-    },
-    {
-        id: 54,
-        name: "Bangsilog (1 Pax)",
-        mealType: ["Breakfast"],
-        diet: ["anything", "protein"],
-        image: "assets/recipes/bangsilog.jpg",
-        servings: 1,
-        estimatedCost: 60,
-        prepTime: "10 mins",
-        cookTime: "15 mins",
-        difficulty: "Easy",
-        ingredients: [
-            "1 piece Daing na Bangus",
-            "1 cup Rice",
-            "1 Egg",
-            "Garlic",
-            "Tomato"
-        ],
-        instructions: [
-            "Marinate bangus in vinegar and garlic.",
-            "Fry the fish until crisp.",
-            "Cook rice and fry egg.",
-            "Serve with tomatoes."
-        ]
-    },
-    {
-        id: 55,
-        name: "Tapsilog (1 Pax)",
-        mealType: ["Breakfast"],
-        diet: ["anything", "protein"],
-        image: "assets/recipes/tapsilog.jpg",
-        servings: 1,
-        estimatedCost: 85,
-        prepTime: "15 mins",
-        cookTime: "15 mins",
-        difficulty: "Easy",
-        ingredients: [
-            "100g Beef Tapa",
-            "1 cup Rice",
-            "1 Egg",
-            "Garlic",
-            "Calamansi"
-        ],
-        instructions: [
-            "Marinate beef tapa.",
-            "Fry beef until cooked.",
-            "Cook rice and fry egg.",
-            "Serve with garlic rice and egg."
-        ]
-    },
-    {
-        id: 56,
-        name: "Ginisang Monggo (2 Pax)",
-        mealType: ["Lunch", "Dinner"],
-        diet: ["anything", "healthy", "tipid"],
-        image: "assets/recipes/monggo.jpg",
-        servings: 2,
-        estimatedCost: 65,
-        prepTime: "15 mins",
-        cookTime: "35 mins",
-        difficulty: "Easy",
-        ingredients: [
-            "1 cup Mung beans",
-            "Garlic",
-            "Onion",
-            "Tomato",
-            "Spinach",
-            "Pork or tinapa"
-        ],
-        instructions: [
-            "Boil mung beans until soft.",
-            "Sauté garlic, onion, and tomato.",
-            "Add mung beans and simmer.",
-            "Stir in spinach before serving." 
-        ]
-    },
-    {
-        id: 57,
-        name: "Beef Caldereta (2 Pax)",
-        mealType: ["Lunch", "Dinner"],
-        diet: ["anything", "protein"],
-        image: "assets/recipes/caldereta.jpg",
-        servings: 2,
-        estimatedCost: 170,
-        prepTime: "20 mins",
-        cookTime: "1 hr",
-        difficulty: "Medium",
-        ingredients: [
-            "Beef chunks",
-            "Potato",
-            "Carrot",
-            "Tomato sauce",
-            "Bell pepper",
-            "Garlic"
-        ],
-        instructions: [
-            "Sear beef until browned.",
-            "Sauté garlic and onion.",
-            "Add beef, tomato sauce, and simmer until tender.",
-            "Add vegetables and cook until soft." 
-        ]
-    },
-    {
-        id: 58,
-        name: "Pork BBQ (2 Pax)",
-        mealType: ["Lunch", "Dinner"],
-        diet: ["anything", "protein"],
-        image: "assets/recipes/pork-bbq.jpg",
-        servings: 2,
-        estimatedCost: 135,
-        prepTime: "15 mins",
-        cookTime: "20 mins",
-        difficulty: "Easy",
-        ingredients: [
-            "Pork belly",
-            "Soy sauce",
-            "Brown sugar",
-            "Garlic",
-            "Banana ketchup",
-            "Oil"
-        ],
-        instructions: [
-            "Marinate pork in sauce.",
-            "Skewer and grill until charred.",
-            "Baste regularly.",
-            "Serve with rice." 
+            "Season with fish sauce."
         ]
     },
     {
@@ -1509,16 +1358,18 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "2 pc Egg",
-            "2 cup Rice",
-            "3 cloves Garlic",
-            "2 tbsp Oil",
-            "1 tsp Salt"
+            "2 pc Eggs",
+            "150 g Rice",
+            "12 g Garlic",
+            "30 ml Cooking Oil",
+            "5 g Salt"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Fry garlic in oil until golden.",
-            "Add day-old rice and stir-fry with salt.",
+            "Add cooked rice and stir-fry with salt.",
             "Fry eggs sunny side up.",
             "Serve eggs on top of garlic rice."
         ]
@@ -1534,14 +1385,16 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "3 pc Egg",
-            "1 pc Onion",
-            "1 pc Tomato",
-            "2 tbsp Oil",
-            "2 cup Rice"
+            "3 pc Eggs",
+            "100 g Onion",
+            "100 g Tomato",
+            "30 ml Cooking Oil",
+            "150 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Beat eggs with chopped onion and tomato.",
             "Pour into a hot oiled pan.",
             "Cook both sides until golden.",
@@ -1559,14 +1412,16 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "1 can Sardines",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tbsp Oil",
-            "2 cup Rice"
+            "155 g Sardines",
+            "100 g Onion",
+            "12 g Garlic",
+            "15 ml Cooking Oil",
+            "150 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Sauté garlic and onion in oil.",
             "Add sardines with sauce.",
             "Simmer for 5 minutes.",
@@ -1584,10 +1439,11 @@ const RECIPE_DATABASE = [
         prepTime: "2 mins",
         cookTime: "8 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "1 pack Instant Pancit Canton",
-            "1 pc Egg",
-            "1 tbsp Oil"
+            "80 g Instant Pancit Canton",
+            "1 pc Eggs",
+            "15 ml Cooking Oil"
         ],
         instructions: [
             "Boil noodles until just tender, then drain.",
@@ -1607,14 +1463,17 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "30 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "1 cup Rice",
-            "2 pc Egg",
-            "3 cloves Garlic",
-            "1 tbsp Fish Sauce",
-            "1 tsp Pepper"
+            "75 g Rice",
+            "2 pc Eggs",
+            "12 g Garlic",
+            "15 ml Fish Sauce",
+            "2 g Pepper",
+            "1500 ml Water"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Boil rice in plenty of water until porridge-like.",
             "Season with fish sauce and pepper.",
             "Add boiled eggs cut in half.",
@@ -1632,14 +1491,16 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "4 pc Tuyo",
-            "2 pc Tomato",
-            "2 cup Rice",
-            "1 tbsp Oil",
-            "2 tbsp Vinegar"
+            "120 g Tuyo",
+            "200 g Tomato",
+            "150 g Rice",
+            "15 ml Cooking Oil",
+            "30 ml Vinegar"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Fry tuyo in oil until crisp.",
             "Slice tomatoes and season with a little vinegar.",
             "Serve tuyo with tomatoes and hot rice."
@@ -1656,15 +1517,17 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "2 bundle Kangkong",
-            "4 cloves Garlic",
-            "3 tbsp Soy Sauce",
-            "2 tbsp Vinegar",
-            "1 tbsp Oil",
-            "3 cup Rice"
+            "400 g Kangkong",
+            "16 g Garlic",
+            "45 ml Soy Sauce",
+            "30 ml Vinegar",
+            "15 ml Cooking Oil",
+            "225 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Sauté garlic in oil.",
             "Add kangkong stalks first, then leaves.",
             "Pour soy sauce and vinegar; simmer briefly.",
@@ -1673,7 +1536,7 @@ const RECIPE_DATABASE = [
     },
     {
         id: 66,
-        name: "Ginisang Togue",
+        name: "Ginisang Togue with Carrot and Rice",
         mealType: ["Lunch", "Dinner"],
         diet: ["anything", "tipid", "healthy"],
         image: "assets/recipes/ginisang-togue.jpg",
@@ -1682,16 +1545,18 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "400 g Togue",
-            "1 pc Carrot",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "2 tbsp Fish Sauce",
-            "1 tbsp Oil",
-            "3 cup Rice"
+            "400 g Mung Bean Sprouts",
+            "150 g Carrot",
+            "100 g Onion",
+            "12 g Garlic",
+            "30 ml Fish Sauce",
+            "15 ml Cooking Oil",
+            "225 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Sauté garlic and onion in oil.",
             "Add carrot strips and cook briefly.",
             "Add togue and fish sauce; stir-fry 3-5 minutes.",
@@ -1709,13 +1574,15 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "1 can Sardines",
-            "1 pack Misua Noodles",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tbsp Oil",
-            "1 pc Egg"
+            "155 g Sardines",
+            "100 g Misua Noodles",
+            "100 g Onion",
+            "12 g Garlic",
+            "15 ml Cooking Oil",
+            "1 pc Eggs",
+            "1000 ml Water"
         ],
         instructions: [
             "Sauté garlic and onion in oil.",
@@ -1735,16 +1602,18 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "500 g Cabbage",
-            "1 pc Carrot",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "2 tbsp Soy Sauce",
-            "1 tbsp Oil",
-            "4 cup Rice"
+            "150 g Carrot",
+            "100 g Onion",
+            "12 g Garlic",
+            "30 ml Soy Sauce",
+            "15 ml Cooking Oil",
+            "300 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Sauté garlic and onion in oil.",
             "Add carrot and cabbage.",
             "Season with soy sauce and stir-fry until tender.",
@@ -1762,14 +1631,16 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "250 g Hotdog",
-            "2 pc Egg",
-            "2 cup Rice",
-            "3 cloves Garlic",
-            "2 tbsp Oil"
+            "2 pc Eggs",
+            "150 g Rice",
+            "12 g Garlic",
+            "30 ml Cooking Oil"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Fry hotdogs until lightly blistered.",
             "Fry garlic rice in the same pan.",
             "Fry eggs sunny side up.",
@@ -1787,14 +1658,16 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "2 pc Tinapa",
-            "2 pc Tomato",
-            "1 pc Onion",
-            "2 cup Rice",
-            "1 tbsp Oil"
+            "200 g Tinapa",
+            "200 g Tomato",
+            "100 g Onion",
+            "150 g Rice",
+            "15 ml Cooking Oil"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Fry tinapa until crisp on the edges.",
             "Slice tomatoes and onion for ensalada.",
             "Serve tinapa with rice and the tomato-onion side."
@@ -1811,10 +1684,11 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "500 g Kamote",
-            "2 pc Coffee",
-            "1 tbsp Sugar"
+            "4 g Instant Coffee",
+            "12 g Sugar"
         ],
         instructions: [
             "Boil kamote until fork-tender.",
@@ -1833,11 +1707,12 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "6 pc Pandesal",
-            "2 pc Egg",
-            "1 tbsp Oil",
-            "2 pc Coffee"
+            "2 pc Eggs",
+            "15 ml Cooking Oil",
+            "4 g Instant Coffee"
         ],
         instructions: [
             "Scramble the eggs in a little oil.",
@@ -1856,15 +1731,17 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "20 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "1 pack Bihon",
+            "200 g Bihon Noodles",
             "250 g Chicken",
-            "1 pc Carrot",
+            "150 g Carrot",
             "300 g Cabbage",
-            "1 pc Onion",
-            "4 cloves Garlic",
-            "3 tbsp Soy Sauce",
-            "2 tbsp Oil"
+            "100 g Onion",
+            "16 g Garlic",
+            "45 ml Soy Sauce",
+            "30 ml Cooking Oil",
+            "500 ml Water"
         ],
         instructions: [
             "Sauté garlic, onion, and chicken until cooked.",
@@ -1884,15 +1761,18 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "500 g Sayote",
-            "2 pc Egg",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tbsp Oil",
-            "4 cup Rice"
+            "2 pc Eggs",
+            "100 g Onion",
+            "12 g Garlic",
+            "15 ml Cooking Oil",
+            "300 g Rice",
+            "100 ml Water"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Sauté garlic and onion in oil.",
             "Add sliced sayote and a splash of water; cover until tender.",
             "Stir in beaten eggs and cook through.",
@@ -1910,15 +1790,17 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "250 g Giniling",
-            "3 pc Egg",
-            "1 pc Onion",
-            "1 pc Tomato",
-            "2 tbsp Oil",
-            "4 cup Rice"
+            "250 g Ground Pork",
+            "3 pc Eggs",
+            "100 g Onion",
+            "100 g Tomato",
+            "30 ml Cooking Oil",
+            "300 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Sauté ground pork with onion and tomato until cooked.",
             "Mix into beaten eggs.",
             "Fry as small omelets until golden.",
@@ -1936,16 +1818,19 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "25 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "500 g Kalabasa",
             "250 g Sitaw",
-            "2 cup Coconut Milk",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tbsp Fish Sauce",
-            "4 cup Rice"
+            "480 ml Coconut Milk",
+            "100 g Onion",
+            "12 g Garlic",
+            "15 ml Fish Sauce",
+            "300 g Rice",
+            "15 ml Cooking Oil"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Sauté garlic and onion.",
             "Add squash, sitaw, and coconut milk.",
             "Simmer until vegetables are tender.",
@@ -1963,15 +1848,19 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "1 bundle Malunggay",
+            "50 g Malunggay Leaves",
             "300 g Squash",
-            "1 pc Onion",
-            "2 pc Tomato",
-            "1 tbsp Fish Sauce",
-            "4 cup Rice"
+            "100 g Onion",
+            "200 g Tomato",
+            "15 ml Fish Sauce",
+            "300 g Rice",
+            "1000 ml Water",
+            "15 ml Cooking Oil"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Boil onion and tomato in water.",
             "Add squash and simmer until soft.",
             "Add malunggay leaves and fish sauce.",
@@ -1989,15 +1878,17 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "500 g Tilapia",
-            "3 pc Tomato",
-            "1 pc Onion",
-            "3 tbsp Oil",
-            "1 tsp Salt",
-            "4 cup Rice"
+            "300 g Tomato",
+            "100 g Onion",
+            "45 ml Cooking Oil",
+            "5 g Salt",
+            "300 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Season tilapia with salt and fry until crisp.",
             "Chop tomatoes and onion for the ensalada.",
             "Serve fish with rice and ensalada."
@@ -2014,16 +1905,18 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "4 pc Tokwa",
-            "300 g Togue",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "2 tbsp Soy Sauce",
-            "2 tbsp Oil",
-            "4 cup Rice"
+            "400 g Firm Tofu",
+            "300 g Mung Bean Sprouts",
+            "100 g Onion",
+            "12 g Garlic",
+            "30 ml Soy Sauce",
+            "30 ml Cooking Oil",
+            "300 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Fry tokwa cubes until golden; set aside.",
             "Sauté garlic, onion, and togue.",
             "Add tokwa and soy sauce; toss briefly.",
@@ -2041,14 +1934,17 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "30 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "250 g Chicken",
-            "1 pack Noodles",
-            "1 pc Carrot",
+            "200 g Macaroni",
+            "150 g Carrot",
             "300 g Cabbage",
-            "1 can Evaporated Milk",
-            "1 pc Onion",
-            "3 cloves Garlic"
+            "370 ml Evaporated Milk",
+            "100 g Onion",
+            "12 g Garlic",
+            "1200 ml Water",
+            "15 ml Cooking Oil"
         ],
         instructions: [
             "Sauté garlic, onion, and chicken.",
@@ -2068,15 +1964,18 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "45 mins",
         difficulty: "Medium",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "500 g Chicken Feet",
-            "1/2 cup Soy Sauce",
-            "1/4 cup Vinegar",
-            "5 cloves Garlic",
-            "1 pc Onion",
-            "4 cup Rice"
+            "120 ml Soy Sauce",
+            "60 ml Vinegar",
+            "20 g Garlic",
+            "100 g Onion",
+            "300 g Rice",
+            "15 ml Cooking Oil"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Clean chicken feet and trim the nails.",
             "Simmer in soy sauce, vinegar, garlic, and onion.",
             "Cook low and slow until tender and the sauce thickens.",
@@ -2094,15 +1993,18 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "500 g Chicken Liver",
-            "1/4 cup Soy Sauce",
-            "1/4 cup Vinegar",
-            "5 cloves Garlic",
-            "1 pc Onion",
-            "4 cup Rice"
+            "60 ml Soy Sauce",
+            "60 ml Vinegar",
+            "20 g Garlic",
+            "100 g Onion",
+            "300 g Rice",
+            "15 ml Cooking Oil"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Sauté garlic and onion.",
             "Add chicken liver and sear briefly.",
             "Add soy sauce and vinegar; simmer until just cooked through.",
@@ -2120,15 +2022,18 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "45 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "400 g Pork",
-            "1 bunch Kangkong",
-            "2 pc Tomato",
-            "1 pc Onion",
-            "1 pack Sinigang Mix",
-            "4 cup Rice"
+            "200 g Kangkong",
+            "200 g Tomato",
+            "100 g Onion",
+            "40 g Sinigang Mix",
+            "300 g Rice",
+            "1500 ml Water"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Boil pork with onion and tomato until tender.",
             "Add sinigang mix and season.",
             "Add kangkong last — skip the extra gulay to cut cost.",
@@ -2137,7 +2042,7 @@ const RECIPE_DATABASE = [
     },
     {
         id: 84,
-        name: "Tortang Talong",
+        name: "Tortang Talong with Rice",
         mealType: ["Lunch", "Dinner"],
         diet: ["anything", "tipid", "healthy"],
         image: "assets/recipes/tortang-talong.jpg",
@@ -2146,14 +2051,16 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "2 pc Eggplant",
-            "2 pc Egg",
-            "2 tbsp Oil",
-            "1 tsp Salt",
-            "2 cup Rice"
+            "400 g Eggplant",
+            "2 pc Eggs",
+            "30 ml Cooking Oil",
+            "5 g Salt",
+            "150 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Grill or broil eggplants, then peel.",
             "Flatten and dip in beaten egg with salt.",
             "Fry until golden on both sides.",
@@ -2171,15 +2078,19 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "40 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "1 cup Monggo",
-            "1 bundle Malunggay",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tbsp Fish Sauce",
-            "4 cup Rice"
+            "200 g Mung Beans",
+            "50 g Malunggay Leaves",
+            "100 g Onion",
+            "12 g Garlic",
+            "15 ml Fish Sauce",
+            "300 g Rice",
+            "1200 ml Water",
+            "15 ml Cooking Oil"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Boil monggo until soft.",
             "Sauté garlic and onion, then add the boiled monggo.",
             "Add malunggay and season with fish sauce — no pork needed.",
@@ -2197,15 +2108,18 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "50 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "500 g Chicken Feet",
             "300 g Kamote",
-            "1 bunch Pechay",
-            "1 pc Onion",
-            "1 tbsp Fish Sauce",
-            "4 cup Rice"
+            "200 g Pechay",
+            "100 g Onion",
+            "15 ml Fish Sauce",
+            "300 g Rice",
+            "1500 ml Water"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Boil chicken feet with onion until tender.",
             "Add kamote and simmer until soft.",
             "Add pechay and season with fish sauce.",
@@ -2223,17 +2137,20 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "300 g Ampalaya",
-            "3 pcs Egg",
-            "2 pcs Tomato",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tbsp Fish Sauce",
-            "1 tbsp Oil",
-            "4 cup Rice"
+            "3 pc Eggs",
+            "200 g Tomato",
+            "100 g Onion",
+            "12 g Garlic",
+            "15 ml Fish Sauce",
+            "15 ml Cooking Oil",
+            "300 g Rice",
+            "60 ml Water"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Slice ampalaya thinly and soak in salted water for 10 minutes, then squeeze dry to reduce bitterness.",
             "Saute garlic, onion, and tomato in oil.",
             "Add ampalaya and stir-fry for 3 minutes.",
@@ -2252,21 +2169,24 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "150 g Chicken",
-            "1 pc Carrot",
-            "200 g Repolyo",
+            "150 g Carrot",
+            "200 g Cabbage",
             "150 g Sayote",
             "100 g Baguio Beans",
-            "1 pc Bell Pepper",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "2 tbsp Soy Sauce",
-            "1 tbsp Cornstarch",
-            "1 tbsp Oil",
-            "4 cup Rice"
+            "100 g Green Bell Pepper",
+            "100 g Onion",
+            "12 g Garlic",
+            "30 ml Soy Sauce",
+            "8 g Cornstarch",
+            "15 ml Cooking Oil",
+            "300 g Rice",
+            "120 ml Water"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Saute garlic and onion, then brown the chicken strips.",
             "Add the harder vegetables first (carrot, sayote, beans) with a splash of water.",
             "Add repolyo and bell pepper, season with soy sauce.",
@@ -2285,17 +2205,20 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "300 g Kalabasa",
             "200 g Sitaw",
-            "2 pcs Tomato",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tbsp Fish Sauce",
-            "1 tbsp Oil",
-            "4 cup Rice"
+            "200 g Tomato",
+            "100 g Onion",
+            "12 g Garlic",
+            "15 ml Fish Sauce",
+            "15 ml Cooking Oil",
+            "300 g Rice",
+            "120 ml Water"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Saute garlic, onion, and tomato in oil.",
             "Add cubed kalabasa with 1/2 cup water; simmer until almost tender.",
             "Add sitaw and cook 3-4 minutes so it stays crunchy.",
@@ -2313,15 +2236,17 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "2 bunch Pechay",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tbsp Soy Sauce",
-            "1 tbsp Oil",
-            "4 cup Rice"
+            "400 g Pechay",
+            "100 g Onion",
+            "12 g Garlic",
+            "15 ml Soy Sauce",
+            "15 ml Cooking Oil",
+            "300 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Saute garlic and onion in oil.",
             "Add pechay stalks first, then leaves.",
             "Season with soy sauce and cook 2-3 minutes.",
@@ -2339,17 +2264,20 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "45 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "250 g Monggo",
-            "1 cup Malunggay",
-            "2 pcs Tomato",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "2 tbsp Fish Sauce",
-            "1 tbsp Oil",
-            "4 cup Rice"
+            "250 g Mung Beans",
+            "30 g Malunggay Leaves",
+            "200 g Tomato",
+            "100 g Onion",
+            "12 g Garlic",
+            "30 ml Fish Sauce",
+            "15 ml Cooking Oil",
+            "300 g Rice",
+            "1200 ml Water"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Boil monggo in 5 cups water until soft, about 30 minutes.",
             "Saute garlic, onion, and tomato in a separate pan.",
             "Pour the cooked monggo into the saute and season with fish sauce.",
@@ -2368,17 +2296,20 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "3 pcs Sweet Corn",
-            "1 cup Malunggay",
-            "2 pcs Tinapa",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tbsp Fish Sauce",
-            "1 tbsp Oil",
-            "4 cup Rice"
+            "600 g Sweet Corn",
+            "30 g Malunggay Leaves",
+            "200 g Tinapa",
+            "100 g Onion",
+            "12 g Garlic",
+            "15 ml Fish Sauce",
+            "15 ml Cooking Oil",
+            "300 g Rice",
+            "1200 ml Water"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Shave the corn kernels off the cob.",
             "Saute garlic and onion, then add flaked tinapa.",
             "Add corn and 4 cups water; simmer 10 minutes.",
@@ -2397,15 +2328,17 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "4 pcs Talong",
-            "2 pcs Tomato",
-            "1 pc Onion",
-            "2 tbsp Vinegar",
-            "1 tbsp Fish Sauce",
-            "4 cup Rice"
+            "800 g Eggplant",
+            "200 g Tomato",
+            "100 g Onion",
+            "30 ml Vinegar",
+            "15 ml Fish Sauce",
+            "300 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Grill or roast talong over the flame until charred and soft; peel.",
             "Chop the flesh roughly.",
             "Toss with diced tomato, onion, vinegar, and fish sauce.",
@@ -2423,20 +2356,23 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "4 pcs Tokwa",
-            "200 g Togue",
-            "1 bunch Pechay",
-            "150 g Repolyo",
+            "400 g Firm Tofu",
+            "200 g Mung Bean Sprouts",
+            "200 g Pechay",
+            "150 g Cabbage",
             "100 g Sitaw",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tsp Ginger",
-            "2 tbsp Soy Sauce",
-            "2 tbsp Oil",
-            "4 cup Rice"
+            "100 g Onion",
+            "12 g Garlic",
+            "5 g Ginger",
+            "30 ml Soy Sauce",
+            "30 ml Cooking Oil",
+            "300 g Rice",
+            "120 ml Water"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Fry cubed tokwa until golden brown; set aside.",
             "Saute garlic, onion, and ginger.",
             "Add sitaw and repolyo with a splash of water; cook 3 minutes.",
@@ -2455,20 +2391,23 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "30 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "1 pc Labanos",
+            "250 g Radish",
             "200 g Gabi",
             "150 g Sitaw",
             "100 g Okra",
-            "2 pcs Talong",
-            "1 bunch Kangkong",
-            "2 pcs Tomato",
-            "1 pc Onion",
-            "1 pack Sinigang Mix",
-            "1 tbsp Fish Sauce",
-            "4 cup Rice"
+            "400 g Eggplant",
+            "200 g Kangkong",
+            "200 g Tomato",
+            "100 g Onion",
+            "40 g Sinigang Mix",
+            "15 ml Fish Sauce",
+            "300 g Rice",
+            "1500 ml Water"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Boil 6 cups water with onion, tomato, and gabi until gabi softens.",
             "Add labanos, sitaw, okra, and talong; simmer 5 minutes.",
             "Stir in sinigang mix and fish sauce.",
@@ -2487,22 +2426,24 @@ const RECIPE_DATABASE = [
         prepTime: "30 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "1 pack Lumpia Wrapper",
+            "200 g Lumpia Wrapper",
             "200 g Singkamas",
-            "1 pc Carrot",
-            "150 g Repolyo",
+            "150 g Carrot",
+            "150 g Cabbage",
             "100 g Sitaw",
-            "150 g Togue",
+            "150 g Mung Bean Sprouts",
             "100 g Lettuce",
-            "4 pcs Tokwa",
-            "1 pc Onion",
-            "4 cloves Garlic",
-            "3 tbsp Soy Sauce",
-            "3 tbsp Sugar",
-            "2 tbsp Cornstarch",
-            "2 tbsp Peanut Butter",
-            "1 tbsp Oil"
+            "400 g Firm Tofu",
+            "100 g Onion",
+            "16 g Garlic",
+            "45 ml Soy Sauce",
+            "36 g Sugar",
+            "16 g Cornstarch",
+            "32 g Peanut Butter",
+            "15 ml Cooking Oil",
+            "250 ml Water"
         ],
         instructions: [
             "Saute garlic and onion, then cook singkamas, carrot, sitaw, and repolyo until tender-crisp.",
@@ -2523,16 +2464,18 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "300 g Sitaw",
-            "1 pc Onion",
-            "4 cloves Garlic",
-            "2 tbsp Soy Sauce",
-            "1 tbsp Vinegar",
-            "1 tbsp Oil",
-            "4 cup Rice"
+            "100 g Onion",
+            "16 g Garlic",
+            "30 ml Soy Sauce",
+            "15 ml Vinegar",
+            "15 ml Cooking Oil",
+            "300 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Saute garlic and onion in oil.",
             "Add sitaw and stir-fry 2 minutes.",
             "Add soy sauce and vinegar; do not stir until it boils.",
@@ -2551,16 +2494,19 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "2 pcs Patola",
-            "2 pcs Egg",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tbsp Fish Sauce",
-            "1 tbsp Oil",
-            "4 cup Rice"
+            "500 g Patola",
+            "2 pc Eggs",
+            "100 g Onion",
+            "12 g Garlic",
+            "15 ml Fish Sauce",
+            "15 ml Cooking Oil",
+            "300 g Rice",
+            "100 ml Water"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Peel and slice patola.",
             "Saute garlic and onion in oil.",
             "Add patola with 1/2 cup water; simmer 5 minutes.",
@@ -2579,14 +2525,16 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
             "300 g Okra",
-            "2 tbsp Bagoong",
-            "2 pcs Tomato",
-            "1 pc Onion",
-            "4 cup Rice"
+            "30 g Bagoong",
+            "200 g Tomato",
+            "100 g Onion",
+            "300 g Rice"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Steam or blanch okra for 3-4 minutes until bright green.",
             "Chop tomato and onion.",
             "Serve okra with bagoong, tomato, and onion on the side.",
@@ -2604,18 +2552,21 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "30 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "500 g Langka",
-            "1 cup Coconut Milk",
-            "2 pcs Tinapa",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tsp Ginger",
-            "1 tbsp Fish Sauce",
-            "1 pc Chili",
-            "4 cup Rice"
+            "500 g Unripe Jackfruit",
+            "240 ml Coconut Milk",
+            "200 g Tinapa",
+            "100 g Onion",
+            "12 g Garlic",
+            "5 g Ginger",
+            "15 ml Fish Sauce",
+            "5 g Chili",
+            "300 g Rice",
+            "15 ml Cooking Oil"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Saute garlic, onion, and ginger.",
             "Add sliced unripe langka and flaked tinapa.",
             "Pour in coconut milk and simmer 20 minutes until langka is tender.",
@@ -2634,18 +2585,22 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
         ingredients: [
-            "1 pc Puso ng Saging",
-            "1 cup Coconut Milk",
-            "2 pcs Tinapa",
-            "1 pc Onion",
-            "3 cloves Garlic",
-            "1 tsp Ginger",
-            "1 tbsp Vinegar",
-            "1 tbsp Fish Sauce",
-            "4 cup Rice"
+            "400 g Banana Blossom",
+            "240 ml Coconut Milk",
+            "200 g Tinapa",
+            "100 g Onion",
+            "12 g Garlic",
+            "5 g Ginger",
+            "15 ml Vinegar",
+            "15 ml Fish Sauce",
+            "300 g Rice",
+            "200 ml Water",
+            "15 ml Cooking Oil"
         ],
         instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
             "Remove tough outer layers of the banana heart; slice thinly and soak in salted water, then squeeze dry.",
             "Saute garlic, onion, and ginger, then add flaked tinapa.",
             "Add the banana heart, vinegar, and coconut milk; simmer 15 minutes.",
@@ -2663,8 +2618,22 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
-        ingredients: ["2 pcs Egg", "3 pcs Tomato", "1 pc Onion", "2 tbsp Oil", "1 pinch Salt", "4 cup Rice"],
-        instructions: ["Beat eggs with a pinch of salt.", "Mix in chopped tomatoes and onion to stretch the portion.", "Fry in a little oil until set on both sides.", "Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "2 pc Eggs",
+            "300 g Tomato",
+            "100 g Onion",
+            "30 ml Cooking Oil",
+            "1 g Salt",
+            "300 g Rice"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Beat eggs with a pinch of salt.",
+            "Mix in chopped tomatoes and onion to stretch the portion.",
+            "Fry in a little oil until set on both sides.",
+            "Serve with rice."
+        ]
     },
     {
         id: 103,
@@ -2677,8 +2646,23 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["4 pcs Tokwa", "3 cloves Garlic", "1 pc Onion", "2 tbsp Soy Sauce", "2 tbsp Oil", "4 cup Rice"],
-        instructions: ["Cube and fry tokwa until golden.", "Saute garlic and onion, then toss in the tokwa.", "Add soy sauce and a splash of water; simmer 2 minutes.", "Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Firm Tofu",
+            "12 g Garlic",
+            "100 g Onion",
+            "30 ml Soy Sauce",
+            "30 ml Cooking Oil",
+            "300 g Rice",
+            "60 ml Water"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Cube and fry tokwa until golden.",
+            "Saute garlic and onion, then toss in the tokwa.",
+            "Add soy sauce and a splash of water; simmer 2 minutes.",
+            "Serve with rice."
+        ]
     },
     {
         id: 104,
@@ -2691,8 +2675,24 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["1 pack Misua", "2 pcs Egg", "3 cloves Garlic", "1 pc Onion", "1 tbsp Fish Sauce", "4 cup Rice"],
-        instructions: ["Saute garlic and onion; add 5 cups water and bring to a boil.", "Add misua and fish sauce; simmer 2 minutes.", "Stir in beaten eggs slowly to make ribbons.", "Serve hot with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "100 g Misua Noodles",
+            "2 pc Eggs",
+            "12 g Garlic",
+            "100 g Onion",
+            "15 ml Fish Sauce",
+            "300 g Rice",
+            "800 ml Water",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Saute garlic and onion; add 5 cups water and bring to a boil.",
+            "Add misua and fish sauce; simmer 2 minutes.",
+            "Stir in beaten eggs slowly to make ribbons.",
+            "Serve hot with rice."
+        ]
     },
     {
         id: 105,
@@ -2705,12 +2705,23 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "5 mins",
         difficulty: "Easy",
-        ingredients: ["2 pcs Salted Egg", "3 pcs Tomato", "1 pc Onion", "4 cup Rice"],
-        instructions: ["Peel and slice salted eggs.", "Toss with chopped tomatoes and onion.", "Serve with hot rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "2 pc Salted Egg",
+            "300 g Tomato",
+            "100 g Onion",
+            "300 g Rice"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Peel and slice salted eggs.",
+            "Toss with chopped tomatoes and onion.",
+            "Serve with hot rice."
+        ]
     },
     {
         id: 106,
-        name: "Ginisang Toge",
+        name: "Ginisang Togue with Soy Sauce and Rice",
         mealType: ["Lunch", "Dinner"],
         diet: ["anything", "tipid", "nopork"],
         image: "assets/recipes/ginisang-toge.jpg",
@@ -2719,8 +2730,21 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
-        ingredients: ["300 g Togue", "3 cloves Garlic", "1 pc Onion", "1 tbsp Soy Sauce", "1 tbsp Oil", "4 cup Rice"],
-        instructions: ["Heat oil on high and saute garlic and onion.", "Add togue and soy sauce; stir-fry 2 to 3 minutes only.", "Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "300 g Mung Bean Sprouts",
+            "12 g Garlic",
+            "100 g Onion",
+            "15 ml Soy Sauce",
+            "15 ml Cooking Oil",
+            "300 g Rice"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Heat oil on high and saute garlic and onion.",
+            "Add togue and soy sauce; stir-fry 2 to 3 minutes only.",
+            "Serve with rice."
+        ]
     },
     {
         id: 107,
@@ -2733,8 +2757,21 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["2 pcs Sayote", "3 cloves Garlic", "1 pc Onion", "1 tsp Salt", "4 cup Rice"],
-        instructions: ["Saute garlic and onion.", "Add sliced sayote and 4 cups water; season with salt.", "Simmer until tender. Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "500 g Sayote",
+            "12 g Garlic",
+            "100 g Onion",
+            "5 g Salt",
+            "300 g Rice",
+            "1000 ml Water"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Saute garlic and onion.",
+            "Add sliced sayote and 4 cups water; season with salt.",
+            "Simmer until tender. Serve with rice."
+        ]
     },
     {
         id: 108,
@@ -2747,8 +2784,22 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["300 g Kalabasa", "3 cloves Garlic", "1 pc Onion", "1 tbsp Fish Sauce", "1 tbsp Oil", "4 cup Rice"],
-        instructions: ["Saute garlic and onion.", "Add diced kalabasa, fish sauce, and a little water.", "Cover and simmer until soft and sweet. Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "300 g Kalabasa",
+            "12 g Garlic",
+            "100 g Onion",
+            "15 ml Fish Sauce",
+            "15 ml Cooking Oil",
+            "300 g Rice",
+            "120 ml Water"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Saute garlic and onion.",
+            "Add diced kalabasa, fish sauce, and a little water.",
+            "Cover and simmer until soft and sweet. Serve with rice."
+        ]
     },
     {
         id: 109,
@@ -2761,8 +2812,23 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["500 g Upo", "3 cloves Garlic", "1 pc Onion", "2 pcs Tomato", "1 tbsp Fish Sauce", "4 cup Rice"],
-        instructions: ["Saute garlic, onion, and tomato.", "Add sliced upo and fish sauce with a bit of water.", "Simmer until translucent. Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "500 g Upo",
+            "12 g Garlic",
+            "100 g Onion",
+            "200 g Tomato",
+            "15 ml Fish Sauce",
+            "300 g Rice",
+            "120 ml Water",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Saute garlic, onion, and tomato.",
+            "Add sliced upo and fish sauce with a bit of water.",
+            "Simmer until translucent. Serve with rice."
+        ]
     },
     {
         id: 110,
@@ -2775,8 +2841,22 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
-        ingredients: ["1 can Sardines", "1 bundle Pechay", "3 cloves Garlic", "1 pc Onion", "4 cup Rice"],
-        instructions: ["Saute garlic and onion.", "Add sardines with its sauce and a cup of water.", "Add pechay and cook 2 minutes. Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "155 g Sardines",
+            "200 g Pechay",
+            "12 g Garlic",
+            "100 g Onion",
+            "300 g Rice",
+            "120 ml Water",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Saute garlic and onion.",
+            "Add sardines with its sauce and a cup of water.",
+            "Add pechay and cook 2 minutes. Serve with rice."
+        ]
     },
     {
         id: 111,
@@ -2789,8 +2869,22 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["1 can Corned Beef", "300 g Cabbage", "3 cloves Garlic", "1 pc Onion", "4 cup Rice"],
-        instructions: ["Saute garlic and onion, then add half the corned beef.", "Bulk up with shredded cabbage and a splash of water.", "Simmer until cabbage is tender. Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "300 g Corned Beef",
+            "300 g Cabbage",
+            "12 g Garlic",
+            "100 g Onion",
+            "300 g Rice",
+            "60 ml Water",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Saute garlic and onion, then add half the corned beef.",
+            "Bulk up with shredded cabbage and a splash of water.",
+            "Simmer until cabbage is tender. Serve with rice."
+        ]
     },
     {
         id: 112,
@@ -2803,8 +2897,21 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
-        ingredients: ["50 g Dilis", "3 pcs Tomato", "1 pc Onion", "3 cloves Garlic", "1 tbsp Oil", "4 cup Rice"],
-        instructions: ["Fry dilis until crisp; set aside.", "Saute garlic, onion, and tomato until saucy.", "Toss dilis back in. Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "50 g Dilis",
+            "300 g Tomato",
+            "100 g Onion",
+            "12 g Garlic",
+            "15 ml Cooking Oil",
+            "300 g Rice"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Fry dilis until crisp; set aside.",
+            "Saute garlic, onion, and tomato until saucy.",
+            "Toss dilis back in. Serve with rice."
+        ]
     },
     {
         id: 113,
@@ -2817,8 +2924,20 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
-        ingredients: ["1 can Canned Tuna", "2 pcs Egg", "1 pc Onion", "2 tbsp Oil", "4 cup Rice"],
-        instructions: ["Mix half a can of tuna into beaten eggs with chopped onion.", "Fry into a filling patty until golden.", "Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "180 g Canned Tuna",
+            "2 pc Eggs",
+            "100 g Onion",
+            "30 ml Cooking Oil",
+            "300 g Rice"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Mix half a can of tuna into beaten eggs with chopped onion.",
+            "Fry into a filling patty until golden.",
+            "Serve with rice."
+        ]
     },
     {
         id: 114,
@@ -2831,8 +2950,20 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["1 can Luncheon Meat", "4 cup Rice", "3 cloves Garlic", "2 tbsp Soy Sauce", "2 tbsp Oil"],
-        instructions: ["Cube a slice of luncheon meat and fry until browned.", "Add garlic then leftover rice; toss with soy sauce.", "Fry until slightly crisp. Serve hot."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "340 g Luncheon Meat",
+            "300 g Rice",
+            "12 g Garlic",
+            "30 ml Soy Sauce",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Cube a slice of luncheon meat and fry until browned.",
+            "Add garlic then cooked rice; toss with soy sauce.",
+            "Fry until slightly crisp. Serve hot."
+        ]
     },
     {
         id: 115,
@@ -2845,8 +2976,21 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["1 can Sardines", "1 pc Egg", "3 tbsp Flour", "1 pc Onion", "2 tbsp Oil", "4 cup Rice"],
-        instructions: ["Mash sardines and mix with egg, flour, and chopped onion.", "Form into patties and fry until golden on both sides.", "Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "155 g Sardines",
+            "1 pc Eggs",
+            "24 g Flour",
+            "100 g Onion",
+            "30 ml Cooking Oil",
+            "300 g Rice"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Mash sardines and mix with egg, flour, and chopped onion.",
+            "Form into patties and fry until golden on both sides.",
+            "Serve with rice."
+        ]
     },
     {
         id: 116,
@@ -2860,8 +3004,23 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "45 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Chicken","4 pcs Egg","1/2 cup Soy Sauce","1/3 cup Vinegar","6 cloves Garlic","2 Bay Leaves","1 tsp Peppercorn"],
-        instructions: ["Hard-boil and peel eggs.","Brown garlic, add chicken and cook until lightly browned.","Add soy sauce, vinegar, bay leaves and pepper; simmer 35 minutes.","Add eggs in the last 10 minutes so they soak up the sauce.","Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Chicken",
+            "4 pc Eggs",
+            "120 ml Soy Sauce",
+            "80 ml Vinegar",
+            "24 g Garlic",
+            "2 g Bay Leaves",
+            "2 g Peppercorn"
+        ],
+        instructions: [
+            "Hard-boil and peel eggs.",
+            "Brown garlic, add chicken and cook until lightly browned.",
+            "Add soy sauce, vinegar, bay leaves and pepper; simmer 35 minutes.",
+            "Add eggs in the last 10 minutes so they soak up the sauce.",
+            "Serve with rice."
+        ]
     },
     {
         id: 117,
@@ -2875,8 +3034,28 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "40 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Chicken","2 pcs Potato","1 pc Carrot","1 pc Bell Pepper","1 cup Coconut Milk","2 tbsp Curry Powder","1 pc Onion","4 cloves Garlic","1 thumb Ginger","1 tbsp Fish Sauce"],
-        instructions: ["Saute garlic, onion and ginger.","Add chicken and cook until browned.","Add curry powder, potato and carrot; add water and simmer 25 minutes.","Pour in coconut milk and bell pepper; simmer 5 more minutes.","Season with fish sauce and serve."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Chicken",
+            "300 g Potato",
+            "150 g Carrot",
+            "100 g Green Bell Pepper",
+            "240 ml Coconut Milk",
+            "12 g Curry Powder",
+            "100 g Onion",
+            "16 g Garlic",
+            "15 g Ginger",
+            "15 ml Fish Sauce",
+            "500 ml Water",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Saute garlic, onion and ginger.",
+            "Add chicken and cook until browned.",
+            "Add curry powder, potato and carrot; add water and simmer 25 minutes.",
+            "Pour in coconut milk and bell pepper; simmer 5 more minutes.",
+            "Season with fish sauce and serve."
+        ]
     },
     {
         id: 118,
@@ -2890,8 +3069,22 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "30 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Chicken","3 tbsp Butter","6 cloves Garlic","2 tbsp Soy Sauce","1 tbsp Sugar","1 tsp Pepper","2 tbsp Oil"],
-        instructions: ["Season chicken with salt and pepper; fry until golden.","In the same pan melt butter and saute garlic.","Add soy sauce and sugar, toss chicken to coat.","Serve hot with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Chicken",
+            "42 g Butter",
+            "24 g Garlic",
+            "30 ml Soy Sauce",
+            "12 g Sugar",
+            "2 g Pepper",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Season chicken with salt and pepper; fry until golden.",
+            "In the same pan melt butter and saute garlic.",
+            "Add soy sauce and sugar, toss chicken to coat.",
+            "Serve hot with rice."
+        ]
     },
     {
         id: 119,
@@ -2905,8 +3098,24 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Chicken","1/4 cup Soy Sauce","3 tbsp Sugar","2 tbsp Vinegar","1 thumb Ginger","4 cloves Garlic","1 tsp Sesame Oil","1 tbsp Cornstarch"],
-        instructions: ["Mix soy sauce, sugar, vinegar, ginger and garlic for the sauce.","Pan-fry chicken until browned.","Pour in sauce and simmer 10 minutes.","Thicken with cornstarch slurry, drizzle sesame oil.","Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Chicken",
+            "60 ml Soy Sauce",
+            "36 g Sugar",
+            "30 ml Vinegar",
+            "15 g Ginger",
+            "16 g Garlic",
+            "5 ml Sesame Oil",
+            "8 g Cornstarch"
+        ],
+        instructions: [
+            "Mix soy sauce, sugar, vinegar, ginger and garlic for the sauce.",
+            "Pan-fry chicken until browned.",
+            "Pour in sauce and simmer 10 minutes.",
+            "Thicken with cornstarch slurry, drizzle sesame oil.",
+            "Serve with rice."
+        ]
     },
     {
         id: 120,
@@ -2920,8 +3129,26 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "45 mins",
         difficulty: "Medium",
-        ingredients: ["1 kg Chicken","2 pcs Potato","1 pc Carrot","1 pc Bell Pepper","1 can Evaporated Milk","2 tbsp Butter","1 pc Onion","4 cloves Garlic","2 pcs Hotdog","1 tbsp Flour"],
-        instructions: ["Saute garlic and onion in butter; add chicken and brown.","Add potato, carrot and water; simmer 25 minutes.","Add hotdog, bell pepper and milk; thicken with flour.","Simmer 5 minutes and serve."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Chicken",
+            "300 g Potato",
+            "150 g Carrot",
+            "100 g Green Bell Pepper",
+            "370 ml Evaporated Milk",
+            "28 g Butter",
+            "100 g Onion",
+            "16 g Garlic",
+            "100 g Hotdog",
+            "8 g Flour",
+            "250 ml Water"
+        ],
+        instructions: [
+            "Saute garlic and onion in butter; add chicken and brown.",
+            "Add potato, carrot and water; simmer 25 minutes.",
+            "Add hotdog, bell pepper and milk; thicken with flour.",
+            "Simmer 5 minutes and serve."
+        ]
     },
     {
         id: 121,
@@ -2935,8 +3162,27 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "50 mins",
         difficulty: "Medium",
-        ingredients: ["1 kg Chicken","2 pcs Potato","1 pc Carrot","1 pc Bell Pepper","1/2 cup Tomato Sauce","2 tbsp Peanut Butter","1 pc Onion","4 cloves Garlic","2 tbsp Cheese","1 pc Chili"],
-        instructions: ["Saute garlic and onion; brown chicken.","Add tomato sauce and water; simmer 30 minutes.","Add potato and carrot; cook until tender.","Stir in peanut butter, cheese, bell pepper and chili.","Serve hot."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Chicken",
+            "300 g Potato",
+            "150 g Carrot",
+            "100 g Green Bell Pepper",
+            "120 g Tomato Sauce",
+            "32 g Peanut Butter",
+            "100 g Onion",
+            "16 g Garlic",
+            "14 g Cheese",
+            "5 g Chili",
+            "250 ml Water"
+        ],
+        instructions: [
+            "Saute garlic and onion; brown chicken.",
+            "Add tomato sauce and water; simmer 30 minutes.",
+            "Add potato and carrot; cook until tender.",
+            "Stir in peanut butter, cheese, bell pepper and chili.",
+            "Serve hot."
+        ]
     },
     {
         id: 122,
@@ -2950,8 +3196,22 @@ const RECIPE_DATABASE = [
         prepTime: "30 mins",
         cookTime: "25 mins",
         difficulty: "Medium",
-        ingredients: ["1 kg Chicken","1 pc Mango","3 tbsp Vinegar","2 tbsp Soy Sauce","2 tbsp Sugar","4 cloves Garlic","1 tsp Pepper"],
-        instructions: ["Marinate chicken in vinegar, soy sauce, sugar, garlic and pepper for 30 minutes.","Grill or pan-grill chicken until cooked through.","Top with diced ripe mango and a drizzle of the reduced marinade.","Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Chicken",
+            "200 g Mango",
+            "45 ml Balsamic Vinegar",
+            "30 ml Soy Sauce",
+            "24 g Sugar",
+            "16 g Garlic",
+            "2 g Pepper"
+        ],
+        instructions: [
+            "Marinate chicken in vinegar, soy sauce, sugar, garlic and pepper for 30 minutes.",
+            "Grill or pan-grill chicken until cooked through.",
+            "Top with diced ripe mango and a drizzle of the reduced marinade.",
+            "Serve with rice."
+        ]
     },
     {
         id: 123,
@@ -2965,8 +3225,21 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Chicken","3 tbsp Butter","8 cloves Garlic","1 tsp Salt","1 tsp Pepper","1 tbsp Soy Sauce"],
-        instructions: ["Season chicken and pan-fry until golden.","Melt butter, saute plenty of garlic until fragrant.","Toss chicken in garlic butter with a splash of soy sauce.","Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Chicken",
+            "42 g Butter",
+            "32 g Garlic",
+            "5 g Salt",
+            "2 g Pepper",
+            "15 ml Soy Sauce"
+        ],
+        instructions: [
+            "Season chicken and pan-fry until golden.",
+            "Melt butter, saute plenty of garlic until fragrant.",
+            "Toss chicken in garlic butter with a splash of soy sauce.",
+            "Serve with rice."
+        ]
     },
     {
         id: 124,
@@ -2980,8 +3253,25 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["500 g Chicken","1 pc Carrot","1/4 head Cabbage","1 pc Bell Pepper","100 g Baguio Beans","2 tbsp Oyster Sauce","1 tbsp Soy Sauce","4 cloves Garlic","1 pc Onion","2 tbsp Oil"],
-        instructions: ["Slice chicken thinly and stir-fry in hot oil.","Add garlic and onion, then the vegetables.","Season with oyster sauce and soy sauce; toss 3 minutes.","Serve immediately with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "500 g Chicken",
+            "150 g Carrot",
+            "200 g Cabbage",
+            "100 g Green Bell Pepper",
+            "100 g Baguio Beans",
+            "30 ml Oyster Sauce",
+            "15 ml Soy Sauce",
+            "16 g Garlic",
+            "100 g Onion",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Slice chicken thinly and stir-fry in hot oil.",
+            "Add garlic and onion, then the vegetables.",
+            "Season with oyster sauce and soy sauce; toss 3 minutes.",
+            "Serve immediately with rice."
+        ]
     },
     {
         id: 125,
@@ -2995,8 +3285,22 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Chicken","1 cup Flour","1 tbsp Cornstarch","1 tsp Salt","1 tsp Pepper","4 cloves Garlic","2 cups Oil"],
-        instructions: ["Season chicken with salt, pepper and crushed garlic.","Dredge in flour and cornstarch.","Deep fry in hot oil until golden and crispy, about 12 minutes per batch.","Serve with rice and ketchup."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Chicken",
+            "120 g Flour",
+            "8 g Cornstarch",
+            "5 g Salt",
+            "2 g Pepper",
+            "16 g Garlic",
+            "480 ml Cooking Oil"
+        ],
+        instructions: [
+            "Season chicken with salt, pepper and crushed garlic.",
+            "Dredge in flour and cornstarch.",
+            "Deep fry in hot oil until golden and crispy, about 12 minutes per batch.",
+            "Serve with rice and ketchup."
+        ]
     },
     {
         id: 126,
@@ -3010,8 +3314,21 @@ const RECIPE_DATABASE = [
         prepTime: "30 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Chicken","1/4 cup Soy Sauce","3 tbsp Ketchup","3 tbsp Sugar","3 pcs Calamansi","6 cloves Garlic","1 tsp Pepper"],
-        instructions: ["Marinate chicken in soy sauce, ketchup, sugar, calamansi, garlic and pepper (overnight if possible).","Skewer or lay on grill; cook over charcoal, basting with marinade.","Serve with rice and spiced vinegar."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Chicken",
+            "60 ml Soy Sauce",
+            "45 g Ketchup",
+            "36 g Sugar",
+            "30 ml Calamansi Juice",
+            "24 g Garlic",
+            "2 g Pepper"
+        ],
+        instructions: [
+            "Marinate chicken in soy sauce, ketchup, sugar, calamansi, garlic and pepper (overnight if possible).",
+            "Skewer or lay on grill; cook over charcoal, basting with marinade.",
+            "Serve with rice and spiced vinegar."
+        ]
     },
     {
         id: 127,
@@ -3025,8 +3342,25 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
-        ingredients: ["500 g Chicken","3 cups Rice","2 pcs Egg","3 tbsp Soy Sauce","1 tbsp Sugar","4 cloves Garlic","1 pc Onion","1 stalk Onion Leaves"],
-        instructions: ["Cook rice.","Stir-fry sliced chicken with garlic and onion; season with soy sauce and sugar.","Fry eggs sunny-side up.","Top rice with chicken and egg; garnish with onion leaves."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "500 g Chicken",
+            "225 g Rice",
+            "2 pc Eggs",
+            "45 ml Soy Sauce",
+            "12 g Sugar",
+            "16 g Garlic",
+            "100 g Onion",
+            "15 g Onion Leaves",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Cook rice.",
+            "Stir-fry sliced chicken with garlic and onion; season with soy sauce and sugar.",
+            "Fry eggs sunny-side up.",
+            "Top rice with chicken and egg; garnish with onion leaves."
+        ]
     },
     {
         id: 128,
@@ -3040,8 +3374,22 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "30 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Chicken","1 pc Lemon","8 cloves Garlic","2 tbsp Butter","1 tsp Salt","1 tsp Pepper","2 tbsp Oil"],
-        instructions: ["Season chicken with salt, pepper, lemon juice and garlic; rest 15 minutes.","Pan-sear chicken until golden and cooked through.","Finish with butter and remaining garlic in the pan.","Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Chicken",
+            "40 ml Lemon Juice",
+            "32 g Garlic",
+            "28 g Butter",
+            "5 g Salt",
+            "2 g Pepper",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Season chicken with salt, pepper, lemon juice and garlic; rest 15 minutes.",
+            "Pan-sear chicken until golden and cooked through.",
+            "Finish with butter and remaining garlic in the pan.",
+            "Serve with rice."
+        ]
     },
     {
         id: 129,
@@ -3055,8 +3403,25 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "25 mins",
         difficulty: "Medium",
-        ingredients: ["700 g Chicken","1 pc Bell Pepper","1 pc Carrot","1 pc Onion","1 can Pineapple","4 tbsp Ketchup","3 tbsp Vinegar","3 tbsp Sugar","2 tbsp Cornstarch","1 cup Oil"],
-        instructions: ["Coat chicken pieces in cornstarch and fry until crisp.","Saute onion, carrot and bell pepper.","Add ketchup, vinegar, sugar and pineapple with juice; thicken with cornstarch slurry.","Toss fried chicken in the sauce and serve."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "700 g Chicken",
+            "100 g Green Bell Pepper",
+            "150 g Carrot",
+            "100 g Onion",
+            "225 g Pineapple",
+            "60 g Ketchup",
+            "45 ml Vinegar",
+            "36 g Sugar",
+            "16 g Cornstarch",
+            "240 ml Cooking Oil"
+        ],
+        instructions: [
+            "Coat chicken pieces in cornstarch and fry until crisp.",
+            "Saute onion, carrot and bell pepper.",
+            "Add ketchup, vinegar, sugar and pineapple with juice; thicken with cornstarch slurry.",
+            "Toss fried chicken in the sauce and serve."
+        ]
     },
     {
         id: 130,
@@ -3070,8 +3435,22 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "50 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Pork","1/2 cup Soy Sauce","1/3 cup Vinegar","6 cloves Garlic","2 Bay Leaves","1 tsp Peppercorn","1 tbsp Sugar"],
-        instructions: ["Marinate pork in soy sauce and garlic for 30 minutes.","Brown pork in a little oil.","Add marinade, vinegar, bay leaves and pepper; simmer 40 minutes until tender.","Reduce sauce and serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Pork",
+            "120 ml Soy Sauce",
+            "80 ml Vinegar",
+            "24 g Garlic",
+            "2 g Bay Leaves",
+            "2 g Peppercorn",
+            "12 g Sugar"
+        ],
+        instructions: [
+            "Marinate pork in soy sauce and garlic for 30 minutes.",
+            "Brown pork in a little oil.",
+            "Add marinade, vinegar, bay leaves and pepper; simmer 40 minutes until tender.",
+            "Reduce sauce and serve with rice."
+        ]
     },
     {
         id: 131,
@@ -3085,8 +3464,22 @@ const RECIPE_DATABASE = [
         prepTime: "30 mins",
         cookTime: "90 mins",
         difficulty: "Medium",
-        ingredients: ["1 kg Liempo","1 tbsp Salt","1 tsp Pepper","6 cloves Garlic","2 stalks Lemongrass","1 pc Onion","2 tbsp Oil"],
-        instructions: ["Rub liempo with salt, pepper and garlic; lay lemongrass and onion inside and roll.","Tie with string and oven-roast or turbo-broil for 90 minutes.","Crisp the skin at high heat for the last 10 minutes.","Slice and serve with lechon sauce."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Pork Belly",
+            "15 g Salt",
+            "2 g Pepper",
+            "24 g Garlic",
+            "30 g Lemongrass",
+            "100 g Onion",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Rub liempo with salt, pepper and garlic; lay lemongrass and onion inside and roll.",
+            "Tie with string and oven-roast or turbo-broil for 90 minutes.",
+            "Crisp the skin at high heat for the last 10 minutes.",
+            "Slice and serve with lechon sauce."
+        ]
     },
     {
         id: 132,
@@ -3100,8 +3493,26 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "50 mins",
         difficulty: "Medium",
-        ingredients: ["1 kg Pork","3 tbsp Bagoong","2 pcs Tomato","1 pc Onion","4 cloves Garlic","2 pcs Talong","2 tbsp Vinegar","1 pc Chili","1 tbsp Sugar"],
-        instructions: ["Boil pork until tender, then brown.","Saute garlic, onion and tomato; add bagoong.","Add pork, vinegar, sugar and a little water; simmer 15 minutes.","Add fried eggplant and chili; serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Pork",
+            "45 g Bagoong",
+            "200 g Tomato",
+            "100 g Onion",
+            "16 g Garlic",
+            "400 g Eggplant",
+            "30 ml Vinegar",
+            "5 g Chili",
+            "12 g Sugar",
+            "250 ml Water",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Boil pork until tender, then brown.",
+            "Saute garlic, onion and tomato; add bagoong.",
+            "Add pork, vinegar, sugar and a little water; simmer 15 minutes.",
+            "Add fried eggplant and chili; serve with rice."
+        ]
     },
     {
         id: 133,
@@ -3115,8 +3526,21 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "70 mins",
         difficulty: "Medium",
-        ingredients: ["1 kg Liempo","1 tbsp Salt","1 tsp Pepper","4 cloves Garlic","2 Bay Leaves","2 cups Oil"],
-        instructions: ["Boil liempo with salt, garlic and bay leaves for 45 minutes.","Dry thoroughly and rub with salt and pepper.","Deep fry until skin is crispy and golden.","Chop and serve with soy-vinegar dip."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Pork Belly",
+            "15 g Salt",
+            "2 g Pepper",
+            "16 g Garlic",
+            "2 g Bay Leaves",
+            "480 ml Cooking Oil"
+        ],
+        instructions: [
+            "Boil liempo with salt, garlic and bay leaves for 45 minutes.",
+            "Dry thoroughly and rub with salt and pepper.",
+            "Deep fry until skin is crispy and golden.",
+            "Chop and serve with soy-vinegar dip."
+        ]
     },
     {
         id: 134,
@@ -3130,8 +3554,22 @@ const RECIPE_DATABASE = [
         prepTime: "30 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Pork","1/4 cup Soy Sauce","4 pcs Calamansi","2 pcs Onion","4 cloves Garlic","1 tsp Pepper","2 tbsp Oil"],
-        instructions: ["Marinate pork slices in soy sauce, calamansi and pepper for 30 minutes.","Pan-fry pork until browned; set aside.","Saute garlic and onion rings; pour in marinade and simmer.","Return pork, top with onion rings and serve."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Pork",
+            "60 ml Soy Sauce",
+            "40 ml Calamansi Juice",
+            "200 g Onion",
+            "16 g Garlic",
+            "2 g Pepper",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Marinate pork slices in soy sauce, calamansi and pepper for 30 minutes.",
+            "Pan-fry pork until browned; set aside.",
+            "Saute garlic and onion rings; pour in marinade and simmer.",
+            "Return pork, top with onion rings and serve."
+        ]
     },
     {
         id: 135,
@@ -3145,8 +3583,25 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "30 mins",
         difficulty: "Easy",
-        ingredients: ["500 g Giniling","2 pcs Potato","1 pc Carrot","1/2 cup Tomato Sauce","1 pc Onion","4 cloves Garlic","1 pc Bell Pepper","1 tbsp Soy Sauce","1 tbsp Oil"],
-        instructions: ["Saute garlic and onion; add ground pork and cook until browned.","Add tomato sauce, soy sauce and water; simmer 10 minutes.","Add diced potato and carrot; cook until tender.","Add bell pepper and serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "500 g Ground Pork",
+            "300 g Potato",
+            "150 g Carrot",
+            "120 g Tomato Sauce",
+            "100 g Onion",
+            "16 g Garlic",
+            "100 g Green Bell Pepper",
+            "15 ml Soy Sauce",
+            "15 ml Cooking Oil",
+            "200 ml Water"
+        ],
+        instructions: [
+            "Saute garlic and onion; add ground pork and cook until browned.",
+            "Add tomato sauce, soy sauce and water; simmer 10 minutes.",
+            "Add diced potato and carrot; cook until tender.",
+            "Add bell pepper and serve with rice."
+        ]
     },
     {
         id: 136,
@@ -3160,8 +3615,23 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "60 mins",
         difficulty: "Medium",
-        ingredients: ["800 g Liempo","200 g Chicken Liver","2 pcs Onion","3 pcs Chili","4 pcs Calamansi","3 tbsp Soy Sauce","2 pcs Egg","2 tbsp Butter"],
-        instructions: ["Boil then grill or fry pork until crisp; chop finely with liver.","Saute in butter with onion and chili.","Season with soy sauce and calamansi.","Serve on a hot plate topped with a raw egg to mix in."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "800 g Pork Belly",
+            "200 g Chicken Liver",
+            "200 g Onion",
+            "15 g Chili",
+            "40 ml Calamansi Juice",
+            "45 ml Soy Sauce",
+            "2 pc Eggs",
+            "28 g Butter"
+        ],
+        instructions: [
+            "Boil then grill or fry pork until crisp; chop finely with liver.",
+            "Saute in butter with onion and chili.",
+            "Season with soy sauce and calamansi.",
+            "Serve on a hot plate topped with a raw egg to mix in."
+        ]
     },
     {
         id: 137,
@@ -3175,8 +3645,23 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "80 mins",
         difficulty: "Medium",
-        ingredients: ["1 kg Liempo","1/2 cup Soy Sauce","1/4 cup Vinegar","3 tbsp Sugar","6 cloves Garlic","2 Bay Leaves","1 pc Onion","1/2 cup Pineapple","1 tsp Peppercorn"],
-        instructions: ["Combine pork, soy sauce, vinegar, garlic, onion and bay leaves; simmer 45 minutes.","Add sugar and pineapple; continue simmering until pork is tender and sauce is sticky-sweet.","Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Pork Belly",
+            "120 ml Soy Sauce",
+            "60 ml Vinegar",
+            "36 g Sugar",
+            "24 g Garlic",
+            "2 g Bay Leaves",
+            "100 g Onion",
+            "112.5 g Pineapple",
+            "2 g Peppercorn"
+        ],
+        instructions: [
+            "Combine pork, soy sauce, vinegar, garlic, onion and bay leaves; simmer 45 minutes.",
+            "Add sugar and pineapple; continue simmering until pork is tender and sauce is sticky-sweet.",
+            "Serve with rice."
+        ]
     },
     {
         id: 138,
@@ -3190,8 +3675,23 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Pork","1/2 cup Sugar","3 tbsp Soy Sauce","2 tbsp Vinegar","4 cloves Garlic","1 tsp Salt","2 tbsp Oil"],
-        instructions: ["Slice pork thinly and marinate in sugar, soy sauce, vinegar, garlic and salt overnight.","Simmer pork in a little water until tender.","Fry in oil until caramelized.","Serve with garlic rice and egg."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Pork",
+            "100 g Sugar",
+            "45 ml Soy Sauce",
+            "30 ml Vinegar",
+            "16 g Garlic",
+            "5 g Salt",
+            "30 ml Cooking Oil",
+            "200 ml Water"
+        ],
+        instructions: [
+            "Slice pork thinly and marinate in sugar, soy sauce, vinegar, garlic and salt overnight.",
+            "Simmer pork in a little water until tender.",
+            "Fry in oil until caramelized.",
+            "Serve with garlic rice and egg."
+        ]
     },
     {
         id: 139,
@@ -3205,8 +3705,25 @@ const RECIPE_DATABASE = [
         prepTime: "30 mins",
         cookTime: "60 mins",
         difficulty: "Medium",
-        ingredients: ["500 g Giniling","3 pcs Egg","1 pc Carrot","1 pc Bell Pepper","2 pcs Hotdog","1/2 cup Bread Crumbs","1/4 cup Raisins","1 pc Onion","2 tbsp Cheese","3 tbsp Ketchup"],
-        instructions: ["Mix ground pork with 2 eggs, diced carrot, bell pepper, onion, bread crumbs, cheese and ketchup.","Spread on foil, lay hotdog and sliced boiled egg in the center, roll tightly.","Steam for 1 hour.","Slice and serve; fry slices for leftovers."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "500 g Ground Pork",
+            "3 pc Eggs",
+            "150 g Carrot",
+            "100 g Green Bell Pepper",
+            "100 g Hotdog",
+            "50 g Bread Crumbs",
+            "37.5 g Raisins",
+            "100 g Onion",
+            "14 g Cheese",
+            "45 g Ketchup"
+        ],
+        instructions: [
+            "Mix ground pork with 2 eggs, diced carrot, bell pepper, onion, bread crumbs, cheese and ketchup.",
+            "Spread on foil, lay hotdog and sliced boiled egg in the center, roll tightly.",
+            "Steam for 1 hour.",
+            "Slice and serve; fry slices for leftovers."
+        ]
     },
     {
         id: 140,
@@ -3220,8 +3737,25 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "25 mins",
         difficulty: "Medium",
-        ingredients: ["700 g Pork","1 pc Bell Pepper","1 pc Carrot","1 pc Onion","1 can Pineapple","4 tbsp Ketchup","3 tbsp Vinegar","3 tbsp Sugar","2 tbsp Cornstarch","1 cup Oil"],
-        instructions: ["Coat pork cubes in cornstarch and fry until crisp.","Saute onion, carrot and bell pepper.","Add ketchup, vinegar, sugar and pineapple; thicken with cornstarch slurry.","Toss fried pork in the sauce and serve."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "700 g Pork",
+            "100 g Green Bell Pepper",
+            "150 g Carrot",
+            "100 g Onion",
+            "225 g Pineapple",
+            "60 g Ketchup",
+            "45 ml Vinegar",
+            "36 g Sugar",
+            "16 g Cornstarch",
+            "240 ml Cooking Oil"
+        ],
+        instructions: [
+            "Coat pork cubes in cornstarch and fry until crisp.",
+            "Saute onion, carrot and bell pepper.",
+            "Add ketchup, vinegar, sugar and pineapple; thicken with cornstarch slurry.",
+            "Toss fried pork in the sauce and serve."
+        ]
     },
     {
         id: 141,
@@ -3235,8 +3769,25 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["500 g Pork","1 pc Carrot","1/4 head Cabbage","100 g Baguio Beans","1 pc Bell Pepper","2 tbsp Oyster Sauce","1 tbsp Soy Sauce","4 cloves Garlic","1 pc Onion","2 tbsp Oil"],
-        instructions: ["Stir-fry thin pork slices in hot oil until browned.","Add garlic, onion and vegetables.","Season with oyster sauce and soy sauce; toss 3 minutes.","Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "500 g Pork",
+            "150 g Carrot",
+            "200 g Cabbage",
+            "100 g Baguio Beans",
+            "100 g Green Bell Pepper",
+            "30 ml Oyster Sauce",
+            "15 ml Soy Sauce",
+            "16 g Garlic",
+            "100 g Onion",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Stir-fry thin pork slices in hot oil until browned.",
+            "Add garlic, onion and vegetables.",
+            "Season with oyster sauce and soy sauce; toss 3 minutes.",
+            "Serve with rice."
+        ]
     },
     {
         id: 142,
@@ -3250,8 +3801,21 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
-        ingredients: ["800 g Pork","10 cloves Garlic","2 tsp Pepper","3 tbsp Soy Sauce","1 tbsp Sugar","2 tbsp Oil"],
-        instructions: ["Slice pork thinly; marinate in soy sauce, sugar and pepper.","Fry garlic until golden; set aside.","Stir-fry pork in the same oil until cooked.","Top with fried garlic and serve."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "800 g Pork",
+            "40 g Garlic",
+            "4 g Pepper",
+            "45 ml Soy Sauce",
+            "12 g Sugar",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Slice pork thinly; marinate in soy sauce, sugar and pepper.",
+            "Fry garlic until golden; set aside.",
+            "Stir-fry pork in the same oil until cooked.",
+            "Top with fried garlic and serve."
+        ]
     },
     {
         id: 143,
@@ -3265,8 +3829,24 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "30 mins",
         difficulty: "Easy",
-        ingredients: ["800 g Liempo","3 tbsp Oyster Sauce","1 tbsp Soy Sauce","1 tbsp Sugar","4 cloves Garlic","1 pc Onion","1 stalk Onion Leaves","2 tbsp Oil"],
-        instructions: ["Pan-fry pork belly slices until browned.","Add garlic and onion; saute.","Pour in oyster sauce, soy sauce, sugar and a little water; simmer 10 minutes.","Garnish with onion leaves."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "800 g Pork Belly",
+            "45 ml Oyster Sauce",
+            "15 ml Soy Sauce",
+            "12 g Sugar",
+            "16 g Garlic",
+            "100 g Onion",
+            "15 g Onion Leaves",
+            "30 ml Cooking Oil",
+            "120 ml Water"
+        ],
+        instructions: [
+            "Pan-fry pork belly slices until browned.",
+            "Add garlic and onion; saute.",
+            "Pour in oyster sauce, soy sauce, sugar and a little water; simmer 10 minutes.",
+            "Garnish with onion leaves."
+        ]
     },
     {
         id: 144,
@@ -3280,8 +3860,22 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Pork Chop","1/4 cup Soy Sauce","3 pcs Calamansi","2 pcs Onion","4 cloves Garlic","1 tbsp Butter","1 tsp Pepper"],
-        instructions: ["Marinate pork chops in soy sauce, calamansi and pepper.","Pan-fry chops until browned on both sides.","Saute onion rings in butter with garlic; pour marinade and simmer.","Serve chops topped with onions."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Pork Chop",
+            "60 ml Soy Sauce",
+            "30 ml Calamansi Juice",
+            "200 g Onion",
+            "16 g Garlic",
+            "14 g Butter",
+            "2 g Pepper"
+        ],
+        instructions: [
+            "Marinate pork chops in soy sauce, calamansi and pepper.",
+            "Pan-fry chops until browned on both sides.",
+            "Saute onion rings in butter with garlic; pour marinade and simmer.",
+            "Serve chops topped with onions."
+        ]
     },
     {
         id: 145,
@@ -3295,8 +3889,25 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "30 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Bangus","1 pack Sinigang Mix","2 pcs Tomato","1 pc Onion","1 pc Labanos","1 bundle Kangkong","4 pcs Okra","2 pcs Chili","1 tbsp Fish Sauce"],
-        instructions: ["Boil water with tomato and onion.","Add labanos and sinigang mix; simmer 5 minutes.","Add bangus and okra; cook 8 minutes.","Add kangkong and chili; season with fish sauce."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Bangus",
+            "40 g Sinigang Mix",
+            "200 g Tomato",
+            "100 g Onion",
+            "250 g Radish",
+            "200 g Kangkong",
+            "60 g Okra",
+            "10 g Chili",
+            "15 ml Fish Sauce",
+            "1500 ml Water"
+        ],
+        instructions: [
+            "Boil water with tomato and onion.",
+            "Add labanos and sinigang mix; simmer 5 minutes.",
+            "Add bangus and okra; cook 8 minutes.",
+            "Add kangkong and chili; season with fish sauce."
+        ]
     },
     {
         id: 146,
@@ -3310,8 +3921,21 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["2 cans Canned Tuna","1 pc Onion","2 pcs Chili","3 pcs Calamansi","2 tbsp Soy Sauce","1 pc Egg","2 tbsp Butter"],
-        instructions: ["Drain tuna and saute in butter with onion and chili.","Season with soy sauce and calamansi.","Serve sizzling topped with an egg."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "360 g Canned Tuna",
+            "100 g Onion",
+            "10 g Chili",
+            "30 ml Calamansi Juice",
+            "30 ml Soy Sauce",
+            "1 pc Eggs",
+            "28 g Butter"
+        ],
+        instructions: [
+            "Drain tuna and saute in butter with onion and chili.",
+            "Season with soy sauce and calamansi.",
+            "Serve sizzling topped with an egg."
+        ]
     },
     {
         id: 147,
@@ -3325,8 +3949,22 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["2 cans Canned Tuna","2 pcs Egg","1/2 cup Bread Crumbs","1 pc Onion","4 cloves Garlic","1 tsp Pepper","3 tbsp Oil","1 pack Bread"],
-        instructions: ["Mix drained tuna, egg, bread crumbs, onion, garlic and pepper.","Shape into patties and pan-fry until golden.","Serve in bread or with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "360 g Canned Tuna",
+            "2 pc Eggs",
+            "50 g Bread Crumbs",
+            "100 g Onion",
+            "16 g Garlic",
+            "2 g Pepper",
+            "45 ml Cooking Oil",
+            "400 g Bread"
+        ],
+        instructions: [
+            "Mix drained tuna, egg, bread crumbs, onion, garlic and pepper.",
+            "Shape into patties and pan-fry until golden.",
+            "Serve in bread or with rice."
+        ]
     },
     {
         id: 148,
@@ -3340,8 +3978,23 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
-        ingredients: ["1 pack Spaghetti","2 cans Canned Tuna","6 cloves Garlic","1 pc Onion","3 pcs Tomato","3 tbsp Oil","1 tsp Pepper","2 tbsp Cheese"],
-        instructions: ["Boil pasta until al dente.","Saute garlic, onion and tomato in oil; add tuna.","Toss pasta in the tuna mixture; season with pepper.","Top with grated cheese."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Spaghetti",
+            "360 g Canned Tuna",
+            "24 g Garlic",
+            "100 g Onion",
+            "300 g Tomato",
+            "45 ml Cooking Oil",
+            "2 g Pepper",
+            "14 g Cheese"
+        ],
+        instructions: [
+            "Boil pasta until al dente.",
+            "Saute garlic, onion and tomato in oil; add tuna.",
+            "Toss pasta in the tuna mixture; season with pepper.",
+            "Top with grated cheese."
+        ]
     },
     {
         id: 149,
@@ -3355,8 +4008,21 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Shrimp","4 tbsp Butter","10 cloves Garlic","1 tbsp Soy Sauce","1 tsp Pepper","1/2 cup Pineapple"],
-        instructions: ["Melt butter and saute garlic until fragrant.","Add shrimp and cook 3-4 minutes until pink.","Add soy sauce, pepper and a splash of pineapple juice.","Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Shrimp",
+            "56 g Butter",
+            "40 g Garlic",
+            "15 ml Soy Sauce",
+            "2 g Pepper",
+            "112.5 g Pineapple"
+        ],
+        instructions: [
+            "Melt butter and saute garlic until fragrant.",
+            "Add shrimp and cook 3-4 minutes until pink.",
+            "Add soy sauce, pepper and a splash of pineapple juice.",
+            "Serve with rice."
+        ]
     },
     {
         id: 150,
@@ -3370,8 +4036,25 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
-        ingredients: ["800 g Shrimp","1 pack Sinigang Mix","2 pcs Tomato","1 pc Onion","1 pc Labanos","1 bundle Kangkong","4 pcs Okra","100 g Sitaw","1 tbsp Fish Sauce"],
-        instructions: ["Boil water with tomato and onion.","Add labanos, sitaw and sinigang mix; simmer 5 minutes.","Add shrimp and okra; cook 5 minutes.","Add kangkong and season with fish sauce."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "800 g Shrimp",
+            "40 g Sinigang Mix",
+            "200 g Tomato",
+            "100 g Onion",
+            "250 g Radish",
+            "200 g Kangkong",
+            "60 g Okra",
+            "100 g Sitaw",
+            "15 ml Fish Sauce",
+            "1500 ml Water"
+        ],
+        instructions: [
+            "Boil water with tomato and onion.",
+            "Add labanos, sitaw and sinigang mix; simmer 5 minutes.",
+            "Add shrimp and okra; cook 5 minutes.",
+            "Add kangkong and season with fish sauce."
+        ]
     },
     {
         id: 151,
@@ -3385,8 +4068,25 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Medium",
-        ingredients: ["1 kg Shrimp","4 tbsp Ketchup","2 tbsp Sugar","3 pcs Chili","6 cloves Garlic","1 thumb Ginger","1 pc Egg","2 tbsp Oil","1 tbsp Cornstarch"],
-        instructions: ["Saute garlic, ginger and chili in oil.","Add ketchup, sugar and water; simmer.","Add shrimp and cook until pink; thicken with cornstarch.","Swirl in a beaten egg and serve."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Shrimp",
+            "60 g Ketchup",
+            "24 g Sugar",
+            "15 g Chili",
+            "24 g Garlic",
+            "15 g Ginger",
+            "1 pc Eggs",
+            "30 ml Cooking Oil",
+            "8 g Cornstarch",
+            "120 ml Water"
+        ],
+        instructions: [
+            "Saute garlic, ginger and chili in oil.",
+            "Add ketchup, sugar and water; simmer.",
+            "Add shrimp and cook until pink; thicken with cornstarch.",
+            "Swirl in a beaten egg and serve."
+        ]
     },
     {
         id: 152,
@@ -3400,8 +4100,26 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "35 mins",
         difficulty: "Medium",
-        ingredients: ["500 g Shrimp","500 g Squid","1/2 cup Peanut Butter","2 pcs Talong","1 bundle Pechay","100 g Sitaw","1 pc Puso ng Saging","1 pc Onion","4 cloves Garlic","2 tbsp Bagoong"],
-        instructions: ["Saute garlic and onion; add peanut butter and water to make the sauce.","Add banana heart, sitaw and eggplant; simmer until tender.","Add shrimp and squid; cook 5 minutes.","Add pechay last; serve with bagoong."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "500 g Shrimp",
+            "500 g Squid",
+            "128 g Peanut Butter",
+            "400 g Eggplant",
+            "200 g Pechay",
+            "100 g Sitaw",
+            "400 g Banana Blossom",
+            "100 g Onion",
+            "16 g Garlic",
+            "30 g Bagoong",
+            "500 ml Water"
+        ],
+        instructions: [
+            "Saute garlic and onion; add peanut butter and water to make the sauce.",
+            "Add banana heart, sitaw and eggplant; simmer until tender.",
+            "Add shrimp and squid; cook 5 minutes.",
+            "Add pechay last; serve with bagoong."
+        ]
     },
     {
         id: 153,
@@ -3415,8 +4133,22 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Squid","3 pcs Tomato","1 pc Onion","4 tbsp Soy Sauce","4 pcs Calamansi","4 cloves Garlic","1 tsp Pepper"],
-        instructions: ["Clean squid; marinate in soy sauce, calamansi, garlic and pepper.","Stuff with chopped tomato and onion.","Grill over charcoal 4-5 minutes per side.","Serve with soy-calamansi dip."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Squid",
+            "300 g Tomato",
+            "100 g Onion",
+            "60 ml Soy Sauce",
+            "40 ml Calamansi Juice",
+            "16 g Garlic",
+            "2 g Pepper"
+        ],
+        instructions: [
+            "Clean squid; marinate in soy sauce, calamansi, garlic and pepper.",
+            "Stuff with chopped tomato and onion.",
+            "Grill over charcoal 4-5 minutes per side.",
+            "Serve with soy-calamansi dip."
+        ]
     },
     {
         id: 154,
@@ -3430,8 +4162,21 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
-        ingredients: ["800 g Fish Fillet","3 tbsp Butter","1 pc Lemon","4 cloves Garlic","1/2 cup Flour","1 tsp Salt","1 tsp Pepper"],
-        instructions: ["Season fillets, dredge in flour and pan-fry until golden.","Melt butter with garlic and lemon juice.","Pour lemon butter over fish and serve."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "800 g Fish Fillet",
+            "42 g Butter",
+            "40 ml Lemon Juice",
+            "16 g Garlic",
+            "60 g Flour",
+            "5 g Salt",
+            "2 g Pepper"
+        ],
+        instructions: [
+            "Season fillets, dredge in flour and pan-fry until golden.",
+            "Melt butter with garlic and lemon juice.",
+            "Pour lemon butter over fish and serve."
+        ]
     },
     {
         id: 155,
@@ -3445,8 +4190,26 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "30 mins",
         difficulty: "Medium",
-        ingredients: ["1 kg Tilapia","1 pc Carrot","1 pc Bell Pepper","1 pc Onion","1 thumb Ginger","4 tbsp Vinegar","3 tbsp Sugar","2 tbsp Ketchup","1 tbsp Cornstarch","1 cup Oil"],
-        instructions: ["Fry fish until crisp; set aside.","Saute ginger, onion, carrot and bell pepper.","Add vinegar, sugar, ketchup and water; thicken with cornstarch.","Pour sweet-sour sauce over fish."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Tilapia",
+            "150 g Carrot",
+            "100 g Green Bell Pepper",
+            "100 g Onion",
+            "15 g Ginger",
+            "60 ml Vinegar",
+            "36 g Sugar",
+            "30 g Ketchup",
+            "8 g Cornstarch",
+            "240 ml Cooking Oil",
+            "200 ml Water"
+        ],
+        instructions: [
+            "Fry fish until crisp; set aside.",
+            "Saute ginger, onion, carrot and bell pepper.",
+            "Add vinegar, sugar, ketchup and water; thicken with cornstarch.",
+            "Pour sweet-sour sauce over fish."
+        ]
     },
     {
         id: 156,
@@ -3460,8 +4223,23 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "35 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Bangus","3 pcs Tomato","1 pc Onion","4 cloves Garlic","2 tbsp Butter","3 pcs Calamansi","1 tsp Salt","1 tsp Pepper"],
-        instructions: ["Season boneless bangus with salt, pepper and calamansi.","Top with tomato, onion, garlic and butter.","Bake or turbo-broil 30 minutes until golden.","Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Bangus",
+            "300 g Tomato",
+            "100 g Onion",
+            "16 g Garlic",
+            "28 g Butter",
+            "30 ml Calamansi Juice",
+            "5 g Salt",
+            "2 g Pepper"
+        ],
+        instructions: [
+            "Season boneless bangus with salt, pepper and calamansi.",
+            "Top with tomato, onion, garlic and butter.",
+            "Bake or turbo-broil 30 minutes until golden.",
+            "Serve with rice."
+        ]
     },
     {
         id: 157,
@@ -3475,8 +4253,27 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "25 mins",
         difficulty: "Medium",
-        ingredients: ["2 packs Bihon","300 g Shrimp","300 g Squid","1 pc Carrot","1/4 head Cabbage","4 cloves Garlic","1 pc Onion","4 tbsp Soy Sauce","1 tbsp Oyster Sauce","4 pcs Calamansi"],
-        instructions: ["Soak bihon in water.","Saute garlic, onion, shrimp and squid; add carrot and cabbage.","Add soy sauce, oyster sauce and broth; add noodles and toss until absorbed.","Serve with calamansi."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Bihon Noodles",
+            "300 g Shrimp",
+            "300 g Squid",
+            "150 g Carrot",
+            "200 g Cabbage",
+            "16 g Garlic",
+            "100 g Onion",
+            "60 ml Soy Sauce",
+            "15 ml Oyster Sauce",
+            "40 ml Calamansi Juice",
+            "500 ml Water",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Soak bihon in water.",
+            "Saute garlic, onion, shrimp and squid; add carrot and cabbage.",
+            "Add soy sauce, oyster sauce and broth; add noodles and toss until absorbed.",
+            "Serve with calamansi."
+        ]
     },
     {
         id: 158,
@@ -3490,8 +4287,24 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["4 cups Rice","300 g Shrimp","3 pcs Egg","6 cloves Garlic","1 pc Carrot","1 stalk Onion Leaves","3 tbsp Soy Sauce","2 tbsp Oil"],
-        instructions: ["Scramble eggs and set aside.","Saute garlic and shrimp; add diced carrot.","Add leftover rice and soy sauce; toss over high heat.","Fold in egg and onion leaves."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "300 g Rice",
+            "300 g Shrimp",
+            "3 pc Eggs",
+            "24 g Garlic",
+            "150 g Carrot",
+            "15 g Onion Leaves",
+            "45 ml Soy Sauce",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Scramble eggs and set aside.",
+            "Saute garlic and shrimp; add diced carrot.",
+            "Add cooked rice and soy sauce; toss over high heat.",
+            "Fold in egg and onion leaves."
+        ]
     },
     {
         id: 159,
@@ -3505,8 +4318,25 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "25 mins",
         difficulty: "Easy",
-        ingredients: ["1 kg Tilapia","1 thumb Ginger","1 pc Onion","4 cloves Garlic","1 pc Sayote","1 bundle Malunggay","1 tbsp Fish Sauce","1 pc Chili"],
-        instructions: ["Saute ginger, garlic and onion; add water and fish sauce.","Add sayote and simmer until tender.","Add fish and cook 8 minutes.","Add malunggay and chili; serve hot."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "1 kg Tilapia",
+            "15 g Ginger",
+            "100 g Onion",
+            "16 g Garlic",
+            "250 g Sayote",
+            "50 g Malunggay Leaves",
+            "15 ml Fish Sauce",
+            "5 g Chili",
+            "1500 ml Water",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Saute ginger, garlic and onion; add water and fish sauce.",
+            "Add sayote and simmer until tender.",
+            "Add fish and cook 8 minutes.",
+            "Add malunggay and chili; serve hot."
+        ]
     },
     {
         id: 160,
@@ -3520,8 +4350,25 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "15 mins",
         difficulty: "Medium",
-        ingredients: ["400 g Shrimp","400 g Squid","1 pc Bell Pepper","1 pc Carrot","100 g Baguio Beans","2 tbsp Oyster Sauce","1 tbsp Soy Sauce","4 cloves Garlic","1 thumb Ginger","2 tbsp Oil"],
-        instructions: ["Stir-fry garlic and ginger in hot oil.","Add shrimp and squid; cook 2 minutes.","Add vegetables, oyster sauce and soy sauce; toss 3 minutes.","Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Shrimp",
+            "400 g Squid",
+            "100 g Green Bell Pepper",
+            "150 g Carrot",
+            "100 g Baguio Beans",
+            "30 ml Oyster Sauce",
+            "15 ml Soy Sauce",
+            "16 g Garlic",
+            "15 g Ginger",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Stir-fry garlic and ginger in hot oil.",
+            "Add shrimp and squid; cook 2 minutes.",
+            "Add vegetables, oyster sauce and soy sauce; toss 3 minutes.",
+            "Serve with rice."
+        ]
     },
     {
         id: 161,
@@ -3535,8 +4382,24 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["3 cups Rice","2 cans Canned Tuna","2 pcs Egg","4 cloves Garlic","1 pc Onion","2 tbsp Soy Sauce","1 stalk Onion Leaves"],
-        instructions: ["Cook rice.","Saute garlic, onion and tuna; season with soy sauce.","Fry eggs.","Top rice with tuna and egg; garnish with onion leaves."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "225 g Rice",
+            "360 g Canned Tuna",
+            "2 pc Eggs",
+            "16 g Garlic",
+            "100 g Onion",
+            "30 ml Soy Sauce",
+            "15 g Onion Leaves",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Cook rice.",
+            "Saute garlic, onion and tuna; season with soy sauce.",
+            "Fry eggs.",
+            "Top rice with tuna and egg; garnish with onion leaves."
+        ]
     },
     {
         id: 162,
@@ -3550,8 +4413,22 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["1/2 head Cabbage","3 pcs Tokwa","4 cloves Garlic","1 pc Onion","2 pcs Tomato","2 tbsp Soy Sauce","2 tbsp Oil"],
-        instructions: ["Fry tokwa cubes until golden; set aside.","Saute garlic, onion and tomato.","Add shredded cabbage and soy sauce; cook 5 minutes.","Toss in tokwa and serve."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Cabbage",
+            "300 g Firm Tofu",
+            "16 g Garlic",
+            "100 g Onion",
+            "200 g Tomato",
+            "30 ml Soy Sauce",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Fry tokwa cubes until golden; set aside.",
+            "Saute garlic, onion and tomato.",
+            "Add shredded cabbage and soy sauce; cook 5 minutes.",
+            "Toss in tokwa and serve."
+        ]
     },
     {
         id: 163,
@@ -3565,8 +4442,22 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["1/2 head Cabbage","200 g Baguio Beans","4 cloves Garlic","1 pc Onion","1 pc Carrot","2 tbsp Soy Sauce","1 tbsp Oyster Sauce","2 tbsp Oil"],
-        instructions: ["Saute garlic and onion.","Add Baguio beans and carrot; stir-fry 3 minutes.","Add cabbage, soy sauce and oyster sauce; cook until tender-crisp."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Cabbage",
+            "200 g Baguio Beans",
+            "16 g Garlic",
+            "100 g Onion",
+            "150 g Carrot",
+            "30 ml Soy Sauce",
+            "15 ml Oyster Sauce",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Saute garlic and onion.",
+            "Add Baguio beans and carrot; stir-fry 3 minutes.",
+            "Add cabbage, soy sauce and oyster sauce; cook until tender-crisp."
+        ]
     },
     {
         id: 164,
@@ -3580,8 +4471,25 @@ const RECIPE_DATABASE = [
         prepTime: "25 mins",
         cookTime: "20 mins",
         difficulty: "Medium",
-        ingredients: ["1 pack Lumpia Wrapper","200 g Togue","1 pc Carrot","1/4 head Cabbage","100 g Baguio Beans","2 pcs Tokwa","4 cloves Garlic","1 pc Onion","2 tbsp Soy Sauce","1 cup Oil"],
-        instructions: ["Saute garlic, onion, tokwa and vegetables; season with soy sauce and drain.","Wrap 2 tbsp of filling in each wrapper.","Deep fry until golden and crisp.","Serve with vinegar-garlic dip."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "200 g Lumpia Wrapper",
+            "200 g Mung Bean Sprouts",
+            "150 g Carrot",
+            "200 g Cabbage",
+            "100 g Baguio Beans",
+            "200 g Firm Tofu",
+            "16 g Garlic",
+            "100 g Onion",
+            "30 ml Soy Sauce",
+            "240 ml Cooking Oil"
+        ],
+        instructions: [
+            "Saute garlic, onion, tokwa and vegetables; season with soy sauce and drain.",
+            "Wrap 2 tbsp of filling in each wrapper.",
+            "Deep fry until golden and crisp.",
+            "Serve with vinegar-garlic dip."
+        ]
     },
     {
         id: 165,
@@ -3595,8 +4503,25 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
-        ingredients: ["1 pc Carrot","1/4 head Cabbage","100 g Baguio Beans","1 pc Bell Pepper","1 pc Sayote","4 cloves Garlic","1 pc Onion","2 tbsp Oyster Sauce","1 tbsp Soy Sauce","2 tbsp Oil"],
-        instructions: ["Heat oil; saute garlic and onion.","Add harder vegetables first, then softer ones.","Season with oyster sauce and soy sauce; toss 3 minutes.","Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "150 g Carrot",
+            "200 g Cabbage",
+            "100 g Baguio Beans",
+            "100 g Green Bell Pepper",
+            "250 g Sayote",
+            "16 g Garlic",
+            "100 g Onion",
+            "30 ml Oyster Sauce",
+            "15 ml Soy Sauce",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Heat oil; saute garlic and onion.",
+            "Add harder vegetables first, then softer ones.",
+            "Season with oyster sauce and soy sauce; toss 3 minutes.",
+            "Serve with rice."
+        ]
     },
     {
         id: 166,
@@ -3610,8 +4535,21 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
-        ingredients: ["300 g Baguio Beans","6 cloves Garlic","1 pc Onion","2 pcs Tomato","1 tbsp Fish Sauce","2 tbsp Oil"],
-        instructions: ["Saute garlic, onion and tomato.","Add green beans and a splash of water; cook 5 minutes.","Season with fish sauce."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "300 g Baguio Beans",
+            "24 g Garlic",
+            "100 g Onion",
+            "200 g Tomato",
+            "15 ml Fish Sauce",
+            "30 ml Cooking Oil",
+            "60 ml Water"
+        ],
+        instructions: [
+            "Saute garlic, onion and tomato.",
+            "Add green beans and a splash of water; cook 5 minutes.",
+            "Season with fish sauce."
+        ]
     },
     {
         id: 167,
@@ -3625,8 +4563,21 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
-        ingredients: ["4 cups Rice","3 pcs Egg","6 cloves Garlic","2 tbsp Soy Sauce","1 stalk Onion Leaves","2 tbsp Oil"],
-        instructions: ["Scramble eggs in oil; set aside.","Saute garlic, add leftover rice and soy sauce; toss over high heat.","Fold in egg and onion leaves."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "300 g Rice",
+            "3 pc Eggs",
+            "24 g Garlic",
+            "30 ml Soy Sauce",
+            "15 g Onion Leaves",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Scramble eggs in oil; set aside.",
+            "Saute garlic, add cooked rice and soy sauce; toss over high heat.",
+            "Fold in egg and onion leaves."
+        ]
     },
     {
         id: 168,
@@ -3640,8 +4591,19 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
-        ingredients: ["4 cups Rice","8 cloves Garlic","1 tsp Salt","2 tbsp Oil"],
-        instructions: ["Fry chopped garlic in oil until golden.","Add day-old rice and salt; toss until heated through.","Serve as sinangag with any ulam."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "300 g Rice",
+            "32 g Garlic",
+            "5 g Salt",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Fry chopped garlic in oil until golden.",
+            "Add cooked rice and salt; toss until heated through.",
+            "Serve as sinangag with any ulam."
+        ]
     },
     {
         id: 169,
@@ -3655,8 +4617,19 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
-        ingredients: ["1 can Luncheon Meat","4 pcs Egg","3 cups Rice","1 tbsp Oil"],
-        instructions: ["Slice luncheon meat and fry until crisp at the edges.","Fry eggs to your liking.","Serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "340 g Luncheon Meat",
+            "4 pc Eggs",
+            "225 g Rice",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Slice luncheon meat and fry until crisp at the edges.",
+            "Fry eggs to your liking.",
+            "Serve with rice."
+        ]
     },
     {
         id: 170,
@@ -3670,8 +4643,20 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
-        ingredients: ["1 pack Bread","4 pcs Egg","1 pc Onion","1 tbsp Butter","1 tsp Salt","1 tsp Pepper"],
-        instructions: ["Scramble eggs with onion, salt and pepper.","Butter the bread and fill with egg.","Toast lightly if desired."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Bread",
+            "4 pc Eggs",
+            "100 g Onion",
+            "14 g Butter",
+            "5 g Salt",
+            "2 g Pepper"
+        ],
+        instructions: [
+            "Scramble eggs with onion, salt and pepper.",
+            "Butter the bread and fill with egg.",
+            "Toast lightly if desired."
+        ]
     },
     {
         id: 171,
@@ -3685,8 +4670,19 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "10 mins",
         difficulty: "Easy",
-        ingredients: ["4 pcs Hotdog","4 pcs Egg","1 pc Onion","1 tsp Salt","2 tbsp Oil"],
-        instructions: ["Slice hotdog and fry briefly.","Pour beaten eggs with onion over hotdog; cook until set.","Flip and cook the other side; serve with rice."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "200 g Hotdog",
+            "4 pc Eggs",
+            "100 g Onion",
+            "5 g Salt",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Slice hotdog and fry briefly.",
+            "Pour beaten eggs with onion over hotdog; cook until set.",
+            "Flip and cook the other side; serve with rice."
+        ]
     },
     {
         id: 172,
@@ -3700,8 +4696,26 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
-        ingredients: ["2 packs Sotanghon","300 g Chicken","1 pc Carrot","1/4 head Cabbage","4 cloves Garlic","1 pc Onion","4 tbsp Soy Sauce","1 tbsp Fish Sauce","4 pcs Calamansi"],
-        instructions: ["Soak sotanghon in water.","Saute garlic, onion and chicken; add carrot and cabbage.","Add broth and soy sauce; add noodles and toss until absorbed.","Serve with calamansi."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Sotanghon Noodles",
+            "300 g Chicken",
+            "150 g Carrot",
+            "200 g Cabbage",
+            "16 g Garlic",
+            "100 g Onion",
+            "60 ml Soy Sauce",
+            "15 ml Fish Sauce",
+            "40 ml Calamansi Juice",
+            "500 ml Water",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Soak sotanghon in water.",
+            "Saute garlic, onion and chicken; add carrot and cabbage.",
+            "Add broth and soy sauce; add noodles and toss until absorbed.",
+            "Serve with calamansi."
+        ]
     },
     {
         id: 173,
@@ -3715,8 +4729,25 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "30 mins",
         difficulty: "Medium",
-        ingredients: ["4 packs Noodles","300 g Giniling","1 pc Carrot","1/4 head Cabbage","100 g Togue","4 pcs Egg","4 cloves Garlic","1 pc Onion","4 tbsp Soy Sauce","2 tbsp Oil"],
-        instructions: ["Saute garlic, onion and ground meat; add vegetables.","Add noodles and soy sauce; toss.","Top each serving with a fried egg.","Serve with a side of egg-drop soup (batil) and chopped onion."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Noodles",
+            "300 g Ground Pork",
+            "150 g Carrot",
+            "200 g Cabbage",
+            "100 g Mung Bean Sprouts",
+            "4 pc Eggs",
+            "16 g Garlic",
+            "100 g Onion",
+            "60 ml Soy Sauce",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Saute garlic, onion and ground meat; add vegetables.",
+            "Add noodles and soy sauce; toss.",
+            "Top each serving with a fried egg.",
+            "Serve with a side of egg-drop soup (batil) and chopped onion."
+        ]
     },
     {
         id: 174,
@@ -3730,8 +4761,25 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "20 mins",
         difficulty: "Easy",
-        ingredients: ["4 packs Noodles","300 g Pork","1 pc Carrot","100 g Sitaw","1 pc Sayote","4 cloves Garlic","1 pc Onion","4 tbsp Soy Sauce","3 tbsp Vinegar"],
-        instructions: ["Saute garlic, onion and pork.","Add vegetables and broth; add noodles and soy sauce.","Toss until noodles absorb the sauce.","Serve on banana leaf with vinegar."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Noodles",
+            "300 g Pork",
+            "150 g Carrot",
+            "100 g Sitaw",
+            "250 g Sayote",
+            "16 g Garlic",
+            "100 g Onion",
+            "60 ml Soy Sauce",
+            "45 ml Vinegar",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Saute garlic, onion and pork.",
+            "Add vegetables and broth; add noodles and soy sauce.",
+            "Toss until noodles absorb the sauce.",
+            "Serve on banana leaf with vinegar."
+        ]
     },
     {
         id: 175,
@@ -3745,8 +4793,24 @@ const RECIPE_DATABASE = [
         prepTime: "20 mins",
         cookTime: "25 mins",
         difficulty: "Medium",
-        ingredients: ["2 packs Bihon","500 g Squid","6 pcs Kamias","100 g Chicharon","4 cloves Garlic","1 pc Onion","3 tbsp Soy Sauce","1 tbsp Fish Sauce"],
-        instructions: ["Saute garlic, onion and squid with its ink.","Add broth, soy sauce, fish sauce and sliced kamias.","Add soaked bihon and toss until absorbed.","Top with crushed chicharon."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Bihon Noodles",
+            "500 g Squid",
+            "90 g Kamias",
+            "100 g Chicharon",
+            "16 g Garlic",
+            "100 g Onion",
+            "45 ml Soy Sauce",
+            "15 ml Fish Sauce",
+            "15 ml Cooking Oil"
+        ],
+        instructions: [
+            "Saute garlic, onion and squid with its ink.",
+            "Add broth, soy sauce, fish sauce and sliced kamias.",
+            "Add soaked bihon and toss until absorbed.",
+            "Top with crushed chicharon."
+        ]
     },
     {
         id: 176,
@@ -3760,8 +4824,24 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["4 cups Rice","300 g Chicken","3 pcs Egg","1 pc Carrot","6 cloves Garlic","3 tbsp Soy Sauce","1 stalk Onion Leaves","2 tbsp Oil"],
-        instructions: ["Stir-fry diced chicken with garlic; add carrot.","Add rice and soy sauce; toss over high heat.","Push rice aside, scramble eggs, then fold together.","Garnish with onion leaves."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "300 g Rice",
+            "300 g Chicken",
+            "3 pc Eggs",
+            "150 g Carrot",
+            "24 g Garlic",
+            "45 ml Soy Sauce",
+            "15 g Onion Leaves",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Stir-fry diced chicken with garlic; add carrot.",
+            "Add rice and soy sauce; toss over high heat.",
+            "Push rice aside, scramble eggs, then fold together.",
+            "Garnish with onion leaves."
+        ]
     },
     {
         id: 177,
@@ -3775,8 +4855,24 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["4 cups Rice","300 g Pork","3 pcs Egg","1 pc Carrot","6 cloves Garlic","3 tbsp Soy Sauce","1 stalk Onion Leaves","2 tbsp Oil"],
-        instructions: ["Fry diced pork until browned; add garlic and carrot.","Add rice and soy sauce; toss over high heat.","Scramble eggs into the rice.","Garnish with onion leaves."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "300 g Rice",
+            "300 g Pork",
+            "3 pc Eggs",
+            "150 g Carrot",
+            "24 g Garlic",
+            "45 ml Soy Sauce",
+            "15 g Onion Leaves",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Cook the listed dry rice before the remaining steps; reserve it for serving or frying as directed.",
+            "Fry diced pork until browned; add garlic and carrot.",
+            "Add rice and soy sauce; toss over high heat.",
+            "Scramble eggs into the rice.",
+            "Garnish with onion leaves."
+        ]
     },
     {
         id: 178,
@@ -3790,8 +4886,21 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["1 pack Spaghetti","3 tbsp Butter","8 cloves Garlic","2 tbsp Soy Sauce","1 tsp Pepper","2 tbsp Cheese"],
-        instructions: ["Boil pasta until al dente.","Melt butter and saute garlic until golden.","Toss pasta in garlic butter with soy sauce and pepper.","Top with cheese."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Spaghetti",
+            "42 g Butter",
+            "32 g Garlic",
+            "30 ml Soy Sauce",
+            "2 g Pepper",
+            "14 g Cheese"
+        ],
+        instructions: [
+            "Boil pasta until al dente.",
+            "Melt butter and saute garlic until golden.",
+            "Toss pasta in garlic butter with soy sauce and pepper.",
+            "Top with cheese."
+        ]
     },
     {
         id: 179,
@@ -3805,8 +4914,24 @@ const RECIPE_DATABASE = [
         prepTime: "15 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["4 packs Noodles","300 g Chicken","1 pc Carrot","1/4 head Cabbage","1 pc Bell Pepper","4 cloves Garlic","1 pc Onion","3 tbsp Soy Sauce","1 tbsp Oyster Sauce","2 tbsp Oil"],
-        instructions: ["Boil noodles briefly and drain.","Stir-fry chicken with garlic and onion; add vegetables.","Add noodles, soy sauce and oyster sauce; toss well."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Noodles",
+            "300 g Chicken",
+            "150 g Carrot",
+            "200 g Cabbage",
+            "100 g Green Bell Pepper",
+            "16 g Garlic",
+            "100 g Onion",
+            "45 ml Soy Sauce",
+            "15 ml Oyster Sauce",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Boil noodles briefly and drain.",
+            "Stir-fry chicken with garlic and onion; add vegetables.",
+            "Add noodles, soy sauce and oyster sauce; toss well."
+        ]
     },
     {
         id: 180,
@@ -3820,8 +4945,22 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["4 packs Noodles","2 tbsp Sesame Oil","3 tbsp Soy Sauce","1 tbsp Sugar","1 tbsp Vinegar","4 cloves Garlic","1 stalk Onion Leaves","1 pc Chili"],
-        instructions: ["Boil noodles and drain.","Whisk sesame oil, soy sauce, sugar, vinegar and minced garlic.","Toss noodles in the sauce; top with onion leaves and chili."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Noodles",
+            "30 ml Sesame Oil",
+            "45 ml Soy Sauce",
+            "12 g Sugar",
+            "15 ml Vinegar",
+            "16 g Garlic",
+            "15 g Onion Leaves",
+            "5 g Chili"
+        ],
+        instructions: [
+            "Boil noodles and drain.",
+            "Whisk sesame oil, soy sauce, sugar, vinegar and minced garlic.",
+            "Toss noodles in the sauce; top with onion leaves and chili."
+        ]
     },
     {
         id: 181,
@@ -3835,8 +4974,23 @@ const RECIPE_DATABASE = [
         prepTime: "5 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["4 packs Noodles","4 tbsp Oil","3 pcs Chili","6 cloves Garlic","3 tbsp Soy Sauce","1 tbsp Vinegar","1 tbsp Sugar","1 stalk Onion Leaves"],
-        instructions: ["Boil noodles and drain.","Heat oil and pour over chopped chili and garlic to make chili oil.","Mix with soy sauce, vinegar and sugar; toss noodles.","Garnish with onion leaves."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Noodles",
+            "60 ml Cooking Oil",
+            "15 g Chili",
+            "24 g Garlic",
+            "45 ml Soy Sauce",
+            "15 ml Vinegar",
+            "12 g Sugar",
+            "15 g Onion Leaves"
+        ],
+        instructions: [
+            "Boil noodles and drain.",
+            "Heat oil and pour over chopped chili and garlic to make chili oil.",
+            "Mix with soy sauce, vinegar and sugar; toss noodles.",
+            "Garnish with onion leaves."
+        ]
     },
     {
         id: 182,
@@ -3850,7 +5004,23 @@ const RECIPE_DATABASE = [
         prepTime: "10 mins",
         cookTime: "15 mins",
         difficulty: "Easy",
-        ingredients: ["4 packs Noodles","1 pc Carrot","1/4 head Cabbage","100 g Togue","1 pc Bell Pepper","100 g Baguio Beans","4 cloves Garlic","1 pc Onion","3 tbsp Soy Sauce","2 tbsp Oil"],
-        instructions: ["Boil noodles briefly and drain.","Stir-fry garlic, onion and vegetables.","Add noodles and soy sauce; toss over high heat."]
+        quantityNote: "Suggested quantities for the listed servings. Weigh ingredients and adjust seasoning to taste. Pack sizes vary: use the listed weight or volume. Rice and sides are separate unless listed. Frying oil is the amount needed in the pan, not the amount absorbed.",
+        ingredients: [
+            "400 g Noodles",
+            "150 g Carrot",
+            "200 g Cabbage",
+            "100 g Mung Bean Sprouts",
+            "100 g Green Bell Pepper",
+            "100 g Baguio Beans",
+            "16 g Garlic",
+            "100 g Onion",
+            "45 ml Soy Sauce",
+            "30 ml Cooking Oil"
+        ],
+        instructions: [
+            "Boil noodles briefly and drain.",
+            "Stir-fry garlic, onion and vegetables.",
+            "Add noodles and soy sauce; toss over high heat."
+        ]
     }
 ];
