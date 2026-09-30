@@ -174,3 +174,22 @@ test('price catalog additions preserve unit, provenance, whole packs and missing
  c.addGroceryPriceItem(1);assert.equal(items[1].price,null);assert.equal(items[1].priceMissing,true);assert.equal(saved,2);
  assert.equal(c.groceryCatalogPrice({price_min:20,price_max:30}),25);assert.equal(c.groceryCatalogPrice({price_avg:0,price_min:null,price_max:null}),null);
 });
+
+test('grocery budget distinguishes remaining, exact, over and incomplete totals',()=>{
+ const input={},status={},store=storage({groceryBudgetTarget:'100'});
+ const c=loadFunctions({localStorage:store,document:{getElementById:id=>id==='groceryBudgetTarget'?input:status}},['renderGroceryBudget']);
+ c.renderGroceryBudget([],75);assert.match(status.innerText,/25.00 left/);
+ c.renderGroceryBudget([],100);assert.match(status.innerText,/exactly on budget/);
+ c.renderGroceryBudget([],125);assert.match(status.innerText,/25.00 over budget/);
+ c.renderGroceryBudget([{priceMissing:true}],75);assert.match(status.innerText,/before missing prices/);assert.match(status.innerText,/not confirmed/);
+ c.renderGroceryBudget([{priceMissing:true}],125);assert.match(status.innerText,/at least ₱25.00 over/);
+ store.setItem('groceryBudgetTarget','0');c.renderGroceryBudget([],5);assert.match(status.innerText,/5.00 over/);assert.equal(input.value,'0');
+});
+
+test('grocery budget persists cents, rejects invalid input, and supports clearing',()=>{
+ let stored=null,errors=0,renders=0;const c=loadFunctions({localStorage:{setItem:(key,value)=>stored=value,removeItem:()=>stored=null},renderGroceryItems:()=>renders++,showNotification:()=>errors++},['setGroceryBudget']);
+ c.setGroceryBudget('1500.25');assert.equal(stored,'1500.25');
+ for(const value of [-1,'abc','Infinity',1000000001])c.setGroceryBudget(value);
+ assert.equal(errors,4);assert.equal(stored,'1500.25');
+ c.setGroceryBudget('');assert.equal(stored,null);assert.equal(renders,6);
+});

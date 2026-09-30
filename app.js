@@ -2152,6 +2152,43 @@ function renderGroceryItems() {
     updateCartSummary(items);
 }
 
+function setGroceryBudget(value) {
+    const text = String(value).trim();
+    const amount = Number(text);
+    if (text && (!Number.isFinite(amount) || amount < 0 || amount > 1000000000)) {
+        showNotification('Enter a budget from ₱0 to ₱1,000,000,000, or clear the field.', 'error');
+        renderGroceryItems();
+        return;
+    }
+    if (!text) localStorage.removeItem('groceryBudgetTarget');
+    else localStorage.setItem('groceryBudgetTarget', (Math.round(amount * 100) / 100).toFixed(2));
+    renderGroceryItems();
+}
+
+function renderGroceryBudget(items, totalCost) {
+    const input = document.getElementById('groceryBudgetTarget');
+    const status = document.getElementById('groceryBudgetStatus');
+    if (!input || !status) return;
+    const stored = localStorage.getItem('groceryBudgetTarget');
+    input.value = stored === null ? '' : stored;
+    const target = stored === null || stored === '' ? null : Number(stored);
+    status.className = 'text-sm mt-2 text-gray-600';
+    if (target === null || !Number.isFinite(target) || target < 0) {
+        status.innerText = 'Set a target to compare against all items, including those already bought.';
+        return;
+    }
+    const difference = Math.round(target * 100) - Math.round(totalCost * 100);
+    const money = (Math.abs(difference) / 100).toLocaleString('en-PH', {minimumFractionDigits:2,maximumFractionDigits:2});
+    const missing = items.filter(item => item.priceMissing).length;
+    if (missing) {
+        status.className = 'text-sm mt-2 font-semibold text-amber-800';
+        status.innerText = (difference < 0 ? 'Already at least ₱' + money + ' over budget. ' : '₱' + money + ' left before missing prices. ') + missing + ' item(s) still need prices; budget fit is not confirmed.';
+    } else {
+        status.className = 'text-sm mt-2 font-semibold ' + (difference < 0 ? 'text-rose-700' : 'text-emerald-800');
+        status.innerText = difference < 0 ? 'Estimated ₱' + money + ' over budget.' : difference === 0 ? 'Estimated total is exactly on budget.' : 'Estimated ₱' + money + ' left in your budget.';
+    }
+}
+
 function updateCartSummary(items) {
     const totalCost = items.reduce((acc, i) => acc + Math.round(getItemUnitPrice(i) * (parseFloat(i.quantity) || 0) * 100) / 100, 0);
     const checkedItems = items.filter(i => i.checked);
@@ -2166,6 +2203,7 @@ function updateCartSummary(items) {
     document.getElementById('checkedTotal').innerText = `₱${checkedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     document.getElementById('remainingTotal').innerText = `₱${remainingCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     
+    if (document.getElementById('groceryBudgetStatus')) renderGroceryBudget(items, totalCost);
     const localPriceNote = document.getElementById('groceryLocalPriceNote');
     if (localPriceNote) localPriceNote.innerText = items.some(i => i.localPrice) ? 'Totals include your local price estimates, not verified government prices for those items.' : '';
     const priorWarning = document.getElementById('budgetWarning');
