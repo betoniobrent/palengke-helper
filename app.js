@@ -123,6 +123,8 @@ const DAYS_OF_WEEK = [
 let currentMealPlan = {};
 let selectedMealSlot = null;
 let plannerDetailsRecipe = null;
+let plannerPriceCache = new WeakMap();
+let plannerPriceFeed = null;
 function initializeMealPlanner() {
 
     DAYS_OF_WEEK.forEach(day => {
@@ -160,7 +162,7 @@ function renderMealSlot(day, type) {
                 <span class="text-xs font-semibold text-gray-500">${type}</span>
                 <button onclick="openRecipeSelector('${day}','${type}')" class="text-[11px] font-semibold text-emerald-700 hover:text-emerald-900">Change</button>
             </div>
-            <button onclick="showRecipeDetailsById(${meal.id})" class="text-left mt-2 font-semibold text-gray-800 hover:text-emerald-800">${escapeHtml(meal.name)}</button>
+            <button onclick="showRecipeDetailsById(${meal.id})" class="text-left mt-2 font-semibold text-gray-800 hover:text-emerald-800">${escapeHtml(meal.name.replace(/\s*\(\d+\s*pax\)/gi, ''))}</button>
             <p class="text-xs text-emerald-700 mt-2">${plannerPriceLabel(meal)}</p>
         </div>`;
 }
@@ -700,7 +702,7 @@ function showRecipeDetails(recipe){
     const pricing = getPlannerRecipePricing(recipe, pax);
     content.innerHTML = `
         <div class="max-w-2xl mx-auto">
-            <h3 class="text-2xl font-bold text-gray-800 mb-2">${escapeHtml(recipe.name)}</h3>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">${escapeHtml(recipe.name.replace(/\s*\(\d+\s*pax\)/gi, ''))}</h3>
             <p class="text-emerald-700 font-semibold mb-2">${plannerPriceLabel(recipe)} · ₱${(pricing.amount / pax).toFixed(2)} per person</p>
             <label for="recipePax" class="text-sm font-semibold">People for this plan</label>
             <input id="recipePax" aria-label="People for this plan" type="number" min="1" max="100" step="1" value="${pax}" onchange="setPlannerPax(this.value)" class="border rounded-lg p-2 w-20 ml-2">
@@ -3239,11 +3241,23 @@ function getPlannerPax() {
 }
 
 function getPlannerRecipePricing(recipe, pax = getPlannerPax()) {
+    if (plannerPriceFeed !== ALL_PRICE_ITEMS) {
+        plannerPriceFeed = ALL_PRICE_ITEMS;
+        plannerPriceCache = new WeakMap();
+    }
+    const key = JSON.stringify([pax, recipe.servings, recipe.estimatedCost, recipe.ingredients]);
+    const cached = plannerPriceCache.get(recipe);
+    if (cached?.has(key)) return cached.get(key);
     const quote = MealCosting.quote(recipe, ALL_PRICE_ITEMS || [], pax);
+    quote.name = quote.name.replace(/\s*\(\d+\s*pax\)/gi, '');
     const baseEstimate = Number(recipe.estimatedCost) / Math.max(Number(recipe.servings) || 1, 1) * pax;
     // An incomplete subtotal cannot be used as the price of a whole meal.
     const amount = quote.complete ? quote.subtotal : Math.max(quote.subtotal, Number.isFinite(baseEstimate) ? baseEstimate : 0);
-    return {quote, amount:Math.round(amount * 100) / 100, estimated:!quote.complete};
+    const result = {quote, amount:Math.round(amount * 100) / 100, estimated:!quote.complete};
+    const entries = cached || new Map();
+    entries.set(key, result);
+    plannerPriceCache.set(recipe, entries);
+    return result;
 }
 
 function calculateRecipeCostFromMarket(recipe, pax = 0) {
