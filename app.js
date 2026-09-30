@@ -2100,18 +2100,18 @@ function renderGroceryItems() {
 }
 
 function updateCartSummary(items) {
-    const totalCost = items.reduce((acc, i) => acc + ((getItemUnitPrice(i)) * (parseFloat(i.quantity) || 0)), 0);
+    const totalCost = items.reduce((acc, i) => acc + Math.round(getItemUnitPrice(i) * (parseFloat(i.quantity) || 0) * 100) / 100, 0);
     const checkedItems = items.filter(i => i.checked);
-    const checkedCost = checkedItems.reduce((acc, i) => acc + ((getItemUnitPrice(i)) * (parseFloat(i.quantity) || 0)), 0);
+    const checkedCost = checkedItems.reduce((acc, i) => acc + Math.round(getItemUnitPrice(i) * (parseFloat(i.quantity) || 0) * 100) / 100, 0);
     const remainingItems = items.filter(i => !i.checked);
-    const remainingCost = remainingItems.reduce((acc, i) => acc + ((getItemUnitPrice(i)) * (parseFloat(i.quantity) || 0)), 0);
+    const remainingCost = remainingItems.reduce((acc, i) => acc + Math.round(getItemUnitPrice(i) * (parseFloat(i.quantity) || 0) * 100) / 100, 0);
 
-    document.getElementById('totalCost').innerText = `₱${totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    document.getElementById('totalCost').innerText = `₱${totalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     document.getElementById('totalItems').innerText = items.length;
     document.getElementById('checkedItems').innerText = checkedItems.length;
     document.getElementById('remainingItems').innerText = remainingItems.length;
-    document.getElementById('checkedTotal').innerText = `₱${checkedCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-    document.getElementById('remainingTotal').innerText = `₱${remainingCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    document.getElementById('checkedTotal').innerText = `₱${checkedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('remainingTotal').innerText = `₱${remainingCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     
     checkGroceryBudgetConstraints(totalCost);
     if (items.some(i => i.priceMissing)) {
@@ -2119,6 +2119,8 @@ function updateCartSummary(items) {
         const warning = document.getElementById('budgetWarning');
         if (warning) warning.innerText = items.filter(i => i.priceMissing).length + ' ingredients still need prices. Totals exclude these items; the budget is not confirmed.';
     }
+    const warningNode = document.getElementById('budgetWarning');
+    warningNode?.classList?.toggle('hidden', !warningNode.innerText);
     if (checkedItems.some(i => i.priceMissing)) document.getElementById('checkedTotal').innerText += ' (partial)';
     if (remainingItems.some(i => i.priceMissing)) document.getElementById('remainingTotal').innerText += ' (partial)';
 }
