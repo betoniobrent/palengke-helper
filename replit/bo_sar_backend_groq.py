@@ -71,6 +71,8 @@ def chat():
         # Store plain turns only: old price snapshots must not accumulate or go stale.
         history = threads.get(thread_id, [])[-4:]
         recent = [{"role": "system", "content": ASSISTANT_INSTRUCTIONS}]
+        if data.get("meal_cost_mode") is True:
+            recent[0]["content"] += "\nMEAL COST MODE: The app appends its own calculated price breakdown. Give only brief cooking advice; do not provide prices, costs, totals, price tables, budget comparisons, or affordability claims. If a catalog recipe is provided, use that exact recipe, state its name, and do not add ingredients. If quantities are for original servings, avoid restating them; the app shows how costs scale. Do not say the meal is within budget."
         recent.extend({"role": turn["role"], "content": turn["content"][:1500]} for turn in history)
         recent.append({"role": "user", "content": f"Context:\n{context}\n\nQuestion:\n{message}"})
 
@@ -87,6 +89,9 @@ def chat():
         # Keep the plain-text chat readable if the model still emits Markdown.
         reply = re.sub(r"(?m)^\s*#{1,6}\s+", "", reply)
         reply = re.sub(r"(?m)^\s*\*\s+", "• ", reply).replace("*", "").replace("`", "").strip()
+        if data.get("meal_cost_mode") is True:
+            # Monetary output comes from the deterministic app calculator only.
+            reply = "\n".join(line for line in reply.splitlines() if not re.search(r"₱|\b(?:PHP|pesos?)\b|\b\d[\d,.]*\s*(?:piso)\b", line, re.I)).strip()
         if len(threads) >= 256 and thread_id not in threads:
             threads.pop(next(iter(threads)))
         threads[thread_id] = (history + [{"role": "user", "content": message}, {"role": "assistant", "content": reply[:1500]}])[-4:]

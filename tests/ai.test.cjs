@@ -16,3 +16,13 @@ test('clear cancels pending work and removes conversation identity',()=>{
 test('pending AI request blocks duplicate submissions',async()=>{
  const c=load({aiRequestPending:true,document:{getElementById(){throw Error('duplicate processed')}}},['processAISuggestionQuery']);await c.processAISuggestionQuery();
 });
+test('English and Filipino recipe questions get scaled verified quotes, not fallback totals',()=>{
+ const c=load({document:{getElementById:()=>({value:''})},MealCosting:require('../meal-costing'),ALL_PRICE_ITEMS:[{item_name:'Whole Chicken, Local Fully Dressed',unit:'kg',price_avg:200,source_agency:'DA',source_date:'2026-09-27',region:'NCR'}],RECIPE_DATABASE:[{name:'Chicken Adobo',servings:4,ingredients:['1 kg Chicken','6 cloves Garlic'],instructions:['Simmer.'],diet:['anything']}]},['buildAIMealQuote']);
+ const en=c.buildAIMealQuote('How much does Chicken Adobo cost for 2 people?');
+ assert.match(en.text,/₱100.00/);assert.match(en.text,/incomplete subtotal/);
+ const tl=c.buildAIMealQuote('Magkano ang Chicken Adobo para sa 2 tao?');
+ assert.match(tl.text,/Subtotal lang/);assert.match(tl.text,/₱100.00/);
+ const custom=c.buildAIMealQuote('Chicken Adobo using 400 g boneless chicken');
+ assert.doesNotMatch(custom.text,/₱/);assert.match(custom.text,/no verified calculation/);
+ assert.equal(c.buildAIMealQuote('Magkano ang sabon ayon sa DTI?'),null);
+});

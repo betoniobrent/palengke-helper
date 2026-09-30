@@ -1,10 +1,11 @@
-const CACHE_NAME = 'palengke-helper-v33';
+const CACHE_NAME = 'palengke-helper-v34';
 
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/style.css',
   '/app.js',
+  '/meal-costing.js',
   '/supabase.js',
   '/data/recipes.js',
   '/data/prices.json',

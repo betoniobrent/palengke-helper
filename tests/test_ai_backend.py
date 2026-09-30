@@ -44,5 +44,12 @@ class ChatTests(unittest.TestCase):
                 self.assertEqual(self.api.post('/chat', json=payload).status_code, 400)
             call.assert_not_called()
 
+    def test_meal_mode_does_not_return_model_generated_money(self):
+        answer = SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content='Cook adobo.\nTotal: ₱120\nChicken: 50 pesos\nSimmer gently.'))])
+        with patch.object(backend.client.chat.completions, 'create', return_value=answer):
+            result = self.api.post('/chat', json={'message':'Dinner for two', 'meal_cost_mode':True})
+            self.assertEqual(result.status_code, 200)
+            self.assertEqual(result.get_json()['reply'], 'Cook adobo.\nSimmer gently.')
+
 if __name__ == '__main__':
     unittest.main()

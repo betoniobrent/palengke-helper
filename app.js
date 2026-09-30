@@ -2888,6 +2888,31 @@ function generateAIResponse(question) {
     return generateAIResponseWithBackend(question);
 }
 
+function buildAIMealQuote(question) {
+    const q = question.toLowerCase();
+    if (!/recipe|cook|meal|dinner|lunch|breakfast|ulam|lutuin|luto|hapunan|tanghalian|almusal|adobo|sinigang|tinola|servings|pax/.test(q)) return null;
+    const filipino = /\b(ano|ang|ng|sa|para|magkano|paano|lutuin|luto|tao|pwede|puwede|pwedeng|ulam|hapunan|tanghalian|almusal)\b/.test(q) && !/\b(in english|answer in english)\b/.test(q) || /\b(in tagalog|in filipino)\b/.test(q);
+    const unavailable = filipino ? 'Wala pang kumpletong kuwenta para sa eksaktong pagkaing ito. Kailangan ang listahan ng sangkap, dami, at katugmang presyo bago masabing pasok sa budget.' : 'There is no verified calculation for this exact meal yet. Ingredient quantities and matching prices are needed before confirming it fits your budget.';
+    const servingMatch = q.match(/(?:for|para sa|good for)\s+(\d+)\b|\b(\d+)\s*(?:people|persons|servings|pax|tao)\b/);
+    const servings = servingMatch ? Number(servingMatch[1] || servingMatch[2]) : Number(document.getElementById('plannerPax')?.value) || 0;
+    if (servings > 100 || /\b\d+\s*(?:kg|grams?|g|ml|cups?|tbsp|tsp)\b/.test(q)) return {text:unavailable, context:'Custom quantities or unsupported servings: no verified meal total. Do not calculate or invent one.'};
+    const diet = document.getElementById('plannerDiet')?.value || 'anything';
+    const recipes = RECIPE_DATABASE.filter(recipe => diet === 'anything' || recipe.diet?.includes(diet));
+    let recipe = recipes.find(recipe => q.includes(recipe.name.toLowerCase()));
+    if (!recipe) {
+        const dishes = ['adobo','sinigang','tinola','tortang talong','ginisang munggo'];
+        const dish = dishes.find(name => q.includes(name));
+        if (dish) recipe = recipes.find(recipe => recipe.name.toLowerCase().includes(dish));
+    }
+    // A generic suggestion can use a catalog recipe; unfamiliar named dishes cannot.
+    if (!recipe && /what.*(?:cook|dinner|lunch|breakfast)|suggest.*(?:meal|dinner|lunch)|ano.*(?:lutuin|ulam|hapunan)|meal ideas|lunch ideas/.test(q)) {
+        recipe = recipes.find(recipe => recipe.ingredients?.length && recipe.ingredients.length <= 7);
+    }
+    if (!recipe) return {text:unavailable,context:'No matching catalog recipe. Do not claim a meal total or that the meal fits a budget.'};
+    const quote = MealCosting.quote(recipe, ALL_PRICE_ITEMS || [], servings || recipe.servings);
+    return {text:MealCosting.format(quote, filipino),context:JSON.stringify({recipe:recipe.name,servings:quote.servings,ingredients:recipe.ingredients,instructions:recipe.instructions,complete:quote.complete,rule:'Describe this catalog recipe only. Its original ingredient list is for ' + recipe.servings + ' servings. The app will append the scaled, deterministic calculation. Never claim it fits a budget when incomplete.'})};
+}
+
 async function generateAIResponseWithBackend(question) {
     if (!navigator.onLine) {
         return 'Palengke AI is unavailable while you are offline. Please connect to the internet to chat.';
@@ -2897,7 +2922,8 @@ async function generateAIResponseWithBackend(question) {
     }
 
     const preferences = `USER SETTINGS: Weekly budget PHP ${document.getElementById('plannerBudget')?.value || 'not set'}; people ${document.getElementById('plannerPax')?.value || 'not set'}; diet ${document.getElementById('plannerDiet')?.value || 'anything'}.`;
-    const context = [preferences, buildMarketPriceContext(question), buildMealPlanContext(), buildRecipeContext()].join('\n\n').slice(0, 6500);
+    const mealQuote = buildAIMealQuote(question);
+    const context = [preferences, mealQuote ? mealQuote.context : buildMarketPriceContext(question), buildMealPlanContext(), buildRecipeContext()].join('\n\n').slice(0, 6500);
     const version = aiConversationVersion;
     const controller = new AbortController();
     aiRequestController = controller;
@@ -2907,7 +2933,7 @@ async function generateAIResponseWithBackend(question) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             signal: controller.signal,
-            body: JSON.stringify({ message: question, thread_id: palengkeAIThreadId, context: context })
+            body: JSON.stringify({ message: question, thread_id: palengkeAIThreadId, context: context, meal_cost_mode: !!mealQuote })
         });
         const data = await response.json().catch(() => ({ error: `AI service unavailable (HTTP ${response.status}). Please try again later.` }));
         if (version !== aiConversationVersion) return '';
@@ -2916,7 +2942,7 @@ async function generateAIResponseWithBackend(question) {
             palengkeAIThreadId = data.thread_id;
             localStorage.setItem('palengke_ai_thread', palengkeAIThreadId);
         }
-        return data.reply || 'No response from Palengke AI.';
+        return (data.reply || 'No response from Palengke AI.') + (mealQuote ? '\n\n' + mealQuote.text : '');
     } catch (error) {
         console.error('Palengke AI backend error:', error);
         if (version !== aiConversationVersion) return '';

@@ -2,6 +2,7 @@
 **
 !/index.html
 !/app.js
+!/meal-costing.js
 !/style.css
 !/supabase.js
 !/sw.js
