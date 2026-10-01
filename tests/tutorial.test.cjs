@@ -18,3 +18,18 @@ test('Tagalog translates all steps, preserves position and remembers the tutoria
  for(let i=0;i<7;i++){assert.ok(nodes.tutorialTips.items.length>=2);assert.ok(nodes.tutorialText.textContent);if(i<6)c.advanceTutorial(1)}
  assert.equal(nodes.tutorialNext.textContent,'Tapos');c.setTutorialLanguage('en');assert.equal(nodes.tutorialNext.textContent,'Finish');assert.equal(nodes.tutorialProgress.textContent,'Step 7 of 7');assert.equal(saved,'en');
 });
+
+test('every tab has a complete bilingual guide with independent navigation and replay',()=>{
+ const nodes={appTutorial:{open:false,showModal(){this.open=true},close(){this.open=false}},tutorialTips:{replaceChildren(){this.items=[]},appendChild(item){this.items.push(item.textContent)}}};let tab=null;
+ const c={document:{getElementById:id=>nodes[id]||(nodes[id]={setAttribute(){},scrollIntoView(){}}),createElement:()=>({})},switchTab:value=>tab=value};vm.createContext(c);vm.runInContext(fs.readFileSync('tutorial-tabs.js','utf8')+'\n'+fs.readFileSync('tutorial.js','utf8'),c);
+ const html=fs.readFileSync('index.html','utf8');
+ for(const topic of ['home','budget','meal','prices','grocery','suggestions']){
+  assert.ok(html.includes("openTabTutorial('"+topic+"')"));
+  for(const language of ['en','tl']){
+   c.openTabTutorial(topic);c.setTutorialLanguage(language);const steps=c.currentTutorialSteps();assert.ok(steps.length>=3);
+   for(let i=0;i<steps.length;i++){assert.ok(steps[i].title);assert.ok(steps[i].text);assert.ok(steps[i].tips.length>=2);assert.equal(steps[i].section,topic);if(i<steps.length-1)c.advanceTutorial(1)}
+   assert.equal(nodes.tutorialNext.textContent,language==='tl'?'Tapos':'Finish');c.openTutorialSection();assert.equal(tab,topic);
+  }
+ }
+ c.openTutorial();assert.equal(c.currentTutorialSteps().length,7);
+});

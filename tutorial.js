@@ -16,6 +16,17 @@ const TUTORIAL_TAGALOG = [
     {title:'5. Magtanong sa Palengke AI', action:'Buksan ang Palengke AI', text:'Humingi ng ideya sa lulutuin o tulong sa pag-unawa sa iyong plano.', tips:['Subukan: “Ano ang puwedeng lutuin para sa 4 na tao?”','Magtanong sa Filipino para sa sagot sa Filipino, o sa English para sa sagot sa English.','Suriin ang dami, pinagmulan ng presyo, at mga sangkap na wala pang presyo bago mamili.']},
     {title:'Handa ka nang magsimula!', action:'Magsimulang mamili', text:'Subukang magdagdag ng isang item, baguhin ang dami, at magtakda ng badyet sa pamimili.', tips:['Maaari mong balikan ang gabay anumang oras gamit ang Tutorial.','Sa browser na ito naka-save ang Grocery budget. Ang mga presyong ikaw ang naglagay ay para sa kasalukuyang listahan lamang.']}
 ];
+let tutorialTopic = null;
+function currentTutorialSteps() {
+    if (tutorialTopic && typeof TAB_TUTORIALS !== 'undefined' && TAB_TUTORIALS[tutorialTopic]) {
+        return TAB_TUTORIALS[tutorialTopic].map(row => {
+            const [title,text,...tips] = row[tutorialLanguage];
+            return {title,text,tips,section:tutorialTopic,action:tutorialLanguage === 'tl' ? 'Bumalik sa tab' : 'Return to tab'};
+        });
+    }
+    return tutorialLanguage === 'tl' ? TUTORIAL_TAGALOG.map((step,index)=>({...step,section:TUTORIAL_STEPS[index].section})) : TUTORIAL_STEPS;
+}
+function openTabTutorial(topic) { openTutorial(0, topic); }
 let tutorialLanguage = 'en';
 function setTutorialLanguage(language) {
     tutorialLanguage = language === 'tl' ? 'tl' : 'en';
@@ -23,23 +34,24 @@ function setTutorialLanguage(language) {
     renderTutorialStep();
 }
 let tutorialStep = 0;
-function openTutorial(step = 0) {
+function openTutorial(step = 0, topic = null) {
+    tutorialTopic = typeof TAB_TUTORIALS !== 'undefined' && Object.hasOwn(TAB_TUTORIALS, topic) ? topic : null;
     try { tutorialLanguage = localStorage.getItem('palengkeTutorialLanguage') === 'tl' ? 'tl' : 'en'; } catch (_) {}
-    tutorialStep = Number.isInteger(step) && step >= 0 && step < TUTORIAL_STEPS.length ? step : 0;
+    tutorialStep = Number.isInteger(step) && step >= 0 && step < currentTutorialSteps().length ? step : 0;
     renderTutorialStep();
     const dialog = document.getElementById('appTutorial');
     if (!dialog.open) dialog.showModal();
 }
 function renderTutorialStep() {
     const tagalog = tutorialLanguage === 'tl';
-    const step = (tagalog ? TUTORIAL_TAGALOG : TUTORIAL_STEPS)[tutorialStep];
+    const step = currentTutorialSteps()[tutorialStep];
     document.getElementById('appTutorial').lang = tagalog ? 'fil' : 'en';
     document.getElementById('tutorialLanguage').value = tutorialLanguage;
     document.getElementById('tutorialLanguageLabel').textContent = tagalog ? 'Wika ng gabay' : 'Tutorial language';
     document.getElementById('tutorialClose').textContent = tagalog ? 'Isara' : 'Close';
     document.getElementById('tutorialClose').setAttribute('aria-label', tagalog ? 'Isara ang gabay' : 'Close tutorial');
     document.getElementById('tutorialBack').textContent = tagalog ? 'Bumalik' : 'Back';
-    document.getElementById('tutorialProgress').textContent = (tagalog ? 'Hakbang ' : 'Step ') + (tutorialStep + 1) + (tagalog ? ' sa ' : ' of ') + TUTORIAL_STEPS.length;
+    document.getElementById('tutorialProgress').textContent = (tagalog ? 'Hakbang ' : 'Step ') + (tutorialStep + 1) + (tagalog ? ' sa ' : ' of ') + currentTutorialSteps().length;
     document.getElementById('tutorialTitle').textContent = step.title;
     document.getElementById('tutorialText').textContent = step.text;
     const list = document.getElementById('tutorialTips');
@@ -50,19 +62,19 @@ function renderTutorialStep() {
         list.appendChild(li);
     }
     document.getElementById('tutorialBack').disabled = tutorialStep === 0;
-    document.getElementById('tutorialNext').textContent = tutorialStep === TUTORIAL_STEPS.length - 1 ? (tagalog ? 'Tapos' : 'Finish') : (tagalog ? 'Susunod' : 'Next');
+    document.getElementById('tutorialNext').textContent = tutorialStep === currentTutorialSteps().length - 1 ? (tagalog ? 'Tapos' : 'Finish') : (tagalog ? 'Susunod' : 'Next');
     document.getElementById('tutorialOpenSection').textContent = step.action;
 }
 function advanceTutorial(direction) {
-    if (direction === 1 && tutorialStep === TUTORIAL_STEPS.length - 1) {
+    if (direction === 1 && tutorialStep === currentTutorialSteps().length - 1) {
         document.getElementById('appTutorial').close();
         return;
     }
-    tutorialStep = Math.max(0, Math.min(TUTORIAL_STEPS.length - 1, tutorialStep + direction));
+    tutorialStep = Math.max(0, Math.min(currentTutorialSteps().length - 1, tutorialStep + direction));
     renderTutorialStep();
 }
 function openTutorialSection() {
     document.getElementById('appTutorial').close();
-    switchTab(TUTORIAL_STEPS[tutorialStep].section);
-    document.getElementById('view-' + TUTORIAL_STEPS[tutorialStep].section)?.scrollIntoView({behavior:'smooth', block:'start'});
+    switchTab(currentTutorialSteps()[tutorialStep].section);
+    document.getElementById('view-' + currentTutorialSteps()[tutorialStep].section)?.scrollIntoView({behavior:'smooth', block:'start'});
 }
