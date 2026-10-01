@@ -12,7 +12,7 @@
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Decoupled Visual Presentation Design Component Layer -->
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-900">
     <div id="authPage" style="background: #f0fdf4; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
@@ -266,7 +266,7 @@
             <!-- TAB 0: HOME VIEW PANEL -->
             <div id="view-home" class="tab-content">
                 <h2 class="text-3xl font-bold mb-6 text-gray-800">Welcome back, Ka-Palengke!</h2>
-                <button type="button" onclick="openTabTutorial('home')" class="text-sm text-emerald-800 underline my-2" aria-haspopup="dialog">How to use Home</button>
+                <button type="button" onclick="openTabTutorial('home')" class="tutorial-help-button" aria-haspopup="dialog"><span class="tutorial-help-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5c3-1 5.5-.5 8 1.5 2.5-2 5-2.5 8-1.5V19c-3-1-5.5-.5-8 1.5-2.5-2-5-2.5-8-1.5V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 7v13" stroke="currentColor" stroke-width="1.7"/></svg></span><span>How to use Home</span><svg class="tutorial-help-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 
                 <div class="grid md:grid-cols-3 gap-6">
                     <div class="md:col-span-2 space-y-6">
@@ -387,7 +387,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <div>
                         <h2 class="text-3xl font-bold text-gray-800">Budget Tracker</h2>
-                <button type="button" onclick="openTabTutorial('budget')" class="text-sm text-emerald-800 underline my-2" aria-haspopup="dialog">How to use Budget</button>
+                <button type="button" onclick="openTabTutorial('budget')" class="tutorial-help-button" aria-haspopup="dialog"><span class="tutorial-help-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5c3-1 5.5-.5 8 1.5 2.5-2 5-2.5 8-1.5V19c-3-1-5.5-.5-8 1.5-2.5-2-5-2.5-8-1.5V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 7v13" stroke="currentColor" stroke-width="1.7"/></svg></span><span>How to use Budget</span><svg class="tutorial-help-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                         <p class="text-sm text-gray-500">Track income and expenses across weekly, kinsena, or monthly timelines.</p>
                     </div>
                     <!-- TRIGGER ADD BUDGET CONFIGURATION VIEW -->
@@ -620,7 +620,7 @@
                 <div class="bg-white p-4 md:p-6 border-b border-slate-300 w-full min-h-[calc(100vh-4rem)]">
                     <div class="mb-6">
                         <h2 class="text-3xl font-bold text-gray-800">Meal Planner</h2>
-                <button type="button" onclick="openTabTutorial('meal')" class="text-sm text-emerald-800 underline my-2" aria-haspopup="dialog">How to use Meal Planner</button>
+                <button type="button" onclick="openTabTutorial('meal')" class="tutorial-help-button" aria-haspopup="dialog"><span class="tutorial-help-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5c3-1 5.5-.5 8 1.5 2.5-2 5-2.5 8-1.5V19c-3-1-5.5-.5-8 1.5-2.5-2-5-2.5-8-1.5V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 7v13" stroke="currentColor" stroke-width="1.7"/></svg></span><span>How to use Meal Planner</span><svg class="tutorial-help-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                         <p class="text-sm text-gray-500 mt-1">Create a weekly plan tailored to your budget, household size, and diet — or build your own.</p>
                     </div>
 
@@ -816,7 +816,7 @@
             <div id="view-prices" class="tab-content hidden -mx-4 -my-6 md:-mx-6">
                 <div class="bg-white p-4 md:p-6 border-b border-slate-300 w-full min-h-[calc(100vh-4rem)]">
                     <h2 class="text-3xl font-bold mb-4 text-gray-800">Palengke Market Prices</h2>
-                <button type="button" onclick="openTabTutorial('prices')" class="text-sm text-emerald-800 underline my-2" aria-haspopup="dialog">How to use Prices</button>
+                <button type="button" onclick="openTabTutorial('prices')" class="tutorial-help-button" aria-haspopup="dialog"><span class="tutorial-help-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5c3-1 5.5-.5 8 1.5 2.5-2 5-2.5 8-1.5V19c-3-1-5.5-.5-8 1.5-2.5-2-5-2.5-8-1.5V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 7v13" stroke="currentColor" stroke-width="1.7"/></svg></span><span>How to use Prices</span><svg class="tutorial-help-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-200 pb-3 mb-4 gap-2">
                         <div>
                             <h3 class="text-2xl font-bold text-gray-800">Bantay Presyo Watchlist</h3>
@@ -856,7 +856,7 @@
                             <div>
                                 <div class="flex items-center gap-2">
                                     <h2 class="text-xl font-semibold text-gray-800">Palengke AI</h2>
-                <button type="button" onclick="openTabTutorial('suggestions')" class="text-sm text-emerald-800 underline my-2" aria-haspopup="dialog">How to use Palengke AI</button>
+                <button type="button" onclick="openTabTutorial('suggestions')" class="tutorial-help-button" aria-haspopup="dialog"><span class="tutorial-help-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5c3-1 5.5-.5 8 1.5 2.5-2 5-2.5 8-1.5V19c-3-1-5.5-.5-8 1.5-2.5-2-5-2.5-8-1.5V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 7v13" stroke="currentColor" stroke-width="1.7"/></svg></span><span>How to use Palengke AI</span><svg class="tutorial-help-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                                     <span id="aiStatusIndicator" class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-600">ready</span>
                                 </div>
                                 <p class="text-xs text-gray-500 mt-0.5">Meals, budgeting, palengke shopping, groceries, recipes — ask in English or Tagalog.</p>
@@ -890,7 +890,7 @@
             <!-- TAB 5: GROCERY LIST TRACKER -->
             <div id="view-grocery" class="tab-content hidden">
                 <h2 class="text-3xl font-bold mb-2 text-gray-800">Grocery List Tracker</h2>
-                <button type="button" onclick="openTabTutorial('grocery')" class="text-emerald-800 underline mb-4">How to use Grocery</button>
+                <button type="button" onclick="openTabTutorial('grocery')" class="tutorial-help-button" aria-haspopup="dialog"><span class="tutorial-help-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5c3-1 5.5-.5 8 1.5 2.5-2 5-2.5 8-1.5V19c-3-1-5.5-.5-8 1.5-2.5-2-5-2.5-8-1.5V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 7v13" stroke="currentColor" stroke-width="1.7"/></svg></span><span>How to use Grocery</span><svg class="tutorial-help-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 
                 
                 <div class="grid xl:grid-cols-[minmax(0,1fr)_280px] gap-6">

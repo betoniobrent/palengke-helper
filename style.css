@@ -221,3 +221,11 @@ nav .tab-link.active {
 .tutorial-next:hover { background:#064e3b; }
 #appTutorial button:focus-visible,#appTutorial select:focus-visible { outline:3px solid #84cc16; outline-offset:3px; }
 @media(max-width:480px) { .tutorial-header {padding:16px 20px 18px;} .tutorial-body {padding:18px 20px;} .tutorial-footer {padding:14px 20px;} #tutorialTitle {font-size:23px;} .tutorial-topic {font-size:19px;} .tutorial-icon {width:54px;height:54px;} }
+
+/* Tutorial entry points shared by all six tabs. */
+.tutorial-help-button { display:inline-flex; align-items:center; gap:10px; max-width:100%; min-height:44px; margin:10px 0 18px; padding:7px 12px 7px 7px; border:1px solid #cde3d4; border-radius:12px; background:#f0f8ef; color:#145a40; font-size:13px; font-weight:600; line-height:1.4; text-align:left; text-decoration:none; box-shadow:0 2px 5px #145a4006; transition:background .15s,border-color .15s; }
+.tutorial-help-button:hover { background:#e3f1df; border-color:#a6c7ac; }
+.tutorial-help-button:focus-visible { outline:3px solid #65a30d; outline-offset:3px; }
+.tutorial-help-icon { display:grid; place-items:center; flex-shrink:0; width:30px; height:30px; border-radius:8px; background:#fff; color:#246e4a; }
+.tutorial-help-icon svg { width:19px; height:19px; }
+.tutorial-help-arrow { flex-shrink:0; width:16px; height:16px; color:#497b58; }
