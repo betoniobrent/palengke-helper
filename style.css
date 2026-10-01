@@ -84,9 +84,7 @@ button {
     to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.tab-content:not(.hidden) {
-    animation: fadeSlideUp 0.3s ease-out both;
-}
+/* Tab entry motion is coordinated by switchTab so rapid taps cancel cleanly. */
 
 .fixed.inset-0:not(.hidden) {
     animation: fadeIn 0.2s ease-out both;
@@ -268,3 +266,7 @@ nav .tab-link.active {
     #view-prices th,#view-prices td { padding:10px; }
     .tab-content { scroll-margin-top:70px; }
 }
+
+.mobile-bottom-tab svg { transition:transform 160ms ease; }
+.mobile-bottom-tab.active svg { transform:translateY(-2px); }
+@media (prefers-reduced-motion:reduce) { .mobile-bottom-tab svg { transition:none !important; } }

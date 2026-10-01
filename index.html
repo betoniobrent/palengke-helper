@@ -12,7 +12,7 @@
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Decoupled Visual Presentation Design Component Layer -->
-    <link rel="stylesheet" href="style.css?v=10">
+    <link rel="stylesheet" href="style.css?v=11">
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-900">
     <div id="authPage" style="background: #f0fdf4; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
@@ -1188,26 +1188,27 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
     <script src="tutorial-tabs.js?v=2"></script>
     <script src="tutorial.js?v=4"></script>
     <script>
+        let activeTabTransition = null;
         function switchTab(tabId) {
-            console.log('switchTab called with:', tabId);
+            const target = document.getElementById('view-' + tabId);
+            if (!target) return;
+            const previous = document.querySelector('.tab-content:not(.hidden)');
+            activeTabTransition?.cancel();
+            activeTabTransition = null;
             const views = document.querySelectorAll('.tab-content');
-            console.log('Found tab-content elements:', views.length);
             views.forEach(v => v.classList.add('hidden'));
 
             const hero = document.getElementById('homeHero');
             if (hero) hero.classList.toggle('hidden', tabId !== 'home');
 
-            const target = document.getElementById('view-' + tabId);
-            console.log('Target element:', target);
-            if (target) {
-                target.classList.remove('hidden');
-                console.log('Removed hidden from target');
-                console.log('Target display style:', window.getComputedStyle(target).display);
-                console.log('Target visibility:', window.getComputedStyle(target).visibility);
-                console.log('Target offsetHeight:', target.offsetHeight);
-                console.log('Target offsetWidth:', target.offsetWidth);
-            } else {
-                console.error('Target element not found for view-' + tabId);
+            target.classList.remove('hidden');
+            if (previous && previous !== target && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && typeof target.animate === 'function') {
+                const order = ['home','budget','meal','prices','suggestions','grocery'];
+                const direction = order.indexOf(tabId) >= order.indexOf(previous.id.replace('view-', '')) ? 1 : -1;
+                activeTabTransition = target.animate([
+                    {opacity:0.35, transform:'translateX(' + direction * 12 + 'px)'},
+                    {opacity:1, transform:'translateX(0)'}
+                ], {duration:180, easing:'cubic-bezier(0.2, 0.7, 0.2, 1)'});
             }
 
             if (tabId === 'suggestions') {
