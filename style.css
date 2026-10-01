@@ -187,3 +187,37 @@ nav .tab-link.active {
 }
 
 #appTutorial::backdrop { background: rgba(15, 23, 42, 0.6); }
+
+/* Tutorial: a compact guide card, with its own scoped visual styles. */
+#appTutorial.tutorial-dialog { padding:0; border:1px solid #d4e6dd; border-radius:24px; width:min(620px,calc(100% - 24px)); max-height:90dvh; color:#18372c; background:#fafcf9; box-shadow:0 24px 80px #052e1640; overflow-y:auto; }
+#appTutorial::backdrop { background:#102e27a6; backdrop-filter:blur(4px); }
+.tutorial-header { padding:20px 28px 22px; background:linear-gradient(125deg,#064e3b,#14735a); color:#fff; }
+.tutorial-topline,.tutorial-heading-row,.tutorial-language-row,.tutorial-footer { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.tutorial-eyebrow { font-size:11px; letter-spacing:.16em; font-weight:700; color:#c9f0db; }
+.tutorial-close { font-size:13px; padding:8px 12px; border:1px solid #ffffff55; border-radius:10px; background:#ffffff12; color:#fff; min-height:40px; }
+.tutorial-heading-row { justify-content:flex-start; margin:14px 0 18px; }
+.tutorial-icon { width:64px; height:64px; padding:10px; flex-shrink:0; border-radius:18px; background:#ffffff16; border:1px solid #ffffff28; }
+.tutorial-icon svg { width:100%; height:100%; }
+.tutorial-topic { font-size:21px; line-height:1.3; font-weight:700; }
+.tutorial-step-label { color:#c9f0db; font-size:13px; margin-top:5px; }
+.tutorial-progress { display:block; appearance:none; width:100%; height:6px; border:0; border-radius:8px; overflow:hidden; background:#ffffff26; }
+.tutorial-progress::-webkit-progress-bar { background:#ffffff26; border-radius:8px; }
+.tutorial-progress::-webkit-progress-value { background:#bef264; border-radius:8px; }
+.tutorial-progress::-moz-progress-bar { background:#bef264; border-radius:8px; }
+.tutorial-body { padding:22px 28px; }
+.tutorial-language-row { margin-bottom:24px; color:#52675d; font-size:12px; }
+.tutorial-language-row select { border:1px solid #c9dacf; border-radius:10px; padding:9px 12px; background:white; color:#18372c; font-size:13px; min-height:40px; }
+#tutorialTitle { font-size:26px; line-height:1.25; font-weight:750; letter-spacing:-.025em; margin:0 0 10px; }
+#tutorialText { color:#52675d; line-height:1.6; font-size:15px; margin-bottom:20px; }
+.tutorial-tip-cards { list-style:none; padding:0; margin:0; counter-reset:guide-tip; display:grid; gap:10px; }
+.tutorial-tip-cards li { position:relative; counter-increment:guide-tip; padding:15px 16px 15px 54px; border:1px solid #e0e9df; border-radius:14px; background:white; color:#344f42; font-size:14px; line-height:1.6; }
+.tutorial-tip-cards li::before { content:counter(guide-tip); position:absolute; left:14px; top:16px; width:26px; height:26px; display:grid; place-items:center; background:#edf5e7; border-radius:8px; color:#366438; font-size:12px; font-weight:700; }
+.tutorial-section-link { margin-top:20px; color:#146143; font-size:14px; font-weight:650; text-decoration:underline; text-underline-offset:4px; min-height:40px; }
+.tutorial-footer { position:sticky; bottom:0; padding:16px 28px; border-top:1px solid #dfe9df; background:#fafcf9; }
+.tutorial-back,.tutorial-next { min-height:44px; padding:10px 23px; border-radius:12px; font-size:14px; font-weight:650; }
+.tutorial-back { border:1px solid #c9dacf; color:#344f42; background:white; }
+.tutorial-back:disabled { opacity:.4; cursor:default; }
+.tutorial-next { background:#116149; color:white; border:1px solid #116149; }
+.tutorial-next:hover { background:#064e3b; }
+#appTutorial button:focus-visible,#appTutorial select:focus-visible { outline:3px solid #84cc16; outline-offset:3px; }
+@media(max-width:480px) { .tutorial-header {padding:16px 20px 18px;} .tutorial-body {padding:18px 20px;} .tutorial-footer {padding:14px 20px;} #tutorialTitle {font-size:23px;} .tutorial-topic {font-size:19px;} .tutorial-icon {width:54px;height:54px;} }

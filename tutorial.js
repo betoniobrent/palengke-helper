@@ -52,6 +52,13 @@ function renderTutorialStep() {
     document.getElementById('tutorialClose').setAttribute('aria-label', tagalog ? 'Isara ang gabay' : 'Close tutorial');
     document.getElementById('tutorialBack').textContent = tagalog ? 'Bumalik' : 'Back';
     document.getElementById('tutorialProgress').textContent = (tagalog ? 'Hakbang ' : 'Step ') + (tutorialStep + 1) + (tagalog ? ' sa ' : ' of ') + currentTutorialSteps().length;
+    const progress = document.getElementById('tutorialProgressBar');
+    progress.max = currentTutorialSteps().length;
+    progress.value = tutorialStep + 1;
+    progress.setAttribute('aria-label', tagalog ? 'Progreso ng gabay' : 'Tutorial progress');
+    document.getElementById('tutorialGuideLabel').textContent = tagalog ? 'GABAY NG KA-PALENGKE' : 'YOUR PALENGKE GUIDE';
+    const topics = tagalog ? {home:'Simulan dito',budget:'Kita at gastusin',meal:'Plano ng pagkain',prices:'Gabay sa presyo',grocery:'Listahan ng bibilhin',suggestions:'Palengke AI'} : {home:'Getting started',budget:'Income & expenses',meal:'Meal planning',prices:'Price references',grocery:'Shopping made simpler',suggestions:'Palengke AI'};
+    document.getElementById('tutorialTopicLabel').textContent = topics[step.section] || 'Palengke Helper+';
     document.getElementById('tutorialTitle').textContent = step.title;
     document.getElementById('tutorialText').textContent = step.text;
     const list = document.getElementById('tutorialTips');
