@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Palengke Helper+</title>
     <meta name="theme-color" content="#047857">
     <link rel="manifest" href="manifest.json">
@@ -12,7 +12,7 @@
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Decoupled Visual Presentation Design Component Layer -->
-    <link rel="stylesheet" href="style.css?v=9">
+    <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-900">
     <div id="authPage" style="background: #f0fdf4; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
@@ -225,18 +225,10 @@
         </aside>
 
         <!-- MOBILE TOP BAR + TAB STRIP -->
-        <nav class="md:hidden bg-white border-b border-slate-300 px-4 pt-3 pb-2 sticky top-0 z-50">
+        <nav id="mobileTopBar" class="md:hidden bg-white border-b border-slate-200 px-4 py-2 sticky top-0 z-30">
             <div class="flex justify-between items-center">
                 <h1 class="font-semibold text-lg text-slate-900 cursor-pointer" onclick="switchTab('home')">🥬 Palengke Helper+</h1>
-                <button class="text-2xl text-slate-600 focus:outline-none" onclick="toggleMenu()">☰</button>
-            </div>
-            <div class="mt-3 -mx-4 px-4 flex gap-2 overflow-x-auto whitespace-nowrap" style="scrollbar-width:none">
-                <button data-tab="home" onclick="switchTab('home')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">Home</button>
-                <button data-tab="budget" onclick="switchTab('budget')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">Budget</button>
-                <button data-tab="meal" onclick="switchTab('meal')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">Meal Planner</button>
-                <button data-tab="prices" onclick="switchTab('prices')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">Prices</button>
-                <button data-tab="suggestions" onclick="switchTab('suggestions')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">Palengke AI</button>
-                <button data-tab="grocery" onclick="switchTab('grocery')" class="tab-link shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">Grocery</button>
+                <button class="text-2xl text-slate-600 rounded-lg px-3" aria-label="Open menu" onclick="toggleMenu()">☰</button>
             </div>
             <div id="mobileMenu" class="hidden mt-3 space-y-1 pb-1 border-t border-slate-200 pt-2">
                 <button type="button" onclick="toggleMenu(); openTutorial()" class="block w-full text-left py-2 text-slate-700" aria-haspopup="dialog">Tutorial</button>
@@ -251,7 +243,15 @@
             </div>
         </nav>
 
-        <div class="md:ml-[240px] min-h-screen flex flex-col">
+<nav id="mobileBottomNav" class="mobile-bottom-nav" aria-label="Main navigation">
+<button type="button" data-tab="home" onclick="switchTab('home')" class="tab-link mobile-bottom-tab" aria-label="Home"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-8 9 8M5 10v10h14V10"/></svg><span>Home</span></button>
+<button type="button" data-tab="budget" onclick="switchTab('budget')" class="tab-link mobile-bottom-tab" aria-label="Budget"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18v10H3zM7 12h.01M17 12h.01M12 9.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"/></svg><span>Budget</span></button>
+<button type="button" data-tab="meal" onclick="switchTab('meal')" class="tab-link mobile-bottom-tab" aria-label="Meal Planner"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3v8M5 3v8a3 3 0 006 0V3M16 3c-2 2-2 6-2 8h4v10M8 14v7"/></svg><span>Meals</span></button>
+<button type="button" data-tab="prices" onclick="switchTab('prices')" class="tab-link mobile-bottom-tab" aria-label="Prices"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M6 16V10M11 16V6M16 16v-3"/></svg><span>Prices</span></button>
+<button type="button" data-tab="suggestions" onclick="switchTab('suggestions')" class="tab-link mobile-bottom-tab" aria-label="Palengke AI"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2M8 7h8a3 3 0 013 3v6a3 3 0 01-3 3H8a3 3 0 01-3-3v-6a3 3 0 013-3zM9 13h.01M15 13h.01"/></svg><span>AI</span></button>
+<button type="button" data-tab="grocery" onclick="switchTab('grocery')" class="tab-link mobile-bottom-tab" aria-label="Grocery"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h2l2.5 11h11L21 7H6M9 20a1 1 0 100-2 1 1 0 000 2zM17 20a1 1 0 100-2 1 1 0 000 2z"/></svg><span>Grocery</span></button>
+</nav>
+        <div id="appMainContent" class="md:ml-[240px] min-h-screen flex flex-col">
 
         <!-- APP HERO ATTRIBUTION DISPLAY PANEL -->
         <section id="homeHero" class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white py-12 text-center mt-6 mx-4 md:mx-6 rounded-lg shadow-sm">
@@ -850,9 +850,9 @@
             <!-- TAB 4: PALENGKE AI -->
             <div id="view-suggestions" class="tab-content hidden -mx-4 -my-6 md:-mx-6">
                 <div class="w-full">
-                    <div class="bg-white border-b border-slate-300 overflow-hidden flex flex-col h-[calc(100vh-4rem)] md:h-screen">
+                    <div id="aiChatShell" class="bg-white border-b border-slate-300 overflow-hidden flex flex-col h-[calc(100vh-4rem)] md:h-screen">
                         <!-- CHAT HEADER -->
-                        <div class="px-4 md:px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+                        <div class="ai-chat-header px-4 md:px-6 py-4 border-b border-slate-200 flex items-center justify-between">
                             <div>
                                 <div class="flex items-center gap-2">
                                     <h2 class="text-xl font-semibold text-gray-800">Palengke AI</h2>
@@ -870,7 +870,7 @@
                         </div>
 
                         <!-- QUICK PROMPTS + INPUT -->
-                        <div class="sticky bottom-0 z-10 bg-white border-t border-slate-200 p-4 md:px-6 flex flex-col gap-3">
+                        <div class="ai-composer sticky bottom-0 z-10 bg-white border-t border-slate-200 p-4 md:px-6 flex flex-col gap-3">
                             <div class="flex flex-wrap gap-2">
                                 <button onclick="handleQuickPrompt('What should I cook for dinner?')" class="rounded-full border border-gray-200 bg-slate-50 px-3 py-1.5 text-xs text-gray-700 hover:bg-slate-100 transition">What should I cook for dinner?</button>
                                 <button onclick="handleQuickPrompt('How can I save money on groceries?')" class="rounded-full border border-gray-200 bg-slate-50 px-3 py-1.5 text-xs text-gray-700 hover:bg-slate-100 transition">How can I save money on groceries?</button>
@@ -1185,7 +1185,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
         <footer class="tutorial-footer"><button id="tutorialBack" type="button" onclick="advanceTutorial(-1)" class="tutorial-back">Back</button><button id="tutorialNext" type="button" onclick="advanceTutorial(1)" class="tutorial-next">Next</button></footer>
     </dialog>
     <script src="app.js?v=44"></script>
-    <script src="tutorial-tabs.js?v=1"></script>
+    <script src="tutorial-tabs.js?v=2"></script>
     <script src="tutorial.js?v=4"></script>
     <script>
         function switchTab(tabId) {
@@ -1218,9 +1218,12 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
                     evaluateDynamicContextualAISuggestions();
                 }
             }
+            document.getElementById('mobileMenu')?.classList.add('hidden');
             const tabButtons = document.querySelectorAll('.tab-link');
             tabButtons.forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.tab === tabId);
+                if (btn.dataset.tab === tabId) btn.setAttribute('aria-current', 'page');
+                else btn.removeAttribute('aria-current');
             });
             if (tabId === 'meal') {
                 const mealWrapper = document.getElementById('mealScheduleWrapper');
