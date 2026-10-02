@@ -1,6 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" role="img" aria-labelledby="title">
+  <title id="title">Palengke Helper grocery cart</title>
   <rect width="192" height="192" rx="48" fill="#047857"/>
-  <path d="M52 70h88l-12 80H64L52 70z" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
-  <path d="M40 70h112" stroke="white" stroke-width="8" stroke-linecap="round"/>
-  <path d="M80 50c0-20 32-20 32 0" fill="none" stroke="#a7f3d0" stroke-width="8" stroke-linecap="round"/>
+  <path d="M92 77V59a13 13 0 0 1 26 0v18" fill="#fcd34d"/>
+  <path d="M126 77c-13-20-4-38 19-39 3 20-3 33-19 39Z" fill="#a7f3d0"/>
+  <path d="M34 48h20l19 80h67M61 74h95l-12 35H70" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="81" cy="148" r="10" fill="#fff"/>
+  <circle cx="135" cy="148" r="10" fill="#fff"/>
 </svg>
