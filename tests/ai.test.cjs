@@ -22,7 +22,25 @@ test('English and Filipino recipe questions get scaled verified quotes, not fall
  assert.match(en.text,/₱100.00/);assert.match(en.text,/incomplete subtotal/);
  const tl=c.buildAIMealQuote('Magkano ang Chicken Adobo para sa 2 tao?');
  assert.match(tl.text,/Subtotal lang/);assert.match(tl.text,/₱100.00/);
- const custom=c.buildAIMealQuote('Chicken Adobo using 400 g boneless chicken');
+ const custom=c.buildAIMealQuote('Cost of Chicken Adobo using 400 g boneless chicken');
  assert.doesNotMatch(custom.text,/₱/);assert.match(custom.text,/no verified calculation/);
  assert.equal(c.buildAIMealQuote('Magkano ang sabon ayon sa DTI?'),null);
+});
+test('ingredient suggestions never select the first catalog recipe or append its bill',async()=>{
+ let sent;
+ const c=load({navigator:{onLine:true},BO_SAR_BACKEND_URL:'https://example.test',document:{getElementById:()=>({value:''})},
+ RECIPE_DATABASE:[{name:'Champorado',ingredients:['100 g Rice'],servings:2},{name:'Chicken Adobo'},{name:'Pork Adobo'}],
+ buildMarketPriceContext:()=>'',buildMealPlanContext:()=>'',aiConversationVersion:0,aiRequestController:null,palengkeAIThreadId:'',
+ AbortController,setTimeout,clearTimeout,localStorage:{setItem(){}},
+ fetch:async(url,options)=>{sent=JSON.parse(options.body);return {ok:true,json:async()=>({reply:'**Ginisang baboy at malunggay**\\\nIgisa ang baboy.\\nIdagdag ang malunggay.'})};}
+ },['buildAIMealQuote','generateAIResponseWithBackend']);
+ const question='anong pwedeng lutuin kung meron akong malunggay at karne ng baboy';
+ assert.equal(c.buildAIMealQuote(question),null);
+ assert.equal(c.buildAIMealQuote('What can I cook with pork and malunggay?'),null);
+ const answer=await c.generateAIResponseWithBackend(question);
+ assert.equal(answer,'Ginisang baboy at malunggay\nIgisa ang baboy.\nIdagdag ang malunggay.');
+ assert.equal(sent.meal_cost_mode,false);assert.equal(sent.message,question);
+ assert.doesNotMatch(sent.context,/Champorado/);
+ assert.doesNotMatch(c.buildAIMealQuote('What can I cook with pork on a budget?').text,/Champorado/);
+ assert.doesNotMatch(c.buildAIMealQuote('How much does adobo cost?').text,/Chicken Adobo|Pork Adobo/);
 });

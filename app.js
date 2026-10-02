@@ -3017,6 +3017,8 @@ function generateAIResponse(question) {
 
 function buildAIMealQuote(question) {
     const q = question.toLowerCase();
+    // Cooking ideas do not need a catalog bill appended to the generated dish.
+    if (!/cost|budget|magkano|kasya|presyo|pesos|₱|\bphp\b|price|how much/i.test(q)) return null;
     if (!/recipe|cook|meal|dinner|lunch|breakfast|ulam|lutuin|luto|hapunan|tanghalian|almusal|adobo|sinigang|tinola|servings|pax/.test(q)) return null;
     const filipino = /\b(ano|ang|ng|sa|para|magkano|paano|lutuin|luto|tao|pwede|puwede|pwedeng|ulam|hapunan|tanghalian|almusal)\b/.test(q) && !/\b(in english|answer in english)\b/.test(q) || /\b(in tagalog|in filipino)\b/.test(q);
     const unavailable = filipino ? 'Wala pang kumpletong kuwenta para sa eksaktong pagkaing ito. Kailangan ang listahan ng sangkap, dami, at katugmang presyo bago masabing pasok sa budget.' : 'There is no verified calculation for this exact meal yet. Ingredient quantities and matching prices are needed before confirming it fits your budget.';
@@ -3029,12 +3031,12 @@ function buildAIMealQuote(question) {
     if (!recipe) {
         const dishes = ['adobo','sinigang','tinola','tortang talong','ginisang munggo'];
         const dish = dishes.find(name => q.includes(name));
-        if (dish) recipe = recipes.find(recipe => recipe.name.toLowerCase().includes(dish));
+        if (dish) {
+            const candidates = recipes.filter(recipe => recipe.name.toLowerCase().includes(dish));
+            if (candidates.length === 1) recipe = candidates[0];
+        }
     }
-    // A generic suggestion can use a catalog recipe; unfamiliar named dishes cannot.
-    if (!recipe && /what.*(?:cook|dinner|lunch|breakfast)|suggest.*(?:meal|dinner|lunch)|ano.*(?:lutuin|ulam|hapunan)|meal ideas|lunch ideas/.test(q)) {
-        recipe = recipes.find(recipe => recipe.ingredients?.length && recipe.ingredients.length <= 7);
-    }
+    // Never substitute the first catalog entry for the user's ingredients or dish.
     if (!recipe) return {text:unavailable,context:'No matching catalog recipe. Do not claim a meal total or that the meal fits a budget.'};
     const quote = MealCosting.quote(recipe, ALL_PRICE_ITEMS || [], servings || recipe.servings);
     return {text:MealCosting.format(quote, filipino),context:JSON.stringify({recipe:recipe.name,servings:quote.servings,instructions:recipe.instructions,complete:quote.complete,rule:'Give a brief cooking tip for this recipe. Do not list ingredients, quantities, servings, prices, or instructions mentioning quantities. The app appends the scaled ingredient list and calculation. Never claim it fits a budget when incomplete.'})};
@@ -3052,7 +3054,8 @@ async function generateAIResponseWithBackend(question) {
     const mealQuote = buildAIMealQuote(question);
     // Price and budget answers are calculations, not generated prose.
     if (mealQuote && /cost|budget|magkano|kasya|presyo|pesos|₱|\bphp\b|price|how much/i.test(question)) return mealQuote.text;
-    const context = [preferences, mealQuote ? mealQuote.context : buildMarketPriceContext(question), buildMealPlanContext(), buildRecipeContext()].join('\n\n').slice(0, 6500);
+    const cookingRule = 'Answer the current question in its language. For ingredient-based cooking ideas, use the ingredients the user named together in the suggested dish. Clearly identify any extra ingredients needed. Do not switch to unrelated catalog meals or append an unrelated price breakdown. Do not invent prices or claim a verified meal total. Use plain text with real line breaks, no Markdown stars or backslash line endings.';
+    const context = [cookingRule, preferences, mealQuote ? mealQuote.context : buildMarketPriceContext(question), buildMealPlanContext()].join('\n\n').slice(0, 6500);
     const version = aiConversationVersion;
     const controller = new AbortController();
     aiRequestController = controller;
@@ -3071,7 +3074,8 @@ async function generateAIResponseWithBackend(question) {
             palengkeAIThreadId = data.thread_id;
             localStorage.setItem('palengke_ai_thread', palengkeAIThreadId);
         }
-        return (data.reply || 'No response from Palengke AI.') + (mealQuote ? '\n\n' + mealQuote.text : '');
+        const reply = (data.reply || 'No response from Palengke AI.').replace(/\\+\r?\n/g, '\n').replace(/\\n/g, '\n').replace(/\*\*/g, '');
+        return reply + (mealQuote ? '\n\n' + mealQuote.text : '');
     } catch (error) {
         console.error('Palengke AI backend error:', error);
         if (version !== aiConversationVersion) return '';
