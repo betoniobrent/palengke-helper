@@ -1397,8 +1397,9 @@ function applySpecificationFilter(cadence) {
     // Toggle active visual styles natively
     const buttons = document.querySelectorAll('[id^="filter-spec-"]');
     buttons.forEach(b => {
-        b.classList.remove('bg-emerald-700', 'text-white', 'shadow-sm');
+        b.classList.remove('bg-emerald-700', 'text-white', 'shadow-sm', 'bg-white', 'hover:bg-emerald-50', 'hover:bg-emerald-800');
         b.classList.add('bg-gray-50', 'text-gray-700', 'hover:bg-gray-100');
+        b.setAttribute('aria-pressed', 'false');
     });
 
     let activeBtnId = 'filter-spec-all';
@@ -1413,7 +1414,8 @@ function applySpecificationFilter(cadence) {
     const currentBtn = document.getElementById(activeBtnId);
     if (currentBtn) {
         currentBtn.classList.remove('bg-gray-50', 'text-gray-700', 'hover:bg-gray-100');
-        currentBtn.classList.add('bg-emerald-700', 'text-white', 'shadow-sm');
+        currentBtn.classList.add('bg-emerald-700', 'hover:bg-emerald-800', 'text-white', 'shadow-sm');
+        currentBtn.setAttribute('aria-pressed', 'true');
     }
 
     recalculateActiveWorkspaceBalanceSheet();

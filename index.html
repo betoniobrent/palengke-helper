@@ -439,14 +439,14 @@
                         <p class="text-sm text-gray-600">Filter workspace details dynamically by specification intervals below.</p>
                         <!-- LOCALIZED DYNAMIC SPECIFICATION QUICK FILTERS -->
                         <div class="flex flex-wrap gap-1.5 bg-gradient-to-br from-gray-50 to-gray-100 p-1.5 rounded-xl border border-gray-200 shadow-sm">
-                            <button onclick="applySpecificationFilter('all')" class="bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm" id="filter-spec-all">All</button>
-                            <button onclick="applySpecificationFilter('Monthly')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-Monthly">Monthly</button>
-                            <button onclick="applySpecificationFilter('1st Cut (1st-15th)')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-1st">1st Cut</button>
-                            <button onclick="applySpecificationFilter('2nd Cut (16th-End)')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-2nd">2nd Cut</button>
-                            <button onclick="applySpecificationFilter('Week 1')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w1">W1</button>
-                            <button onclick="applySpecificationFilter('Week 2')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w2">W2</button>
-                            <button onclick="applySpecificationFilter('Week 3')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w3">W3</button>
-                            <button onclick="applySpecificationFilter('Week 4')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w4">W4</button>
+                            <button onclick="applySpecificationFilter('all')" class="bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm" id="filter-spec-all" aria-pressed="true">All</button>
+                            <button onclick="applySpecificationFilter('Monthly')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-Monthly" aria-pressed="false">Monthly</button>
+                            <button onclick="applySpecificationFilter('1st Cut (1st-15th)')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-1st" aria-pressed="false">1st Cut</button>
+                            <button onclick="applySpecificationFilter('2nd Cut (16th-End)')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-2nd" aria-pressed="false">2nd Cut</button>
+                            <button onclick="applySpecificationFilter('Week 1')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w1" aria-pressed="false">W1</button>
+                            <button onclick="applySpecificationFilter('Week 2')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w2" aria-pressed="false">W2</button>
+                            <button onclick="applySpecificationFilter('Week 3')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w3" aria-pressed="false">W3</button>
+                            <button onclick="applySpecificationFilter('Week 4')" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-2 py-1.5 rounded-lg transition" id="filter-spec-w4" aria-pressed="false">W4</button>
                         </div>
                     </div>
 
@@ -1184,7 +1184,7 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
         </div>
         <footer class="tutorial-footer"><button id="tutorialBack" type="button" onclick="advanceTutorial(-1)" class="tutorial-back">Back</button><button id="tutorialNext" type="button" onclick="advanceTutorial(1)" class="tutorial-next">Next</button></footer>
     </dialog>
-    <script src="app.js?v=45"></script>
+    <script src="app.js?v=46"></script>
     <script src="tutorial-tabs.js?v=2"></script>
     <script src="tutorial.js?v=4"></script>
     <script>
