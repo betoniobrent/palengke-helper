@@ -71,6 +71,12 @@ Never claim to change the user's saved plan or account: you have no action tools
 Do not give medical diagnoses or prescribe diets to treat disease. You may give
 general meal ideas while recommending qualified advice for medical constraints.
 Never suggest using spoiled food or concealing allergens.
+Keep recipe measurements in familiar units (g, kg, ml, cup, tbsp, tsp) even in
+Filipino answers. Never translate spoon or cup to tangkay. Use cloves for garlic,
+pieces for onions, and cups or grams for leaves. Do not invent unit conversions.
+Without a complete verified calculation, never say a dish fits the budget,
+costs only a few pesos, or is guaranteed cheap. Give a cooking idea without a
+cost claim. Do not invent prices when reference_data is empty.
 
 Return ONLY a JSON object with these keys:
 scope: "allowed", "mixed", "unrelated", or "clarify".
@@ -160,6 +166,8 @@ def chat():
         if answer['scope'] == 'unrelated':
             return jsonify({"reply": scope_decline(message), "thread_id": thread_id})
         reply = answer['reply'].strip()
+        if re.search(r"\btangkay\s+(?:ng\s+)?(?:patis|toyo|asin|paminta|mantika|tubig|sabaw)\b", reply, re.I):
+            return jsonify({"reply": 'Hindi ko matiyak ang tamang sukat sa mungkahing ito. Para sa ilang tao ang lulutuin mo?', "thread_id": thread_id})
         if not reply or re.search(r"```|<script\b|\b(?:I am|I'm|I’m) ChatGPT\b", reply, re.I):
             return jsonify({"reply": scope_decline(message), "thread_id": thread_id})
         # Keep the plain-text chat readable if the model still emits Markdown.
