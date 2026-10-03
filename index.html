@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="/theme.js?v=1"></script>
     <meta name="google-site-verification" content="5O2PImcNDfsRAYhDeUuN-Y593PYRsF0EZFP3gJlxooQ">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Palengke Helper+ | Budget, Meal Planner & Grocery Prices</title>
@@ -20,7 +21,7 @@
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Decoupled Visual Presentation Design Component Layer -->
-    <link rel="stylesheet" href="style.css?v=11">
+    <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-900">
     <div id="authPage" style="background: #f0fdf4; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
@@ -29,6 +30,7 @@
             <p style="text-align:center;color:#475569;font-size:0.9rem;line-height:1.6;margin-bottom:1.25rem">Plan affordable Filipino meals, manage your household budget, and track your grocery list. Compare DA and DTI reference prices to prepare for your next palengke trip. Sign in or try the app as a guest.</p>
 
             <!-- LOGIN SUBSYSTEM VIEW -->
+            <button type="button" data-theme-toggle class="theme-toggle" style="display:block;margin:0 auto 16px">☾ Dark mode</button>
             <div id="loginBox">
                 <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 0.75rem; color: #1f2937;">Login</h2>
 
@@ -212,6 +214,7 @@
                 </button>
             </div>
             <div class="p-3 border-t border-slate-200">
+                <button type="button" data-theme-toggle class="sidebar-item theme-toggle mb-1">☾ Dark mode</button>
                 <button type="button" onclick="openTutorial()" class="sidebar-item mb-1" aria-haspopup="dialog">
                     <svg class="w-5 h-5 shrink-0" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/><path d="M9.5 9a2.5 2.5 0 015 0c0 2-2.5 2-2.5 4m0 3h.01" stroke-width="2" stroke-linecap="round"/></svg>
                     <span>Tutorial</span>
@@ -240,6 +243,7 @@
                 <button class="text-2xl text-slate-600 rounded-lg px-3" aria-label="Open menu" onclick="toggleMenu()">☰</button>
             </div>
             <div id="mobileMenu" class="hidden mt-3 space-y-1 pb-1 border-t border-slate-200 pt-2">
+                <button type="button" data-theme-toggle class="theme-toggle w-full text-left">☾ Dark mode</button>
                 <button type="button" onclick="toggleMenu(); openTutorial()" class="block w-full text-left py-2 text-slate-700" aria-haspopup="dialog">Tutorial</button>
                 <div id='navLoginRegisterMobile' class='hidden'>
                     <button onclick='logout(); toggleMenu()' class='block w-full text-left py-2 font-semibold text-emerald-700'>Login / Register</button>
