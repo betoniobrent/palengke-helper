@@ -33,7 +33,7 @@ test('ingredient suggestions never select the first catalog recipe or append its
  buildMarketPriceContext:()=>'',buildMealPlanContext:()=>'',aiConversationVersion:0,aiRequestController:null,palengkeAIThreadId:'',
  AbortController,setTimeout,clearTimeout,localStorage:{setItem(){}},
  fetch:async(url,options)=>{sent=JSON.parse(options.body);return {ok:true,json:async()=>({reply:'**Ginisang baboy at malunggay**\\\nIgisa ang baboy.\\nIdagdag ang malunggay.'})};}
- },['buildAIMealQuote','generateAIResponseWithBackend']);
+ },['buildAIMealQuote','getAIScopeResponse','generateAIResponseWithBackend']);
  const question='anong pwedeng lutuin kung meron akong malunggay at karne ng baboy';
  assert.equal(c.buildAIMealQuote(question),null);
  assert.equal(c.buildAIMealQuote('What can I cook with pork and malunggay?'),null);
@@ -43,4 +43,12 @@ test('ingredient suggestions never select the first catalog recipe or append its
  assert.doesNotMatch(sent.context,/Champorado/);
  assert.doesNotMatch(c.buildAIMealQuote('What can I cook with pork on a budget?').text,/Champorado/);
  assert.doesNotMatch(c.buildAIMealQuote('How much does adobo cost?').text,/Chicken Adobo|Pork Adobo/);
+});
+test('AI redirects website requests and answers identity without calling the provider',async()=>{
+ const c=load({},['getAIScopeResponse','generateAIResponseWithBackend']);
+ assert.match(await c.generateAIResponseWithBackend('can you help me build a website'),/can’t help build a website/);
+ assert.match(await c.generateAIResponseWithBackend('are you chatgpt or grok'),/I’m Palengke AI/);
+ assert.match(c.getAIScopeResponse('Gawan mo ako ng website'),/Para lang ako/);
+ assert.equal(c.getAIScopeResponse('How do I use the meal planner?'),null);
+ assert.equal(c.getAIScopeResponse('What can I cook with pork and malunggay?'),null);
 });
