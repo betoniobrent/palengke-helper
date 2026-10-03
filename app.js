@@ -3047,7 +3047,7 @@ function buildAIMealQuote(question) {
 function getAIScopeResponse(question) {
     const q = question.toLowerCase();
     const filipino = /\b(ano|ang|ng|sa|mo|ka|ikaw|paano|gumawa|gawan|pwede|puwede|ako)\b/.test(q) && !/\bin english\b/.test(q) || /\bin (tagalog|filipino)\b/.test(q);
-    if (/\b(chatgpt|grok|groq)\b|\b(who are you|what are you|sino ka)\b/.test(q)) {
+    if (/\b(who are you|what are you|sino ka)\b|\b(?:are you|ikaw ba|ikaw ay)\b.{0,30}\b(chatgpt|grok|groq)\b/.test(q)) {
         return filipino ? 'Ako si Palengke AI, ang assistant ng Palengke Helper+. Matutulungan kita sa meal planning, pagluluto, grocery list, presyo, at budget sa pagkain.' : 'I’m Palengke AI, the assistant in Palengke Helper+. I help with meal planning, cooking, grocery lists, food prices, and food budgeting.';
     }
     if (/\b(?:build|create|develop|code|design|make)\b.{0,55}\b(?:website|web ?app|software|html|python|javascript)\b|\b(?:gumawa|gawan)\b.{0,55}\b(?:website|web ?app|code)\b/i.test(q)) {
