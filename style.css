@@ -299,3 +299,16 @@ html[data-theme="dark"] .mobile-bottom-tab { color:#cbd5e1; }
 html[data-theme="dark"] .text-white { color:#fff !important; }
 html[data-theme="dark"] ::-webkit-scrollbar-track { background:#0f172a; }
 html[data-theme="dark"] ::-webkit-scrollbar-thumb { background:#64748b; }
+
+/* Pale gradients and secondary surfaces need their own dark counterparts. */
+html[data-theme="dark"] :is(.bg-slate-200,.bg-gray-200) { background:#334155 !important; color:#e2e8f0 !important; }
+html[data-theme="dark"] :is(.from-teal-50,.from-emerald-100,.from-emerald-200) { background:linear-gradient(135deg,#123e35,#1e293b) !important; border-color:#286354 !important; }
+html[data-theme="dark"] .from-rose-50 { background:linear-gradient(135deg,#482632,#1e293b) !important; }
+html[data-theme="dark"] :is(.text-teal-900,.text-emerald-900) { color:#a7f3d0 !important; }
+html[data-theme="dark"] :is(.text-rose-800,.text-rose-900) { color:#fda4af !important; }
+html[data-theme="dark"] .text-amber-800 { color:#fcd34d !important; }
+html[data-theme="dark"] .bg-amber-100 { background:#42351c !important; }
+html[data-theme="dark"] :is(.border-teal-200,.border-emerald-100,.border-emerald-200) { border-color:#286354 !important; }
+html[data-theme="dark"] :is(.border-rose-100,.border-rose-200) { border-color:#754052 !important; }
+html[data-theme="dark"] .border-amber-200 { border-color:#756036 !important; }
+html[data-theme="dark"] table :is(th,td) { border-color:#475569 !important; }
