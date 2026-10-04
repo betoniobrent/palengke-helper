@@ -1,9 +1,11 @@
-const CACHE_NAME = 'palengke-helper-v67';
+const CACHE_NAME = 'palengke-helper-v68';
 
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/style.css',
+  '/tailwind.css?v=1',
+  '/navigation.js?v=1',
   '/theme.js?v=1',
   '/daily-home.js?v=1',
   '/app.js',

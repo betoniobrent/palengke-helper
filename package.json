@@ -1,5 +1,7 @@
 {
   "devDependencies": {
-    "pdfjs-dist": "3.11.174"
+    "esbuild": "0.25.12",
+    "pdfjs-dist": "3.11.174",
+    "tailwindcss": "3.4.17"
   }
 }

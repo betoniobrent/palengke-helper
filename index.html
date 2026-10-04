@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="/theme.js?v=1"></script>
+    <script>try{let t=localStorage.getItem('palengkeTheme');if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t}catch(e){}</script>
+    <script defer src="/theme.js?v=1"></script>
     <meta name="google-site-verification" content="5O2PImcNDfsRAYhDeUuN-Y593PYRsF0EZFP3gJlxooQ">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Palengke Helper+ | Budget, Meal Planner & Grocery Prices</title>
@@ -17,14 +18,16 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.svg">
     <!-- Tailwind CSS Engine CDN Deployment -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://hurqvygjmaamrynuptuo.supabase.co" crossorigin>
+    <link rel="stylesheet" href="/tailwind.css?v=1">
     <!-- Supabase JS Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Decoupled Visual Presentation Design Component Layer -->
     <link rel="stylesheet" href="style.css?v=14">
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-900">
-    <div id="authPage" style="background: #f0fdf4; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
+    <div role="main" aria-label="Welcome to Palengke Helper+" id="authPage" style="background: #f0fdf4; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
         <div style="background: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; width: 100%; max-width: 28rem;">
             <h1 style="font-size: 1.875rem; font-weight: bold; text-align: center; color: #047857; margin-bottom: 1rem;">🥬 Palengke Helper+</h1>
             <p style="text-align:center;color:#475569;font-size:0.9rem;line-height:1.6;margin-bottom:1.25rem">Plan affordable Filipino meals, manage your household budget, and track your grocery list. Compare DA and DTI reference prices to prepare for your next palengke trip. Sign in or try the app as a guest.</p>
@@ -264,7 +267,7 @@
 <button type="button" data-tab="suggestions" onclick="switchTab('suggestions')" class="tab-link mobile-bottom-tab" aria-label="Palengke AI"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2M8 7h8a3 3 0 013 3v6a3 3 0 01-3 3H8a3 3 0 01-3-3v-6a3 3 0 013-3zM9 13h.01M15 13h.01"/></svg><span>AI</span></button>
 <button type="button" data-tab="grocery" onclick="switchTab('grocery')" class="tab-link mobile-bottom-tab" aria-label="Grocery"><svg aria-hidden="true" class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h2l2.5 11h11L21 7H6M9 20a1 1 0 100-2 1 1 0 000 2zM17 20a1 1 0 100-2 1 1 0 000 2z"/></svg><span>Grocery</span></button>
 </nav>
-        <div id="appMainContent" class="md:ml-[240px] min-h-screen flex flex-col">
+        <div role="main" aria-label="Palengke Helper+ workspace" id="appMainContent" class="md:ml-[240px] min-h-screen flex flex-col">
 
         <!-- APP HERO ATTRIBUTION DISPLAY PANEL -->
         <section id="homeHero" class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white py-12 text-center mt-6 mx-4 md:mx-6 rounded-lg shadow-sm">
@@ -1180,10 +1183,10 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
 
     <!-- Modular Operational Architecture Decoupled Initialization -->
     
-    <script src="data/recipes.js?v=9"></script>
-    <script src="daily-home.js?v=1"></script>
-    <script src="supabase.js?v=3"></script>
-    <script src="meal-costing.js?v=3"></script>
+    <script defer src="data/recipes.js?v=9"></script>
+    <script defer src="daily-home.js?v=1"></script>
+    <script defer src="supabase.js?v=3"></script>
+    <script defer src="meal-costing.js?v=3"></script>
     <dialog id="appTutorial" aria-labelledby="tutorialTitle" aria-describedby="tutorialText" class="tutorial-dialog">
         <header class="tutorial-header">
             <div class="tutorial-topline"><span id="tutorialGuideLabel" class="tutorial-eyebrow">YOUR PALENGKE GUIDE</span><button id="tutorialClose" type="button" autofocus onclick="document.getElementById('appTutorial').close()" class="tutorial-close" aria-label="Close tutorial">Close</button></div>
@@ -1197,165 +1200,11 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
         </div>
         <footer class="tutorial-footer"><button id="tutorialBack" type="button" onclick="advanceTutorial(-1)" class="tutorial-back">Back</button><button id="tutorialNext" type="button" onclick="advanceTutorial(1)" class="tutorial-next">Next</button></footer>
     </dialog>
-    <script src="app.js?v=48"></script>
-    <script src="tutorial-tabs.js?v=2"></script>
-    <script src="tutorial.js?v=4"></script>
-    <script>
-        let activeTabTransition = null;
-        function switchTab(tabId) {
-            const target = document.getElementById('view-' + tabId);
-            if (!target) return;
-            const previous = document.querySelector('.tab-content:not(.hidden)');
-            activeTabTransition?.cancel();
-            activeTabTransition = null;
-            const views = document.querySelectorAll('.tab-content');
-            views.forEach(v => v.classList.add('hidden'));
+    <script defer src="app.js?v=48"></script>
+    <script defer src="tutorial-tabs.js?v=2"></script>
+    <script defer src="tutorial.js?v=4"></script>
+    <script defer src="navigation.js?v=1"></script>
 
-            const hero = document.getElementById('homeHero');
-            if (hero) hero.classList.toggle('hidden', tabId !== 'home');
-
-            target.classList.remove('hidden');
-            if (previous && previous !== target && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && typeof target.animate === 'function') {
-                const order = ['home','budget','meal','prices','suggestions','grocery'];
-                const direction = order.indexOf(tabId) >= order.indexOf(previous.id.replace('view-', '')) ? 1 : -1;
-                activeTabTransition = target.animate([
-                    {opacity:0.35, transform:'translateX(' + direction * 12 + 'px)'},
-                    {opacity:1, transform:'translateX(0)'}
-                ], {duration:180, easing:'cubic-bezier(0.2, 0.7, 0.2, 1)'});
-            }
-
-            if (tabId === 'suggestions') {
-                if (typeof renderAIWelcomeMessage === 'function') {
-                    renderAIWelcomeMessage();
-                }
-                if (typeof evaluateDynamicContextualAISuggestions === 'function') {
-                    evaluateDynamicContextualAISuggestions();
-                }
-            }
-            document.getElementById('mobileMenu')?.classList.add('hidden');
-            const tabButtons = document.querySelectorAll('.tab-link');
-            tabButtons.forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.tab === tabId);
-                if (btn.dataset.tab === tabId) btn.setAttribute('aria-current', 'page');
-                else btn.removeAttribute('aria-current');
-            });
-            if (tabId === 'meal') {
-                const mealWrapper = document.getElementById('mealScheduleWrapper');
-                const intro = document.getElementById('mealPlannerIntro');
-                const plannerResult = document.getElementById('plannerResultsSection');
-                const savedWrapper = document.getElementById('savedMealPlansWrapper');
-                const planActive = typeof hasActiveMealPlan === 'function' && hasActiveMealPlan();
-                if (mealWrapper) mealWrapper.classList.toggle('hidden', !planActive);
-                if (intro) intro.classList.toggle('hidden', planActive);
-                if (plannerResult) plannerResult.classList.toggle('hidden', !planActive);
-                if (savedWrapper) savedWrapper.classList.remove('hidden');
-            }
-        }
-
-        function toggleAccountMenu() {
-            const dropdown = document.getElementById('accountDropdown');
-            dropdown.classList.toggle('hidden');
-        }
-
-        function openAccountSettings() {
-            const modal = document.getElementById('accountSettingsModal');
-            modal.classList.remove('hidden');
-
-            // Populate account info
-            const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
-            document.getElementById('settingsFullName').textContent = session.full_name || session.name || session.user || 'Not set';
-            document.getElementById('settingsEmail').textContent = session.email || session.user || 'guest@local';
-            document.getElementById('settingsAddress').textContent = session.address || 'Not set';
-            document.getElementById('settingsRole').textContent = session.role || 'guest';
-
-            // Close dropdown if open
-            const dropdown = document.getElementById('accountDropdown');
-            dropdown.classList.add('hidden');
-        }
-
-        function closeAccountSettings() {
-            const modal = document.getElementById('accountSettingsModal');
-            modal.classList.add('hidden');
-        }
-
-        function exportAllData() {
-            const data = {
-                budget: JSON.parse(localStorage.getItem('palengke_budget') || '[]'),
-                grocery: JSON.parse(localStorage.getItem('palengke_grocery') || '[]'),
-                mealPlans: JSON.parse(localStorage.getItem('palengke_mealplans') || '[]'),
-                customRecipes: JSON.parse(localStorage.getItem('palengke_customrecipes') || '[]'),
-                session: JSON.parse(localStorage.getItem('palengke_session') || '{}')
-            };
-
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'palengke-backup-' + new Date().toISOString().split('T')[0] + '.json';
-            a.click();
-            URL.revokeObjectURL(url);
-
-            showNotification('Data exported successfully!', 'success');
-        }
-
-        function clearAllData() {
-            if (confirm('Are you sure you want to clear all local data? This cannot be undone.')) {
-                localStorage.removeItem('palengke_budget');
-                localStorage.removeItem('palengke_grocery');
-                localStorage.removeItem('palengke_mealplans');
-                localStorage.removeItem('palengke_customrecipes');
-                showNotification('All local data cleared.', 'success');
-                setTimeout(() => location.reload(), 1500);
-            }
-        }
-
-        function deleteAccount() {
-            if (confirm('Are you sure you want to delete your account? This will sign you out and clear all local data.')) {
-                localStorage.removeItem('palengke_session');
-                localStorage.removeItem('palengke_budget');
-                localStorage.removeItem('palengke_grocery');
-                localStorage.removeItem('palengke_mealplans');
-                localStorage.removeItem('palengke_customrecipes');
-                localStorage.removeItem('palengke_ai_thread');
-
-                if (typeof supabaseClient !== 'undefined' && supabaseClient.auth) {
-                    supabaseClient.auth.signOut().finally(() => location.reload());
-                } else {
-                    location.reload();
-                }
-            }
-        }
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('accountDropdown');
-            const accountButton = event.target.closest('button[onclick="toggleAccountMenu()"]');
-            if (!accountButton && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden');
-            }
-        });
-
-        // Filter price categories
-        function filterPriceCategory(category) {
-            // Update button styles
-            const buttons = document.querySelectorAll('.price-tab-btn');
-            buttons.forEach(btn => {
-                if (btn.dataset.category === category) {
-                    btn.classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-200');
-                    btn.classList.add('bg-emerald-700', 'text-white', 'shadow-sm');
-                } else {
-                    btn.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-200');
-                    btn.classList.remove('bg-emerald-700', 'text-white', 'shadow-sm');
-                }
-            });
-
-            // Filter the table rows (this would need to be implemented with actual price data)
-            const tableBody = document.getElementById('marketPricesTableBody');
-            // For now, this is a placeholder - the actual filtering logic would need
-            // to be implemented based on the price data structure
-            console.log('Filtering by category:', category);
-        }
-    </script>
 
     <!-- PWA Install Tutorial Modal -->
     <div id="pwaInstallModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
