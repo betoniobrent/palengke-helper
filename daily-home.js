@@ -50,7 +50,7 @@ if (typeof document !== 'undefined') {
         const nextMidnight = (homeDayIndex(new Date(now)) + 1) * 86400000 - 8 * 60 * 60 * 1000;
         dailyTimer = setTimeout(scheduleDailyHome, nextMidnight - now + 100);
     }
-    document.addEventListener('DOMContentLoaded', scheduleDailyHome);
+    document.addEventListener('palengke:ready', scheduleDailyHome);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) scheduleDailyHome(); });
 }
 if (typeof module !== 'undefined') module.exports = {homeDayIndex, selectDailyHome};

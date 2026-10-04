@@ -109,7 +109,7 @@ const staticUIActions = {
 "h5c060ea49966": function(event) { advanceTutorial(1) },
 "h80e9f6a77eaf": function(event) { closePwaInstallModal() }
 };
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('palengke:ready', () => {
   for (const type of ['click','change','input','keyup']) {
     document.querySelectorAll('[data-handler-' + type + ']').forEach(element => {
       const action = staticUIActions[element.getAttribute('data-handler-' + type)];

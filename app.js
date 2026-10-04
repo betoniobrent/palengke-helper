@@ -735,12 +735,11 @@ let activeSelectedDietStyle = 'anything';
 // 2. AUTHORIZATION & SESSION GATEWAY MANAGEMENT
 // ==========================================
 
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('palengke:ready', async function() {
     console.log('App.js loaded');
 
     // Check for existing session
     const cachedUser = localStorage.getItem('palengke_session');
-    console.log('Cached user:', cachedUser);
 
     const authPage = document.getElementById('authPage');
     const appPage = document.getElementById('appPage');
@@ -766,7 +765,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                 localStorage.removeItem('palengke_session');
                 location.reload();
             } else {
-                console.log('Supabase session restored successfully:', data);
             }
         }
 
@@ -783,7 +781,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             appPage.style.setProperty('display', 'block', 'important');
             appPage.style.visibility = 'visible';
             console.log('AppPage display set to block with !important');
-            console.log('AppPage computed display:', window.getComputedStyle(appPage).display);
         } else {
             console.error('appPage element not found!');
         }
@@ -1254,7 +1251,7 @@ async function handleOAuthCallback() {
 }
 
 // Check for OAuth callback or password recovery on page load
-window.addEventListener('load', () => {
+window.addEventListener('palengke:ready', () => {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const type = hashParams.get('type');
     if (type === 'recovery') {
@@ -3891,7 +3888,7 @@ async function loadLiveMarketPrices() {
 }
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadLiveMarketPrices);
+    document.addEventListener('palengke:ready', loadLiveMarketPrices);
 } else {
     loadLiveMarketPrices();
 }
@@ -4352,7 +4349,7 @@ function clearAIChatHistory() {
 
 // PWA install helpers and service worker registration
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
+    window.addEventListener('palengke:ready', () => {
         navigator.serviceWorker.register('sw.js')
             .then(reg => console.log('Service Worker registered:', reg.scope))
             .catch(err => console.error('Service Worker registration failed:', err));
