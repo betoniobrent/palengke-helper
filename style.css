@@ -312,3 +312,12 @@ html[data-theme="dark"] :is(.border-teal-200,.border-emerald-100,.border-emerald
 html[data-theme="dark"] :is(.border-rose-100,.border-rose-200) { border-color:#754052 !important; }
 html[data-theme="dark"] .border-amber-200 { border-color:#756036 !important; }
 html[data-theme="dark"] table :is(th,td) { border-color:#475569 !important; }
+
+/* Budget includes translucent ledger rows and a brighter workspace banner. */
+html[data-theme="dark"] #view-budget .bg-gray-50\/50 { background:#263449 !important; }
+html[data-theme="dark"] #view-budget .from-emerald-500 { background:linear-gradient(120deg,#065f46,#115e59) !important; }
+html[data-theme="dark"] #view-budget .text-rose-500 { color:#fda4af !important; }
+html[data-theme="dark"] #view-budget :is(.border-emerald-300,.border-emerald-600) { border-color:#34d399 !important; }
+html[data-theme="dark"] #view-budget .border-rose-300 { border-color:#be647e !important; }
+html[data-theme="dark"] #view-budget [id^="filter-spec-"][aria-pressed="true"] { background:#065f46 !important; color:#fff !important; box-shadow:inset 0 0 0 2px #6ee7b7; }
+html[data-theme="dark"] #view-budget button:focus-visible { outline:2px solid #6ee7b7; outline-offset:3px; }
