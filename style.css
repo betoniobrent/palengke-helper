@@ -352,6 +352,7 @@ html[data-theme="dark"] .budget-period-picker select { background:#1e293b; color
 html[data-theme="dark"] .budget-period-picker p { color:#cbd5e1; }
 @media(max-width:767px) {
   #view-budget { padding-bottom:84px; }
+  #view-budget .budget-desktop-add { display:none; }
   .budget-mobile-actions { display:flex; position:fixed; left:0; right:0; bottom:var(--mobile-nav-height,68px); padding:10px 12px; gap:10px; background:#fff; border-top:1px solid #cbd5e1; z-index:34; }
   .budget-mobile-actions button { flex:1; min-height:48px; border-radius:12px; background:#047857; color:#fff; font-weight:700; }
   .budget-mobile-actions button:last-child { background:#be123c; }
