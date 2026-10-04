@@ -908,6 +908,10 @@
                 <button type="button" data-handler-click="h76d9d20364a6" class="tutorial-help-button" aria-haspopup="dialog"><span class="tutorial-help-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5c3-1 5.5-.5 8 1.5 2.5-2 5-2.5 8-1.5V19c-3-1-5.5-.5-8 1.5-2.5-2-5-2.5-8-1.5V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 7v13" stroke="currentColor" stroke-width="1.7"/></svg></span><span>How to use Grocery</span><svg class="tutorial-help-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 
 
+                <div class="grocery-mobile-switch" role="group" aria-label="Grocery views">
+                    <button type="button" data-action-click="grocery-view" data-view="prices" aria-pressed="true" aria-controls="groceryPricesPanel">Price list</button>
+                    <button type="button" data-action-click="grocery-view" data-view="cart" aria-pressed="false" aria-controls="groceryShoppingPanel grocerySummaryPanel"><svg width="20" height="20" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h2l2.5 11h11L21 7H6M9 20h.01M17 20h.01"/></svg>Cart (<span id="groceryMobileCartCount" aria-live="polite">0</span>)</button>
+                </div>
                 <div class="grid xl:grid-cols-[minmax(0,1fr)_280px] gap-6">
                     <!-- Shopping Cart Section -->
                     <div class="min-w-0 bg-gradient-to-br from-slate-50 to-gray-100 p-6 rounded-xl shadow-md border border-gray-200">
@@ -922,7 +926,7 @@
                         </div>
 
                         <div class="grid lg:grid-cols-2 gap-4 items-start">
-                <section class="bg-white border border-emerald-200 rounded-xl p-4 min-w-0" aria-label="Grocery price list">
+                <section id="groceryPricesPanel" class="bg-white border border-emerald-200 rounded-xl p-4 min-w-0" aria-label="Grocery price list">
                     <div class="flex justify-between gap-3 mb-2"><h3 class="text-lg font-bold text-emerald-900">Price list</h3><span id="groceryPriceCount" class="text-sm text-gray-500"></span></div>
                     <p class="text-sm text-gray-600 mb-3">Browse the same prices shown in Prices. Add one selling unit, then adjust its quantity below. These are reference prices; shop prices may differ. Where only a price range is available, its midpoint is used.</p>
                     <div class="flex flex-col gap-2 mb-3">
@@ -931,7 +935,7 @@
                     </div>
                     <div id="groceryPriceList" class="max-h-[55vh] lg:max-h-[600px] overflow-y-auto" aria-live="polite"></div>
                 </section>
-                        <section class="min-w-0" aria-label="Your shopping items">
+                        <section id="groceryShoppingPanel" class="min-w-0" aria-label="Your shopping items">
                         <h3 class="text-lg font-bold text-gray-800 mb-3">Your shopping items</h3>
                         <!-- Search with Market Price Integration -->
                         <div class="relative mb-4">
@@ -975,7 +979,7 @@
                     </div>
 
                     <!-- Cart Summary Sidebar -->
-                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl shadow-md border border-emerald-200 h-fit">
+                    <div id="grocerySummaryPanel" class="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl shadow-md border border-emerald-200 h-fit">
                         <h3 class="text-lg font-bold text-emerald-900 mb-4">Shopping List Summary</h3>
                         <div class="bg-white rounded-lg border border-emerald-200 p-3 mb-4">
                             <label for="groceryBudgetTarget" class="text-sm font-semibold text-gray-800">Grocery budget (₱)</label>

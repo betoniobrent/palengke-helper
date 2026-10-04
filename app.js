@@ -2200,6 +2200,8 @@ function renderGroceryBudget(items, totalCost) {
 }
 
 function updateCartSummary(items) {
+    const cartCount = document.getElementById('groceryMobileCartCount');
+    if (cartCount) cartCount.textContent = String(items.length);
     const totalCost = items.reduce((acc, i) => acc + Math.round(getItemUnitPrice(i) * (parseFloat(i.quantity) || 0) * 100) / 100, 0);
     const checkedItems = items.filter(i => i.checked);
     const checkedCost = checkedItems.reduce((acc, i) => acc + Math.round(getItemUnitPrice(i) * (parseFloat(i.quantity) || 0) * 100) / 100, 0);
@@ -2308,6 +2310,7 @@ function clearBoughtItems() {
         return;
     }
     
+    if (!confirm('Remove all ' + boughtItems.length + ' bought items from your grocery list?')) return;
     // Remove bought items from list
     const remainingItems = items.filter(i => !i.checked);
     setGroceryData(remainingItems);
@@ -2371,6 +2374,8 @@ function addItem() {
 
 function deleteItem(index) {
     const items = getGroceryData();
+    if (!Number.isInteger(index) || !items[index]) return;
+    if (!confirm('Remove ' + items[index].name + ' from your grocery list?')) return;
     items.splice(index, 1);
     setGroceryData(items);
     renderGroceryItems();

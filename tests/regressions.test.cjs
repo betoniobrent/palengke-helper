@@ -32,6 +32,7 @@ function groceryContext() {
     Object.defineProperty(cart, 'innerHTML', { set: () => { cards.length = 0; } });
     let summary;
     const context = loadFunctions({
+        confirm: () => true,
         localStorage: storage({ groceryItems: JSON.stringify([
             { name: 'Rice', price: 50, quantity: 1, unit: 'kg' },
             { name: 'Fish', price: 100, quantity: 1, unit: 'kg' }
@@ -203,3 +204,5 @@ test('repeat catalog additions increase quantity and preserve distinct units and
  c.addGroceryPriceItem(1);assert.equal(items.length,2);assert.equal(items[1].unit,'pc');
  feed[0].price_avg=110;c.addGroceryPriceItem(0);assert.equal(items.length,3);
 });
+
+test('canceling deletion leaves the grocery item untouched',()=>{const {context}=groceryContext();context.confirm=()=>false;context.deleteItem(1);assert.equal(context.getGroceryData().length,2);assert.equal(context.getGroceryData()[1].name,'Fish');});

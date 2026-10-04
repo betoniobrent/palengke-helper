@@ -341,3 +341,14 @@ html[data-theme="dark"] #view-budget :is(.border-emerald-300,.border-emerald-600
 html[data-theme="dark"] #view-budget .border-rose-300 { border-color:#be647e !important; }
 html[data-theme="dark"] #view-budget [id^="filter-spec-"][aria-pressed="true"] { background:#065f46 !important; color:#fff !important; box-shadow:inset 0 0 0 2px #6ee7b7; }
 html[data-theme="dark"] #view-budget button:focus-visible { outline:2px solid #6ee7b7; outline-offset:3px; }
+
+.grocery-mobile-switch { display:none; }
+@media (max-width:767px) {
+  .grocery-mobile-switch { display:flex; gap:8px; margin:16px 0; }
+  .grocery-mobile-switch button { flex:1; display:flex; align-items:center; justify-content:center; gap:8px; min-height:48px; border:1px solid #047857; border-radius:12px; color:#047857; background:#fff; font-weight:700; }
+  .grocery-mobile-switch button[aria-pressed="true"] { background:#047857; color:#fff; }
+  #view-grocery:not([data-mobile-view="cart"]) :is(#groceryShoppingPanel,#grocerySummaryPanel) { display:none; }
+  #view-grocery[data-mobile-view="cart"] #groceryPricesPanel { display:none; }
+  html[data-theme="dark"] .grocery-mobile-switch button { background:#1e293b; color:#a7f3d0; border-color:#34d399; }
+  html[data-theme="dark"] .grocery-mobile-switch button[aria-pressed="true"] { background:#065f46; color:#fff; }
+}

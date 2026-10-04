@@ -1,5 +1,12 @@
 // Explicit actions migrated from the static HTML. No evaluation of DOM strings.
 const dynamicUIActions = {
+  'grocery-view': e => {
+    const view = e.dataset.view === 'cart' ? 'cart' : 'prices';
+    document.getElementById('view-grocery').dataset.mobileView = view;
+    document.querySelectorAll('[data-action-click="grocery-view"]').forEach(button => {
+      button.setAttribute('aria-pressed', String(button.dataset.view === view));
+    });
+  },
   'recipe-selector': e => openRecipeSelector(e.dataset.day, e.dataset.mealType),
   'recipe-details': e => showRecipeDetailsById(Number(e.dataset.id)),
   'custom-recipe': () => openCustomRecipePrompt(),
