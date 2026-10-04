@@ -1,5 +1,8 @@
 // Explicit actions migrated from the static HTML. No evaluation of DOM strings.
 const dynamicUIActions = {
+  'budget-add': e => openBudgetEntry(e.dataset.kind),
+  'budget-frequency': () => setBudgetFrequency(),
+  'budget-period': e => selectBudgetPeriod(e.value),
   'grocery-view': e => {
     const view = e.dataset.view === 'cart' ? 'cart' : 'prices';
     document.getElementById('view-grocery').dataset.mobileView = view;

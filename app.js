@@ -1273,6 +1273,40 @@ function toggleForm(formId) {
     if (f) f.classList.toggle('hidden');
 }
 
+function openBudgetEntry(type) {
+    let formId = type === 'expense' ? 'expenseForm' : 'incomeForm';
+    if (!currentActiveMonthId) {
+        formId = 'newMonthBudgetForm';
+        const now = new Date();
+        document.getElementById('newBudgetDate').value = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+        if (type === 'expense') showNotification('Create or select a budget first, then add your expense.', 'info');
+    }
+    const form = document.getElementById(formId);
+    form.classList.remove('hidden');
+    form.scrollIntoView({ block: 'center', behavior: 'auto' });
+    form.querySelector('input, select')?.focus({ preventScroll: true });
+}
+
+function setBudgetFrequency() {
+    const frequency = document.getElementById('budgetFrequency').value;
+    const periods = frequency === 'kinsenas' ? ['1st Cut (1st-15th)', '2nd Cut (16th-End)'] : frequency === 'weekly' ? ['Week 1', 'Week 2', 'Week 3', 'Week 4'] : [];
+    const select = document.getElementById('budgetPeriod');
+    select.replaceChildren(...periods.map((value, i) => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = frequency === 'weekly' ? value + ' (days ' + ['1–7', '8–14', '15–21', '22–end'][i] + ')' : value;
+        return option;
+    }));
+    select.hidden = periods.length === 0;
+    document.getElementById('budgetPeriodLabel').hidden = select.hidden;
+    selectBudgetPeriod(periods[0] || (frequency === 'monthly' ? 'Monthly' : 'all'));
+}
+
+function selectBudgetPeriod(period) {
+    applySpecificationFilter(period);
+    for (const id of ['incSpec', 'expSpec']) document.getElementById(id).value = period === 'all' ? 'Monthly' : period;
+}
+
 // ==========================================
 // 3. ARCHITECTURE HUB BUDGET ENGINE
 // ==========================================
@@ -1285,7 +1319,7 @@ function initializeBudgetHubEngine() {
     grid.innerHTML = '';
     
     if (history.length === 0) {
-        grid.innerHTML = `<p class="text-xs text-gray-400 italic col-span-full py-4">No historical monthly statement structural entries initialized yet.</p>`;
+        grid.innerHTML = `<p class="text-xs text-gray-400 italic col-span-full py-4">No budgets yet. Tap Add budget to get started.</p>`;
         return;
     }
 
@@ -1329,13 +1363,13 @@ function initializeBudgetHubEngine() {
 
 function addNewMonthlyBudgetHubRecord() {
     const targetDateValue = document.getElementById('newBudgetDate').value;
-    if (!targetDateValue) return alert('Please define operational context target date range framework.');
+    if (!targetDateValue) return alert('Choose a month for your budget.');
 
     const history = JSON.parse(localStorage.getItem('palengke_budgets_v2')) || [];
     
     // Check duplication values
     if (history.some(h => h.monthCode === targetDateValue)) {
-        return alert('A workspace statement binder matches this monthly structural coordinate assignment.');
+        return alert('A budget for this month already exists. Select it from your saved budgets.');
     }
 
     const newRecord = {
@@ -1353,6 +1387,7 @@ function addNewMonthlyBudgetHubRecord() {
     toggleForm('newMonthBudgetForm');
     initializeBudgetHubEngine();
     activateLedgerWorkspace(newRecord.id);
+    openBudgetEntry('income');
 }
 
 function purgeMonthlyBudgetFolder(id) {
@@ -1385,7 +1420,7 @@ function activateLedgerWorkspace(id) {
     document.getElementById('incDate').value = `${activeData.monthCode}-01`;
     document.getElementById('expDate').value = `${activeData.monthCode}-01`;
 
-    recalculateActiveWorkspaceBalanceSheet();
+    setBudgetFrequency();
 }
 
 function applySpecificationFilter(cadence) {
@@ -1480,7 +1515,7 @@ function renderLedgerStackElements(containerId, dataset, type) {
 }
 
 function addLedgerItem(type) {
-    if (!currentActiveMonthId) return alert('Please instantiate an operational month folder framework workspace baseline context.');
+    if (!currentActiveMonthId) return alert('Create or select a monthly budget first.');
 
     let desc, amount, spec, date, category = null;
 
@@ -1498,7 +1533,7 @@ function addLedgerItem(type) {
     }
 
     if (!desc || isNaN(amount) || amount <= 0 || !date) {
-        return alert('Please structure balance metrics fields cleanly before execution validation procedures.');
+        return alert('Enter a description, a positive amount, and a date.');
     }
 
     const history = JSON.parse(localStorage.getItem('palengke_budgets_v2')) || [];

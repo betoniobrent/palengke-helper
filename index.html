@@ -398,7 +398,7 @@
             </div>
 
             <!-- TAB 1: BUDGET TRACKER HUB VIEW PANEL -->
-            <div id="view-budget" class="tab-content hidden">
+            <div id="view-budget" class="tab-content hidden"><div class="budget-mobile-actions" aria-label="Budget actions"><button type="button" data-action-click="budget-add" data-kind="income">+ Add budget</button><button type="button" data-action-click="budget-add" data-kind="expense">+ Add expense</button></div>
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <div>
                         <h2 class="text-3xl font-bold text-gray-800">Budget Tracker</h2>
@@ -413,23 +413,23 @@
 
                 <!-- ADD NEW MONTHLY BUDGET ACTION FORM PANEL -->
                 <div id="newMonthBudgetForm" class="hidden bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-xl shadow-md border border-emerald-200 mb-6 max-w-xl">
-                    <h3 class="text-base font-bold text-emerald-900 mb-3">Initialize New Month Focus</h3>
+                    <h3 class="text-base font-bold text-emerald-900 mb-3">Start a budget</h3>
                     <div class="grid grid-cols-2 gap-3 mb-4">
                         <div class="col-span-2">
-                            <label class="text-[10px] font-bold text-emerald-700 uppercase block mb-1">Select Statement Month</label>
+                            <label class="text-[10px] font-bold text-emerald-700 uppercase block mb-1">Choose month</label>
                             <input id="newBudgetDate" type="month" value="2026-07" class="w-full border px-3 py-1.5 text-sm rounded-lg bg-white text-gray-800 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                         </div>
                     </div>
                     <div class="flex gap-2 justify-end">
                         <button data-handler-click="h7f0df4f6d8e3" class="text-emerald-700 hover:text-emerald-900 text-xs px-2 font-medium">Cancel</button>
                         <button data-handler-click="h89daf8174c47" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-4 py-2 rounded-lg shadow-sm transition">
-                            Create Month Folder
+                            Create budget
                         </button>
                     </div>
                 </div>
 
                 <!-- HISTORICAL ARCHIVE STREAM GRID CONTAINER -->
-                <h3 class="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-3">Saved Monthly Statement Folders</h3>
+                <h3 class="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-3">Your saved budgets</h3>
                 <div id="monthlyBudgetsHubGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                     <!-- Dynamic historical cards append here -->
                 </div>
@@ -441,19 +441,19 @@
                 <div id="activeLedgerWorkspaceSection" class="hidden">
                     <div class="bg-gradient-to-r from-emerald-500 to-teal-500 p-4 rounded-xl flex items-center justify-between mb-4 flex-wrap gap-2 shadow-lg">
                         <div>
-                            <span class="text-xs text-emerald-100 font-bold uppercase tracking-wider">Currently Inspecting Workspace:</span>
+                            <span class="text-xs text-emerald-100 font-bold uppercase tracking-wider">Budget for:</span>
                             <h2 id="activeWorkspaceMonthTitle" class="text-xl font-black text-white">Month Context</h2>
                         </div>
                         <div class="text-right">
-                            <span class="text-[10px] text-emerald-100 font-bold uppercase block">Aggregated Active Allowance Pool</span>
+                            <span class="text-[10px] text-emerald-100 font-bold uppercase block">Budget amount</span>
                             <span id="activeWorkspaceBudgetValue" class="text-xl font-mono font-black text-white">₱0.00</span>
                         </div>
                     </div>
 
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-                        <p class="text-sm text-gray-600">Filter workspace details dynamically by specification intervals below.</p>
+                        <p class="text-sm text-gray-600">Choose a period to see its budget and expenses. All periods shows the whole month.</p>
                         <!-- LOCALIZED DYNAMIC SPECIFICATION QUICK FILTERS -->
-                        <div class="flex flex-wrap gap-1.5 bg-gradient-to-br from-gray-50 to-gray-100 p-1.5 rounded-xl border border-gray-200 shadow-sm">
+                        <div class="budget-legacy-filters flex flex-wrap gap-1.5 bg-gradient-to-br from-gray-50 to-gray-100 p-1.5 rounded-xl border border-gray-200 shadow-sm">
                             <button data-handler-click="h5ccda40841e6" class="bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm" id="filter-spec-all" aria-pressed="true">All</button>
                             <button data-handler-click="h5e93e95e4c91" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-Monthly" aria-pressed="false">Monthly</button>
                             <button data-handler-click="h3af50c318335" class="bg-white hover:bg-emerald-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg transition" id="filter-spec-1st" aria-pressed="false">1st Cut</button>
@@ -465,18 +465,23 @@
                         </div>
                     </div>
 
-                    <!-- REVENUE COMPILATION BANNER BAR -->
+                    <div class="budget-period-picker">
+<label for="budgetFrequency">How do you want to budget?</label>
+<select id="budgetFrequency" data-action-change="budget-frequency"><option value="all">All periods (overview)</option><option value="monthly">Monthly — whole month</option><option value="kinsenas">Kinsenas — 2 cuts per month</option><option value="weekly">Weekly — within this month</option></select>
+<label for="budgetPeriod" id="budgetPeriodLabel" hidden>Choose your period</label><select id="budgetPeriod" data-action-change="budget-period" hidden></select>
+<p>Enter the amount for the selected period only. It will not be split automatically.</p></div>
+<!-- REVENUE COMPILATION BANNER BAR -->
                     <div class="bg-gradient-to-r from-emerald-50 to-teal-50 p-4 rounded-xl shadow-md border border-emerald-200 mb-6 flex flex-wrap items-center justify-end gap-6 text-right">
                         <div>
-                            <span class="text-xs font-semibold text-emerald-700 block">Active Specification Income Pool</span>
+                            <span class="text-xs font-semibold text-emerald-700 block">Budget for this period</span>
                             <span id="ledgerTotalIncome" class="text-xl font-bold text-emerald-600">₱0.00</span>
                         </div>
                         <div class="border-l pl-6 border-emerald-200">
-                            <span class="text-xs font-semibold text-rose-700 block">Filtered Tracked Expenses</span>
+                            <span class="text-xs font-semibold text-rose-700 block">Spent this period</span>
                             <span id="ledgerTotalExpenses" class="text-xl font-bold text-rose-500">-₱0.00</span>
                         </div>
                         <div class="border-l pl-6 border-emerald-200">
-                            <span class="text-xs font-semibold text-gray-700 block">Net Margin Balance</span>
+                            <span class="text-xs font-semibold text-gray-700 block">Remaining budget</span>
                             <span id="ledgerNetSavings" class="text-xl font-bold text-gray-800">₱0.00</span>
                         </div>
                     </div>
@@ -515,7 +520,7 @@
                             <div>
                                 <div class="flex justify-between items-center border-b border-emerald-200 pb-3 mb-4">
                                     <h3 class="text-lg font-bold text-emerald-900 flex items-center gap-2">
-                                        Income & Allowance Streams
+                                        Budget & income
                                     </h3>
                                     <button data-handler-click="he15e6daca709" class="bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg font-bold hover:bg-emerald-800 shadow-sm transition">+ Add</button>
                                 </div>
@@ -534,15 +539,15 @@
                                     </div>
                                     <div class="grid grid-cols-2 gap-2">
                                         <div>
-                                            <label class="text-[10px] font-bold text-emerald-800 uppercase">Specification Cadence</label>
+                                            <label class="text-[10px] font-bold text-emerald-800 uppercase">Budget period</label>
                                             <select id="incSpec" class="w-full bg-emerald-50 text-gray-800 border border-emerald-300 p-2 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                                 <option value="Monthly">Monthly (Full Cycle)</option>
                                                 <option value="1st Cut (1st-15th)">Kinsena: 1st Cut (1st-15th)</option>
                                                 <option value="2nd Cut (16th-End)">Kinsena: 2nd Cut (16th-End)</option>
-                                                <option value="Week 1">Week 1</option>
-                                                <option value="Week 2">Week 2</option>
-                                                <option value="Week 3">Week 3</option>
-                                                <option value="Week 4">Week 4</option>
+                                                <option value="Week 1">Week 1 (days 1–7)</option>
+                                                <option value="Week 2">Week 2 (days 8–14)</option>
+                                                <option value="Week 3">Week 3 (days 15–21)</option>
+                                                <option value="Week 4">Week 4 (days 22–end)</option>
                                             </select>
                                         </div>
                                         <div>
@@ -552,7 +557,7 @@
                                     </div>
                                     <div class="flex gap-2 pt-1 justify-end">
                                         <button data-handler-click="he15e6daca709" class="text-emerald-700 hover:text-emerald-900 text-xs px-2 font-medium">✕ Cancel</button>
-                                        <button data-handler-click="h7ff2ab6f1768" class="bg-emerald-700 text-white font-bold text-xs px-4 py-1.5 rounded-lg hover:bg-emerald-800 shadow-sm transition">Save Allocation</button>
+                                        <button data-handler-click="h7ff2ab6f1768" class="bg-emerald-700 text-white font-bold text-xs px-4 py-1.5 rounded-lg hover:bg-emerald-800 shadow-sm transition">Save budget</button>
                                     </div>
                                 </div>
 
@@ -603,10 +608,10 @@
                                                 <option value="Monthly">Monthly (Full Cycle)</option>
                                                 <option value="1st Cut (1st-15th)">Kinsena: 1st Cut (1st-15th)</option>
                                                 <option value="2nd Cut (16th-End)">Kinsena: 2nd Cut (16th-End)</option>
-                                                <option value="Week 1">Week 1</option>
-                                                <option value="Week 2">Week 2</option>
-                                                <option value="Week 3">Week 3</option>
-                                                <option value="Week 4">Week 4</option>
+                                                <option value="Week 1">Week 1 (days 1–7)</option>
+                                                <option value="Week 2">Week 2 (days 8–14)</option>
+                                                <option value="Week 3">Week 3 (days 15–21)</option>
+                                                <option value="Week 4">Week 4 (days 22–end)</option>
                                             </select>
                                         </div>
                                     </div>
