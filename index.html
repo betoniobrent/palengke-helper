@@ -33,6 +33,7 @@
 
             <!-- LOGIN SUBSYSTEM VIEW -->
             <button type="button" data-theme-toggle class="auth-style-4 theme-toggle">☾ Dark mode</button>
+            <button type="button" data-handler-click="h74ac9886f884" class="block mx-auto mb-4 text-emerald-700 underline" aria-haspopup="dialog">How to download the app</button>
             <div id="loginBox">
                 <h2 class="auth-style-5">Login</h2>
 
@@ -221,6 +222,7 @@
                     <svg class="w-5 h-5 shrink-0" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/><path d="M9.5 9a2.5 2.5 0 015 0c0 2-2.5 2-2.5 4m0 3h.01" stroke-width="2" stroke-linecap="round"/></svg>
                     <span>Tutorial</span>
                 </button>
+                <button type="button" data-handler-click="h74ac9886f884" class="sidebar-item mb-1" aria-haspopup="dialog"><svg class="w-5 h-5 shrink-0" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span>How to download</span></button>
                 <div id='navLoginRegisterDesktop' class='hidden'>
                     <button data-handler-click="h9b1aa004b70f" class='sidebar-item text-emerald-700'>Login / Register</button>
                 </div>
@@ -231,7 +233,6 @@
                     </button>
                     <div id="accountDropdown" class="hidden absolute left-0 bottom-full mb-2 w-full bg-white rounded-lg shadow-lg border border-slate-300 py-2 z-50">
                         <button data-handler-click="haf4effefa762" class="block w-full text-left px-4 py-2 text-slate-700 hover:bg-emerald-50 text-sm">Settings</button>
-                        <button data-handler-click="h74ac9886f884" class="block w-full text-left px-4 py-2 text-slate-700 hover:bg-emerald-50 text-sm">Install App</button>
                         <button data-handler-click="h34b597957f88" class="block w-full text-left px-4 py-2 text-rose-600 hover:bg-rose-50 text-sm font-semibold">Logout</button>
                     </div>
                 </div>
@@ -247,12 +248,12 @@
             <div id="mobileMenu" class="hidden mt-3 space-y-1 pb-1 border-t border-slate-200 pt-2">
                 <button type="button" data-theme-toggle class="theme-toggle w-full text-left">☾ Dark mode</button>
                 <button type="button" data-handler-click="h1970af45a402" class="block w-full text-left py-2 text-slate-700" aria-haspopup="dialog">Tutorial</button>
+                <button type="button" data-handler-click="h5dff562cb40f" class="block w-full text-left py-2 text-slate-700" aria-haspopup="dialog">How to download</button>
                 <div id='navLoginRegisterMobile' class='hidden'>
                     <button data-handler-click="he2077e5cea97" class='block w-full text-left py-2 font-semibold text-emerald-700'>Login / Register</button>
                 </div>
                 <div id='navAccountMobile' class='hidden'>
                     <button data-handler-click="hb655e6275924" class='block w-full text-left py-2 text-slate-700'>Account Settings</button>
-                    <button data-handler-click="h5dff562cb40f" class="block w-full text-left py-2 text-slate-700">Install App</button>
                     <button data-handler-click="he2077e5cea97" class='block w-full text-left py-2 text-rose-600 font-bold'>Logout</button>
                 </div>
             </div>
@@ -1198,10 +1199,10 @@ class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
 
 
     <!-- PWA Install Tutorial Modal -->
-    <div id="pwaInstallModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+    <div role="dialog" aria-modal="true" aria-labelledby="installGuideTitle" id="pwaInstallModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
         <div class="bg-white rounded-2xl shadow-xl w-11/12 max-w-md p-6">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold">Install Palengke Helper+</h2>
+                <h2 id="installGuideTitle" class="text-xl font-bold">Install Palengke Helper+</h2>
                 <button data-handler-click="h80e9f6a77eaf" class="text-2xl">&times;</button>
             </div>
             <div class="space-y-3 text-sm text-gray-700">
