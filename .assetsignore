@@ -33,3 +33,6 @@
 !/.well-known/
 !/.well-known/ai-catalog.json
 !/.well-known/ard.json
+!/vendor/
+!/vendor/supabase-2.117.2.js
+!/vendor/SUPABASE-LICENSE
