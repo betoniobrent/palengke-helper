@@ -356,6 +356,7 @@ html[data-theme="dark"] .budget-period-picker p { color:#cbd5e1; }
   .budget-mobile-actions { display:flex; position:fixed; left:0; right:0; bottom:var(--mobile-nav-height,68px); padding:10px 12px; gap:10px; background:#fff; border-top:1px solid #cbd5e1; z-index:34; }
   .budget-mobile-actions button { flex:1; min-height:48px; border-radius:12px; background:#047857; color:#fff; font-weight:700; }
   .budget-mobile-actions button:last-child { background:#be123c; }
+  #view-budget:has(#activeLedgerWorkspaceSection.hidden) .budget-mobile-actions [data-kind="expense"] { display:none; }
   html[data-theme="dark"] .budget-mobile-actions { background:#1e293b; }
   #view-budget input, #view-budget select { font-size:16px; min-height:48px; }
   #incomeForm .grid, #expenseForm .grid { grid-template-columns:minmax(0,1fr); }
