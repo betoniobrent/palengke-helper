@@ -1,5 +1,8 @@
 // Explicit actions migrated from the static HTML. No evaluation of DOM strings.
 const dynamicUIActions = {
+  'diet-info': e => updateDietInfo(e.value),
+  'meal-day': e => changeMealDay(Number(e.dataset.delta)),
+  'budget-back': () => { currentActiveMonthId = null; document.getElementById('activeLedgerWorkspaceSection').classList.add('hidden'); initializeBudgetHubEngine(); },
   'budget-add': e => openBudgetEntry(e.dataset.kind),
   'budget-frequency': () => setBudgetFrequency(),
   'budget-period': e => selectBudgetPeriod(e.value),

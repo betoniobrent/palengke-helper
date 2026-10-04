@@ -121,6 +121,7 @@ const DAYS_OF_WEEK = [
 ];
 
 let currentMealPlan = {};
+let mobileMealDay = 0;
 let selectedMealSlot = null;
 let plannerDetailsRecipe = null;
 let plannerPriceCache = new WeakMap();
@@ -145,6 +146,35 @@ function initializeMealPlanner() {
 // The weekly schedule and plan summary are one section; both render the same day cards
 function renderWeeklyPlanner() {
     renderPlannerSummaryFromCurrentPlan(true);
+}
+
+function updateDietInfo(diet) {
+    const descriptions = { anything: 'Familiar home-style Filipino meals with varied ingredients.', tipid: 'Lower-cost meals chosen to stretch your budget.', healthy: 'Recipes tagged as balanced, with vegetables and varied ingredients.', protein: 'Protein-focused meals to support muscle building. Actual protein amounts vary by recipe and serving.', nopork: 'Meals tagged without pork. These may still contain chicken, fish, eggs, or dairy; this is not a vegetarian diet.' };
+    document.getElementById('dietInfo').textContent = descriptions[diet] || descriptions.anything;
+}
+
+function recipeMatchesAllergies(recipe, exclusions) {
+    exclusions ||= Array.from(document.querySelectorAll('#allergyChipsContainer input:checked')).map(cb => cb.value);
+    if (!exclusions.length) return true;
+    if (!Array.isArray(recipe.ingredients) || !recipe.ingredients.length) return false;
+    const text = [recipe.name, ...recipe.ingredients].join(' ').toLowerCase();
+    const patterns = {
+        peanuts: /peanut|mani\b|kare.kare/, nuts: /almond|cashew|walnut|pistachio|pecan|hazelnut|macadamia/,
+        dairy: /milk|cheese|butter|cream|yogurt|gatas|queso|keso/,
+        egg: /egg|itlog|mayonnaise|mayo\b/,
+        fish: /fish|bangus|tilapia|tuna|sardin|galunggong|tamban|dilis|patis|bagoong|salmon|mackerel|danggit|tuyo|daing/,
+        shrimp: /shrimp|prawn|hipon|crab|alimango|alimasag|squid|pusit|oyster|mussel|clam|tahong|halaan|bagoong/,
+        soy: /soy|tofu|tokwa|taho|miso|toyo/,
+        wheat: /wheat|flour|bread|pandesal|noodle|pasta|macaroni|spaghetti|soy sauce|toyo|breading|wrapper/,
+        sesame: /sesame|linga/
+    };
+    return exclusions.every(key => patterns[key] && !patterns[key].test(text));
+}
+
+function changeMealDay(delta) {
+    mobileMealDay = (mobileMealDay + delta + DAYS_OF_WEEK.length) % DAYS_OF_WEEK.length;
+    document.querySelectorAll('[data-meal-day]').forEach(card => card.classList.toggle('mobile-day-hidden', card.dataset.mealDay !== DAYS_OF_WEEK[mobileMealDay]));
+    document.getElementById('weeklyScheduleCardsContainer').scrollIntoView({ block: 'start', behavior: 'auto' });
 }
 
 function renderMealSlot(day, type) {
@@ -208,6 +238,7 @@ function hideMealPlannerWrapper(){
 }
 
 function enterMealScheduleFlow(){
+    mobileMealDay = 0;
     const intro = document.getElementById('mealPlannerIntro');
     const actions = document.getElementById('mealScheduleActions');
     const summary = document.getElementById('plannerResultsSection');
@@ -270,7 +301,9 @@ function renderPlannerSummaryFromCurrentPlan(showSummary = true){
         totalCost += dayCost;
 
         const card = document.createElement('div');
-        card.className = 'bg-white border border-gray-100 rounded-2xl p-4 shadow-sm';
+        card.dataset.mealDay = day;
+        card.classList.toggle('mobile-day-hidden', DAYS_OF_WEEK.indexOf(day) !== mobileMealDay);
+        card.className = 'bg-white border border-gray-100 rounded-2xl p-4 shadow-sm' + (DAYS_OF_WEEK.indexOf(day) !== mobileMealDay ? ' mobile-day-hidden' : '');
         card.innerHTML = `
             <div class="flex items-center justify-between mb-3">
                 <div>
@@ -363,7 +396,7 @@ function renderRecipeSelector(){
     const searchTerm = document.getElementById('recipeSearch')?.value.toLowerCase().trim() || '';
     container.innerHTML="";
 
-    const availableRecipes = RECIPE_DATABASE.filter(recipe => recipe.mealType.includes(selectedMealSlot.type));
+    const availableRecipes = RECIPE_DATABASE.filter(recipe => recipe.mealType.includes(selectedMealSlot.type) && recipeMatchesAllergies(recipe));
     const categoryRank = recipe => {
         const idx = RECIPE_CATEGORY_ORDER.indexOf(getRecipeCategory(recipe));
         return idx === -1 ? RECIPE_CATEGORY_ORDER.length : idx;
@@ -1802,25 +1835,11 @@ function generateFilipinoMealPlan() {
         return Array.isArray(recipe.diet) && recipe.diet.includes(dietKey);
     });
 
-    if (dietFiltered.length === 0) {
-        dietFiltered = RECIPE_DATABASE;
-    }
-
-    // Strict filtering protocol framework matching criteria indices
-    let filteredRecipes = dietFiltered.filter(recipe => {
-        const titleLower = recipe.name.toLowerCase();
-        
-        if (selectedExclusions.includes('shrimp') && (titleLower.includes('shrimp') || titleLower.includes('hipon') || titleLower.includes('alimango') || titleLower.includes('squid') || titleLower.includes('bangus') || titleLower.includes('danggit') || titleLower.includes('fish'))) return false;
-        if (selectedExclusions.includes('chicken') && (titleLower.includes('chicken') || titleLower.includes('manok') || titleLower.includes('sopas') || titleLower.includes('itlog') || titleLower.includes('egg') || titleLower.includes('silog'))) return false;
-        if (selectedExclusions.includes('peanuts') && (titleLower.includes('mani') || titleLower.includes('kare-kare'))) return false;
-        if (selectedExclusions.includes('dairy') && (titleLower.includes('cheese') || titleLower.includes('gatas') || titleLower.includes('sopas'))) return false;
-        
-        return true;
-    });
-
-    // Fallback deployment routine to prevent crash behavior frameworks
-    if (filteredRecipes.length < 3) {
-        filteredRecipes = RECIPE_DATABASE;
+    const filteredRecipes = dietFiltered.filter(recipe => recipeMatchesAllergies(recipe, selectedExclusions));
+    if (['Breakfast', 'Lunch', 'Dinner'].some(type => !filteredRecipes.some(r => r.mealType.includes(type)))) {
+        backToMealPlannerIntro();
+        showNotification('Not enough matching recipes for every meal. Try creating your own plan. Allergy exclusions have not been relaxed.', 'error');
+        return;
     }
 
     const breakfastOptions = filteredRecipes.filter(r => r.mealType.includes("Breakfast"));
@@ -1978,7 +1997,9 @@ function generateFilipinoMealPlan() {
         const dayCost = bCost + lCost + dCost;
 
         const dayCard = document.createElement('div');
+        dayCard.dataset.mealDay = day;
         dayCard.className = "bg-white p-4 rounded-xl border border-gray-100 shadow-sm grid md:grid-cols-4 items-center gap-4 hover:border-emerald-200 transition";
+        dayCard.classList.toggle('mobile-day-hidden', DAYS_OF_WEEK.indexOf(day) !== mobileMealDay);
         dayCard.innerHTML = `
             <div class="bg-emerald-50 p-3 rounded-lg text-center md:border-r border-emerald-100/50">
                 <span class="text-xs font-black text-emerald-800 uppercase block tracking-wider">${day}</span>

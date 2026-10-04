@@ -429,7 +429,7 @@
                 </div>
 
                 <!-- HISTORICAL ARCHIVE STREAM GRID CONTAINER -->
-                <h3 class="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-3">Your saved budgets</h3>
+                <h3 class="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-3" data-budget-archive>Your saved budgets</h3>
                 <div id="monthlyBudgetsHubGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                     <!-- Dynamic historical cards append here -->
                 </div>
@@ -438,7 +438,7 @@
                 <hr class="border-emerald-200 my-8">
 
                 <!-- MAIN INTERACTIVE LEDGER REGION BLOCK -->
-                <div id="activeLedgerWorkspaceSection" class="hidden">
+                <div id="activeLedgerWorkspaceSection" class="hidden"><button type="button" data-action-click="budget-back" class="mb-4 text-emerald-700 font-semibold">← Back to saved budgets</button>
                     <div class="bg-gradient-to-r from-emerald-500 to-teal-500 p-4 rounded-xl flex items-center justify-between mb-4 flex-wrap gap-2 shadow-lg">
                         <div>
                             <span class="text-xs text-emerald-100 font-bold uppercase tracking-wider">Budget for:</span>
@@ -721,19 +721,23 @@
                 </label>
 
                 <select
-                    id="plannerDiet"
+                    id="plannerDiet" data-action-change="diet-info" aria-describedby="dietInfo"
                     class="w-full mt-1 rounded-xl border border-emerald-300 p-3 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
 
                     <option value="anything">Lutong Bahay</option>
                     <option value="tipid">Petsa de Peligro</option>
                     <option value="healthy">Healthy</option>
                     <option value="protein">High Protein</option>
-                    <option value="nopork">Vegetarian</option>
+                    <option value="nopork">No pork</option>
 
                 </select>
 
             </div>
 
+            <p id="dietInfo" class="text-sm text-gray-600" aria-live="polite">Lutong Bahay: familiar home-style Filipino meals with a variety of ingredients.</p>
+            <fieldset id="allergyChipsContainer"><legend class="font-semibold">Allergies / ingredients to avoid</legend>
+<label class="allergy-choice"><input type="checkbox" value="peanuts"> Peanuts</label><label class="allergy-choice"><input type="checkbox" value="nuts"> Tree nuts</label><label class="allergy-choice"><input type="checkbox" value="dairy"> Milk / dairy</label><label class="allergy-choice"><input type="checkbox" value="egg"> Eggs</label><label class="allergy-choice"><input type="checkbox" value="fish"> Fish</label><label class="allergy-choice"><input type="checkbox" value="shrimp"> Shellfish</label><label class="allergy-choice"><input type="checkbox" value="soy"> Soy</label><label class="allergy-choice"><input type="checkbox" value="wheat"> Wheat</label><label class="allergy-choice"><input type="checkbox" value="sesame"> Sesame</label>
+<p class="text-sm text-gray-600">Applies to generated meals and recipe choices. Ingredient matching cannot guarantee an allergy-safe meal. Check labels, sauces, and cross-contact; review saved plans and custom recipes separately.</p></fieldset>
             <button
                 id="generateMealPlanBtn"
                 class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold transition shadow-sm">
@@ -826,7 +830,7 @@
                 </div>
             </div>
         </div>
-        <div id="weeklyScheduleCardsContainer" class="grid gap-4"></div>
+        <div id="weeklyScheduleCardsContainer" class="grid gap-4"></div><div class="meal-day-controls"><button type="button" data-action-click="meal-day" data-delta="-1">← Previous day</button><button type="button" data-action-click="meal-day" data-delta="1">Next day →</button></div>
     </div>
 </div>
 </div>
