@@ -3841,16 +3841,22 @@ function renderPricePagination(total) {
         </div>`;
 }
 
+function filterPriceItems(items, category, query) {
+    const words = String(query || '').toLowerCase().trim().split(/\s+/).filter(Boolean);
+    return items.filter(item => (category === 'All' || item.category === category) && words.every(word => String(item.name || '').toLowerCase().includes(word)));
+}
+
 function renderFilteredPriceRows() {
     const tbody = document.getElementById('marketPricesTableBody');
     if (!tbody) return;
 
-    const items = ACTIVE_PRICE_GROUP === 'All'
-        ? ALL_PRICE_ITEMS
-        : ALL_PRICE_ITEMS.filter(item => item.category === ACTIVE_PRICE_GROUP);
+    const query = document.getElementById('priceSearch')?.value || '';
+    const items = filterPriceItems(ALL_PRICE_ITEMS, ACTIVE_PRICE_GROUP, query);
+    const count = document.getElementById('priceSearchCount');
+    if (count) count.textContent = `${items.length} matching products${ACTIVE_PRICE_GROUP === 'All' ? ' across all categories' : ' in ' + ACTIVE_PRICE_GROUP}. Search covers all pages.`;
 
     if (!items || items.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-gray-400">No price data available right now.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" class="p-3 text-center text-gray-400">No matching products. Try another name, clear the search, or choose All categories.</td></tr>';
         renderPricePagination(0);
         return;
     }

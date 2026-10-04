@@ -1,5 +1,7 @@
 // Explicit actions migrated from the static HTML. No evaluation of DOM strings.
 const dynamicUIActions = {
+  'price-search': () => { PRICE_PAGE = 1; renderFilteredPriceRows(); },
+  'price-search-clear': () => { document.getElementById('priceSearch').value = ''; PRICE_PAGE = 1; renderFilteredPriceRows(); document.getElementById('priceSearch').focus(); },
   'diet-info': e => updateDietInfo(e.value),
   'meal-day': e => changeMealDay(Number(e.dataset.delta)),
   'budget-back': () => { currentActiveMonthId = null; document.getElementById('activeLedgerWorkspaceSection').classList.add('hidden'); initializeBudgetHubEngine(); },
@@ -33,7 +35,7 @@ const dynamicUIActions = {
   'price-category': e => selectPriceCategory(e.dataset.category),
   'price-page': e => goToPricePage(Number(e.dataset.page))
 };
-for (const type of ['click', 'change']) {
+for (const type of ['click', 'change', 'input']) {
   document.addEventListener(type, event => {
     const element = event.target.closest?.('[data-action-' + type + ']');
     if (!element || element.disabled) return;
