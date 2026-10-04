@@ -1,0 +1,20 @@
+# Palengke Helper+
+
+> A Filipino household budgeting, meal planning, grocery tracking, and reference-price web app.
+
+Visitors can use the website as a guest or sign in. The app includes Budget, Meal Planner, Prices, Palengke AI, and Grocery tabs, with English and Tagalog tutorials.
+
+Government reference prices are dated reports, not live store quotations. DA market prices and DTI suggested retail prices have different scopes and selling units. Preserve each item's date, region, unit, and source when explaining prices. Missing prices mean a meal subtotal is incomplete; do not present it as a guaranteed total or budget fit.
+
+Personal budgets, saved plans, and account information are not public resources. The website does not publish an MCP server, A2A endpoint, or WebMCP tools. Its discovery catalog therefore contains no callable agent entries. This file provides site guidance; it does not grant access to private data or define training permissions.
+
+## Documentation
+
+- [App guide](https://palengkehelper.pages.dev/guide.md): Features, navigation, price interpretation, and limitations.
+- [Palengke Helper+](https://palengkehelper.pages.dev/): Open the app and choose Continue as visitor or sign in.
+
+## Optional
+
+- [Public reference-price snapshot](https://palengkehelper.pages.dev/data/prices.json): Published price records; check individual dates and units.
+- [Agent catalog](https://palengkehelper.pages.dev/.well-known/ai-catalog.json): Discovery manifest; no public callable agent tools are offered.
+- [Sitemap](https://palengkehelper.pages.dev/sitemap.xml): Public website URLs.

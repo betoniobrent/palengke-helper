@@ -27,3 +27,9 @@
 !/_headers
 !/tailwind.css
 !/navigation.js
+!/llms.txt
+!/guide.md
+!/ai-catalog.json
+!/.well-known/
+!/.well-known/ai-catalog.json
+!/.well-known/ard.json
