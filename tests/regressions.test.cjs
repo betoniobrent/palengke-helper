@@ -194,3 +194,12 @@ test('grocery budget persists cents, rejects invalid input, and supports clearin
  assert.equal(errors,4);assert.equal(stored,'1500.25');
  c.setGroceryBudget('');assert.equal(stored,null);assert.equal(renders,6);
 });
+
+test('repeat catalog additions increase quantity and preserve distinct units and reference prices',()=>{
+ let items=[];const feed=[{name:'Avocado',price_avg:100,unit:'kg',source_agency:'DA',source_date:'2026-09-27'}, {name:'Avocado',price_avg:30,unit:'pc',source_agency:'DA',source_date:'2026-09-27'}];
+ const c=loadFunctions({ALL_PRICE_ITEMS:feed,MealCosting:require('../meal-costing'),getGroceryData:()=>items,setGroceryData:value=>items=value,document:{getElementById:()=>({})},renderGroceryItems:()=>{},saveGroceryListToSupabase:()=>{},showNotification:()=>{}},['groceryCatalogPrice','addGroceryPriceItem']);
+ c.addGroceryPriceItem(0);items[0].checked=true;c.addGroceryPriceItem(0);
+ assert.equal(items.length,1);assert.equal(items[0].quantity,2);assert.equal(items[0].checked,false);assert.equal(items[0].price,100);
+ c.addGroceryPriceItem(1);assert.equal(items.length,2);assert.equal(items[1].unit,'pc');
+ feed[0].price_avg=110;c.addGroceryPriceItem(0);assert.equal(items.length,3);
+});

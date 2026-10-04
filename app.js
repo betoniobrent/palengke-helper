@@ -2096,7 +2096,14 @@ function addGroceryPriceItem(index) {
         notes:[source,row.source_date || row.reportDate,row.region,row.notes].filter(Boolean).join(' · '),
         indivisible:!!(measure && (measure.packaged || measure.dimension === 'count'))};
     const items = getGroceryData();
-    items.push(item);
+    const normalize = value => String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+    const existing = items.find(entry => normalize(entry.name) === normalize(item.name)
+        && normalize(entry.unit) === normalize(item.unit) && entry.basePrice === item.basePrice
+        && entry.notes === item.notes && !entry.localPrice && !entry.fromMealPlan);
+    if (existing) {
+        existing.quantity = Math.round((Number(existing.quantity) + 1) * 1000) / 1000;
+        existing.checked = false;
+    } else items.push(item);
     setGroceryData(items);
     const search = document.getElementById('grocerySearchInput');
     if (search) search.value = '';
@@ -2335,7 +2342,14 @@ function addItem() {
     const piecesPerKg = parseFloat(nameEl.dataset.piecesPerKg) || null;
 
     const items = getGroceryData();
-    items.push({ name, price, quantity, unit, category, checked: false, basePrice, piecesPerKg });
+    const normalize = value => String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
+    const existing = items.find(entry => normalize(entry.name) === normalize(name)
+        && normalize(entry.unit) === normalize(unit) && entry.price === price
+        && entry.basePrice === basePrice && !entry.notes && !entry.fromMealPlan && !entry.localPrice);
+    if (existing) {
+        existing.quantity = Math.round((Number(existing.quantity) + quantity) * 1000) / 1000;
+        existing.checked = false;
+    } else items.push({ name, price, quantity, unit, category, checked: false, basePrice, piecesPerKg });
     setGroceryData(items);
 
     // Clear dynamic operational field nodes
