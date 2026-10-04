@@ -54,7 +54,7 @@ test('filtered delete removes the displayed item and keeps full-list totals', ()
     const { context, cards, summary } = groceryContext();
     assert.equal(cards.length, 1);
     assert.equal(summary().length, 2);
-    const index = Number(cards[0].innerHTML.match(/deleteItem\((\d+)\)/)[1]);
+    const index = Number(cards[0].innerHTML.match(/data-action-click="delete-grocery" data-index="(\d+)"/)[1]);
     context.deleteItem(index);
     assert.equal(context.getGroceryData()[0].name, 'Rice');
     assert.equal(context.getGroceryData().length, 1);
@@ -64,7 +64,8 @@ test('filtered delete removes the displayed item and keeps full-list totals', ()
 test('filtered checkbox and both quantity controls target the displayed item', () => {
     const { context, cards } = groceryContext();
     for (const fn of ['toggleGroceryItemCheck', 'updateGroceryQuantity', 'setGroceryQuantity']) {
-        const index = Number(cards[0].innerHTML.match(new RegExp(`${fn}\\((\\d+)`))[1]);
+        const action = {toggleGroceryItemCheck:'check-grocery',updateGroceryQuantity:'grocery-quantity',setGroceryQuantity:'set-grocery-quantity'}[fn];
+        const index = Number(cards[0].innerHTML.match(new RegExp('data-action-(?:click|change)="'+action+'" data-index="(\\d+)"'))[1]);
         context[fn](index, fn === 'setGroceryQuantity' ? '2.5' : 1);
     }
     const items = context.getGroceryData();
@@ -137,7 +138,7 @@ test('local grocery price converts a quoted pack amount and persists without cha
  const {context,cards,search}=groceryContext();
  loadFunctions(context,['setGroceryLocalPrice','clearGroceryLocalPrice']);
  context.setGroceryData([{name:'Rice',price:50,quantity:1,unit:'kg'},{name:'Fish',price:null,basePrice:null,priceMissing:true,quantity:250,unit:'g',notes:'No verified price'}]);
- context.renderGroceryItems();assert.match(cards[0].innerHTML,/setGroceryLocalPrice\(1,/);
+ context.renderGroceryItems();assert.match(cards[0].innerHTML,/data-action-click="save-local-price" data-index="1"/);
  context.setGroceryLocalPrice(1,'120','1000');
  let items=context.getGroceryData();assert.equal(items[1].price,0.12);assert.equal(items[1].basePrice,0.12);assert.equal(items[1].priceMissing,false);assert.equal(items[1].localPrice,true);assert.equal(items[1].quantity,250);assert.equal(context.getItemUnitPrice(items[1])*items[1].quantity,30);assert.equal(items[0].price,50);
  assert.match(cards[0].innerHTML,/Your local price estimate/);assert.match(cards[0].innerHTML,/Remove local price/);
@@ -164,7 +165,7 @@ test('last missing local price removes partial status and summary labels estimat
 test('grocery price browser filters categories and search while retaining original feed indices',()=>{
  const nodes={groceryPriceList:{},groceryPriceSearch:{value:'milk'},groceryPriceCategory:{value:'other food'},groceryPriceCount:{}};
  const c=loadFunctions({document:{getElementById:id=>nodes[id],createElement:()=>({textContent:'',get innerHTML(){return this.textContent.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}})},ALL_PRICE_ITEMS:[{name:'Rice',category:'rice',price_avg:50,unit:'kg'},{name:'Milk <Special>',category:'other food',price_avg:30,unit:'200ml',source_agency:'DTI',source_date:'2026-05-11',region:'Nationwide'}]},['escapeHtml','groceryCatalogPrice','renderGroceryPriceList']);
- c.renderGroceryPriceList();assert.match(nodes.groceryPriceList.innerHTML,/addGroceryPriceItem\(1\)/);assert.match(nodes.groceryPriceList.innerHTML,/Milk &lt;Special&gt;/);assert.match(nodes.groceryPriceList.innerHTML,/DTI SRP/);assert.equal(nodes.groceryPriceCount.innerText,'1 items');
+ c.renderGroceryPriceList();assert.match(nodes.groceryPriceList.innerHTML,/data-action-click="add-price" data-index="1"/);assert.match(nodes.groceryPriceList.innerHTML,/Milk &lt;Special&gt;/);assert.match(nodes.groceryPriceList.innerHTML,/DTI SRP/);assert.equal(nodes.groceryPriceCount.innerText,'1 items');
  nodes.groceryPriceSearch.value='absent';c.renderGroceryPriceList();assert.match(nodes.groceryPriceList.innerHTML,/No matching items/);
 });
 

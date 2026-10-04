@@ -126,7 +126,7 @@
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('accountDropdown');
-            const accountButton = event.target.closest('button[onclick="toggleAccountMenu()"]');
+            const accountButton = event.target.closest('button[data-handler-click="h37933584a7f0"]');
             if (!accountButton && !dropdown.contains(event.target)) {
                 dropdown.classList.add('hidden');
             }

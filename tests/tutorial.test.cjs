@@ -22,7 +22,7 @@ test('Tagalog translates all steps, preserves position and remembers the tutoria
 test('every tab has a complete bilingual guide with independent navigation and replay',()=>{
  const nodes={appTutorial:{open:false,showModal(){this.open=true},close(){this.open=false}},tutorialTips:{replaceChildren(){this.items=[]},appendChild(item){this.items.push(item.textContent)}}};let tab=null;
  const c={document:{getElementById:id=>nodes[id]||(nodes[id]={setAttribute(){},scrollIntoView(){}}),createElement:()=>({})},switchTab:value=>tab=value};vm.createContext(c);vm.runInContext(fs.readFileSync('tutorial-tabs.js','utf8')+'\n'+fs.readFileSync('tutorial.js','utf8'),c);
- const html=fs.readFileSync('index.html','utf8');
+ const html=fs.readFileSync('events.js','utf8');
  for(const topic of ['home','budget','meal','prices','grocery','suggestions']){
   assert.ok(html.includes("openTabTutorial('"+topic+"')"));
   for(const language of ['en','tl']){

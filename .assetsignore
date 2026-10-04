@@ -36,3 +36,4 @@
 !/vendor/
 !/vendor/supabase-2.117.2.js
 !/vendor/SUPABASE-LICENSE
+!/events.js

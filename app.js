@@ -151,7 +151,7 @@ function renderMealSlot(day, type) {
     const meal = currentMealPlan[day]?.[type];
     if (!meal) {
         return `
-            <button onclick="openRecipeSelector('${day}','${type}')" class="text-left bg-gray-50 p-3 rounded-xl border border-dashed border-gray-300 hover:border-emerald-400 transition">
+            <button data-action-click="recipe-selector" data-day="${escapeHtml(day)}" data-meal-type="${escapeHtml(type)}" class="text-left bg-gray-50 p-3 rounded-xl border border-dashed border-gray-300 hover:border-emerald-400 transition">
                 <div class="text-xs font-semibold text-gray-500">${type}</div>
                 <p class="mt-2 text-sm text-emerald-700 font-semibold">+ Choose Meal</p>
             </button>`;
@@ -160,9 +160,9 @@ function renderMealSlot(day, type) {
         <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 hover:border-emerald-200 transition flex flex-col">
             <div class="flex items-center justify-between">
                 <span class="text-xs font-semibold text-gray-500">${type}</span>
-                <button onclick="openRecipeSelector('${day}','${type}')" class="text-[11px] font-semibold text-emerald-700 hover:text-emerald-900">Change</button>
+                <button data-action-click="recipe-selector" data-day="${escapeHtml(day)}" data-meal-type="${escapeHtml(type)}" class="text-[11px] font-semibold text-emerald-700 hover:text-emerald-900">Change</button>
             </div>
-            <button onclick="showRecipeDetailsById(${meal.id})" class="text-left mt-2 font-semibold text-gray-800 hover:text-emerald-800">${escapeHtml(meal.name.replace(/\s*\(\d+\s*pax\)/gi, ''))}</button>
+            <button data-action-click="recipe-details" data-id="${escapeHtml(String(meal.id))}" class="text-left mt-2 font-semibold text-gray-800 hover:text-emerald-800">${escapeHtml(meal.name.replace(/\s*\(\d+\s*pax\)/gi, ''))}</button>
             <p class="text-xs text-emerald-700 mt-2">${plannerPriceLabel(meal)}</p>
         </div>`;
 }
@@ -375,7 +375,7 @@ function renderRecipeSelector(){
     container.innerHTML = `
         <div
             class="bg-white border rounded-2xl p-6 hover:shadow-lg cursor-pointer text-center transition"
-            onclick="openCustomRecipePrompt()">
+            data-action-click="custom-recipe">
             
             <h4 class="font-bold text-lg mt-3">Create Your Own Dish</h4>
             <p class="text-sm text-gray-500 mt-2">Add a custom meal to this slot.</p>
@@ -393,7 +393,7 @@ function renderRecipeSelector(){
             <div
                 class="bg-white border rounded-xl p-5 hover:shadow cursor-pointer transition"
                 data-recipe-id="${recipe.id}"
-                onclick="selectRecipe(${recipe.id})">
+                data-action-click="select-recipe" data-id="${escapeHtml(String(recipe.id))}">
                 <h4 class="font-bold text-lg text-gray-800 mb-1">${recipe.name}</h4>
                 <p class="text-emerald-600 font-semibold mb-2">${plannerPriceLabel(recipe)}</p>
                 <p class="text-sm text-gray-500 mb-1">${getPlannerPax()} pax · ${recipe.difficulty} · ${recipe.prepTime} prep / ${recipe.cookTime} cook</p>
@@ -613,10 +613,10 @@ async function renderSavedMealPlans(){
                     <h4 class="font-bold text-gray-800">${plan.name}</h4>
                     <p class="text-xs text-gray-500">${plan.createdAt}</p>
                 </div>
-                <button onclick="loadMealPlan('${plan.id}')" class="text-emerald-700 font-semibold text-sm">Load</button>
+                <button data-action-click="load-plan" data-id="${escapeHtml(String(plan.id))}" class="text-emerald-700 font-semibold text-sm">Load</button>
             </div>
             <p class="text-sm text-gray-600">Budget: ₱${plan.budget.toFixed(0)} · Pax: ${plan.pax} · Diet: ${plan.diet}</p>
-            <button onclick="deleteMealPlan('${plan.id}')" class="mt-3 w-full bg-rose-600 hover:bg-rose-700 text-white py-2 rounded-xl text-sm font-semibold">Delete</button>
+            <button data-action-click="delete-plan" data-id="${escapeHtml(String(plan.id))}" class="mt-3 w-full bg-rose-600 hover:bg-rose-700 text-white py-2 rounded-xl text-sm font-semibold">Delete</button>
         `;
         container.appendChild(card);
     });
@@ -705,8 +705,8 @@ function showRecipeDetails(recipe){
             <h3 class="text-2xl font-bold text-gray-800 mb-2">${escapeHtml(recipe.name.replace(/\s*\(\d+\s*pax\)/gi, ''))}</h3>
             <p class="text-emerald-700 font-semibold mb-2">${plannerPriceLabel(recipe)} · ₱${(pricing.amount / pax).toFixed(2)} per person</p>
             <label for="recipePax" class="text-sm font-semibold">People for this plan</label>
-            <input id="recipePax" aria-label="People for this plan" type="number" min="1" max="100" step="1" value="${pax}" onchange="setPlannerPax(this.value)" class="border rounded-lg p-2 w-20 ml-2">
-            <div class="flex flex-wrap gap-2 my-3">${[1,2,4,6,8].map(n => '<button type="button" onclick="setPlannerPax(' + n + ')" class="px-3 py-2 rounded-lg border ' + (n === pax ? 'bg-emerald-700 text-white' : 'bg-white text-emerald-700') + '">' + n + ' pax</button>').join('')}</div>
+            <input id="recipePax" aria-label="People for this plan" type="number" min="1" max="100" step="1" value="${pax}" data-action-change="planner-pax" class="border rounded-lg p-2 w-20 ml-2">
+            <div class="flex flex-wrap gap-2 my-3">${[1,2,4,6,8].map(n => '<button type="button" data-action-click="planner-pax" data-pax="' + n + '" class="px-3 py-2 rounded-lg border ' + (n === pax ? 'bg-emerald-700 text-white' : 'bg-white text-emerald-700') + '">' + n + ' pax</button>').join('')}</div>
             <p class="text-xs text-gray-500 mb-3">Changing people updates this entire plan. Cooking times may change for larger batches.</p>
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4">${[1,2,4,6,8].map(n => '<div class="rounded-lg bg-emerald-50 p-2 text-sm">' + n + ' pax<br>₱' + calculateRecipeCostFromMarket(recipe,n).toFixed(2) + '</div>').join('')}</div>
             <p class="text-xs text-gray-500 mb-4">${pricing.estimated ? 'Comparison uses a planning estimate, not a verified total. The saved recipe allowance is scaled per person, or increased to cover the verified subtotal if higher.' : 'Comparison uses priced ingredient amounts; whole-package purchases can cost more.'}</p>
@@ -1323,7 +1323,7 @@ function initializeBudgetHubEngine() {
                     <span class="text-[9px] font-bold text-gray-400 uppercase block">Running Margin</span>
                     <span class="text-sm font-bold font-mono ${computedMargin >= 0 ? 'text-gray-800' : 'text-rose-600'}">₱${computedMargin.toFixed(2)}</span>
                 </div>
-                <button onclick="event.stopPropagation(); purgeMonthlyBudgetFolder('${item.id}')" class="text-xs text-gray-400 hover:text-rose-600 font-medium p-1 transition">✕ Clear</button>
+                <button data-action-click="delete-budget" data-id="${escapeHtml(String(item.id))}" class="text-xs text-gray-400 hover:text-rose-600 font-medium p-1 transition">✕ Clear</button>
             </div>
         `;
         grid.appendChild(card);
@@ -1475,7 +1475,7 @@ function renderLedgerStackElements(containerId, dataset, type) {
                 <span class="font-mono font-bold text-sm block ${type === 'income' ? 'text-emerald-700' : 'text-rose-600'}">
                     ${type === 'income' ? '+' : '-'}₱${parseFloat(item.amount).toFixed(2)}
                 </span>
-                <button onclick="purgeLedgerItemIndex('${item.itemId}', '${type}')" class="text-gray-300 hover:text-rose-600 text-sm font-bold p-1 transition focus:outline-none">✕</button>
+                <button data-action-click="delete-ledger" data-id="${escapeHtml(String(item.itemId))}" data-ledger-type="${escapeHtml(type)}" class="text-gray-300 hover:text-rose-600 text-sm font-bold p-1 transition focus:outline-none">✕</button>
             </div>
         `;
         el.appendChild(itemRow);
@@ -1604,15 +1604,19 @@ function renderDynamicCategoryAnalyticsEngine(expenseDataset) {
         segmentRow.innerHTML = `
             <div class="flex justify-between items-center text-xs font-bold">
                 <span class="text-gray-700 flex items-center gap-1.5 truncate">
-                    <span class="w-2 h-2 rounded-full inline-block shrink-0" style="background-color: ${colorStyle}"></span>
+                    <span class="w-2 h-2 rounded-full inline-block shrink-0" data-chart-dot></span>
                     ${cat}
                 </span>
                 <span class="font-mono text-gray-800">${ratioPercentage.toFixed(1)}% <span class="text-gray-400 font-normal text-[10px]">(₱${catSum.toFixed(0)})</span></span>
             </div>
             <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
-                <div class="h-full rounded-full transition-all duration-500" style="width: ${ratioPercentage}%; background-color: ${colorStyle}"></div>
+                <div class="h-full rounded-full transition-all duration-500" data-chart-bar></div>
             </div>
         `;
+        segmentRow.querySelector('[data-chart-dot]').style.backgroundColor = colorStyle;
+        const bar = segmentRow.querySelector('[data-chart-bar]');
+        bar.style.width = ratioPercentage + '%';
+        bar.style.backgroundColor = colorStyle;
         container.appendChild(segmentRow);
 
         // Native High-Performance SVG Donut Processing Mechanics ($inline$ geometry)
@@ -2077,7 +2081,7 @@ function renderGroceryPriceList() {
         const price = groceryCatalogPrice(item);
         const source = item.source_agency === 'DTI' ? 'DTI SRP' : item.source_agency === 'DA' ? 'DA market price' : 'Supplemental reference';
         const provenance = [source,item.source_date || item.reportDate,item.region,item.notes].filter(Boolean).join(' · ');
-        return '<div class="p-3 border-b flex flex-wrap items-center justify-between gap-3"><div class="min-w-0 flex-1"><p class="font-semibold text-sm">' + escapeHtml(item.name || item.item_name) + '</p><p class="text-sm text-emerald-800">' + (price === null ? 'Price unavailable' : '₱' + price.toFixed(2)) + ' / ' + escapeHtml(item.unit || 'unit unspecified') + '</p><p class="text-xs text-gray-500">' + escapeHtml(provenance) + '</p></div><button type="button" onclick="addGroceryPriceItem(' + index + ')" class="bg-emerald-700 text-white px-3 py-2 rounded-lg text-sm">Add to grocery</button></div>';
+        return '<div class="p-3 border-b flex flex-wrap items-center justify-between gap-3"><div class="min-w-0 flex-1"><p class="font-semibold text-sm">' + escapeHtml(item.name || item.item_name) + '</p><p class="text-sm text-emerald-800">' + (price === null ? 'Price unavailable' : '₱' + price.toFixed(2)) + ' / ' + escapeHtml(item.unit || 'unit unspecified') + '</p><p class="text-xs text-gray-500">' + escapeHtml(provenance) + '</p></div><button type="button" data-action-click="add-price" data-index="' + index + '" class="bg-emerald-700 text-white px-3 py-2 rounded-lg text-sm">Add to grocery</button></div>';
     }).join('') : '<p class="p-4 text-sm text-gray-500">' + (feed.length ? 'No matching items. Try another search or category.' : 'No price list is available yet. You can still add items manually below.') + '</p>';
     const count = document.getElementById('groceryPriceCount');
     if (count) count.innerText = matches.length + ' items';
@@ -2124,7 +2128,7 @@ function renderGroceryItems() {
         card.className = `bg-white p-4 rounded-xl border shadow-sm hover:shadow-md transition ${isChecked ? 'bg-emerald-50 border-emerald-300' : 'border-gray-200'}`;
         card.innerHTML = `
             <div class="flex items-start gap-3">
-                <input type="checkbox" id="check-${index}" ${isChecked ? 'checked' : ''} onchange="toggleGroceryItemCheck(${index})" class="mt-1 w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer">
+                <input type="checkbox" id="check-${index}" ${isChecked ? 'checked' : ''} data-action-change="check-grocery" data-index="${index}" class="mt-1 w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer">
                 <div class='flex-1'>
                     <div class='flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-2'>
                         <div>
@@ -2137,13 +2141,13 @@ function renderGroceryItems() {
                         </div>
                     </div>
                     <p class="text-xs text-gray-500">${escapeHtml(item.notes || '')}</p>
-                    ${item.priceMissing || item.localPrice ? '<div class="mt-3 p-3 bg-amber-50 rounded-lg"><p class="text-sm font-semibold">Your local price estimate</p><div class="flex flex-wrap gap-2 items-end"><label class="text-xs">Price (₱)<input id="localPrice-' + index + '" aria-label="Local price for ' + escapeHtml(item.name) + '" type="number" min="0.01" step="0.01" value="' + (item.localPriceAmount || '') + '" class="block w-28 border rounded p-2"></label><label class="text-xs">Covers how many ' + escapeHtml(item.unit || 'pc') + '?<input id="localPriceQuantity-' + index + '" aria-label="Priced quantity for ' + escapeHtml(item.name) + '" type="number" min="0.001" step="any" value="' + (item.localPriceQuantity || item.quantity) + '" class="block w-28 border rounded p-2"></label><button type="button" onclick="setGroceryLocalPrice(' + index + ', document.getElementById(\'localPrice-' + index + '\').value, document.getElementById(\'localPriceQuantity-' + index + '\').value)" class="px-3 py-2 bg-emerald-700 text-white rounded">Save local price</button>' + (item.localPrice ? '<button type="button" onclick="clearGroceryLocalPrice(' + index + ')" class="px-3 py-2 border rounded">Remove local price</button>' : '') + '</div><p class="text-xs mt-2">Enter the amount and quantity quoted by your shop. This estimate applies to this grocery list only.</p></div>' : ''}
+                    ${item.priceMissing || item.localPrice ? '<div class="mt-3 p-3 bg-amber-50 rounded-lg"><p class="text-sm font-semibold">Your local price estimate</p><div class="flex flex-wrap gap-2 items-end"><label class="text-xs">Price (₱)<input id="localPrice-' + index + '" aria-label="Local price for ' + escapeHtml(item.name) + '" type="number" min="0.01" step="0.01" value="' + (item.localPriceAmount || '') + '" class="block w-28 border rounded p-2"></label><label class="text-xs">Covers how many ' + escapeHtml(item.unit || 'pc') + '?<input id="localPriceQuantity-' + index + '" aria-label="Priced quantity for ' + escapeHtml(item.name) + '" type="number" min="0.001" step="any" value="' + (item.localPriceQuantity || item.quantity) + '" class="block w-28 border rounded p-2"></label><button type="button" data-action-click="save-local-price" data-index="' + index + '" class="px-3 py-2 bg-emerald-700 text-white rounded">Save local price</button>' + (item.localPrice ? '<button type="button" data-action-click="clear-local-price" data-index="' + index + '" class="px-3 py-2 border rounded">Remove local price</button>' : '') + '</div><p class="text-xs mt-2">Enter the amount and quantity quoted by your shop. This estimate applies to this grocery list only.</p></div>' : ''}
                     ${item.indivisible && Number.isFinite(item.requiredUnits) ? '<p class="text-xs text-gray-500">Recipe needs ' + Number(item.requiredUnits).toFixed(3) + ' selling units; shopping quantity rounds up to whole packs or pieces.</p>' : ''}
                     <div class='flex flex-wrap items-center gap-2 mt-2'>
-                        <button onclick="updateGroceryQuantity(${index}, -1)" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">-</button>
-                        <input type="number" step="${item.indivisible ? 1 : 0.001}" min="${item.indivisible ? 1 : 0.001}" value="${item.quantity}" onchange="setGroceryQuantity(${index}, this.value)" class="w-16 text-center font-medium border border-gray-300 rounded p-1 mx-1">
-                        <button onclick="updateGroceryQuantity(${index}, 1)" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">+</button>
-                        <button onclick='deleteItem(${index})' class='ml-auto text-rose-600 hover:text-rose-800 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-rose-50 transition'>Delete</button>
+                        <button data-action-click="grocery-quantity" data-index="${index}" data-delta="-1" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">-</button>
+                        <input type="number" step="${item.indivisible ? 1 : 0.001}" min="${item.indivisible ? 1 : 0.001}" value="${item.quantity}" data-action-change="set-grocery-quantity" data-index="${index}" class="w-16 text-center font-medium border border-gray-300 rounded p-1 mx-1">
+                        <button data-action-click="grocery-quantity" data-index="${index}" data-delta="1" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold transition">+</button>
+                        <button data-action-click="delete-grocery" data-index="${index}" class='ml-auto text-rose-600 hover:text-rose-800 text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-rose-50 transition'>Delete</button>
                     </div>
                 </div>
             </div>
@@ -2386,7 +2390,7 @@ function searchGroceryItemsWithMarket() {
     if (matches.length > 0) {
         suggestionsDiv.classList.remove('hidden');
         suggestionsList.innerHTML = matches.slice(0, 5).map(match => `
-            <div class="flex justify-between items-center p-2 bg-emerald-50 rounded-lg cursor-pointer hover:bg-emerald-100 transition" onclick="selectMarketItem('${escapeHtml(match.item_name)}', ${match.price_avg || match.price_min || 0}, '${escapeHtml(match.category || '')}', '${escapeHtml(match.unit || '')}')">
+            <div class="flex justify-between items-center p-2 bg-emerald-50 rounded-lg cursor-pointer hover:bg-emerald-100 transition" data-action-click="select-market" data-name="${escapeHtml(match.item_name)}" data-price="${match.price_avg || match.price_min || 0}" data-category="${escapeHtml(match.category || '')}" data-unit="${escapeHtml(match.unit || '')}">
                 <div>
                     <span class="text-sm text-gray-800 font-medium">${escapeHtml(match.item_name)}</span>
                     <span class="text-xs text-gray-500 ml-1">${escapeHtml(match.category || '')} · ${escapeHtml(match.unit || '')}</span>
@@ -3712,7 +3716,7 @@ function renderPriceCategoryTabs(items) {
         const cls = active
             ? 'bg-emerald-600 text-white'
             : 'bg-gray-100 text-gray-600 hover:bg-gray-200';
-        return `<button onclick="selectPriceCategory('${g}')" class="${cls} text-xs font-semibold px-3 py-1.5 rounded-full transition">${label}</button>`;
+        return `<button data-action-click="price-category" data-category="${escapeHtml(g)}" class="${cls} text-xs font-semibold px-3 py-1.5 rounded-full transition">${label}</button>`;
     }).join('');
 }
 
@@ -3741,7 +3745,7 @@ function renderPricePagination(total) {
     const start = (PRICE_PAGE - 1) * PRICE_PAGE_SIZE + 1;
     const end = Math.min(total, PRICE_PAGE * PRICE_PAGE_SIZE);
     const btn = (label, page, extra = '') =>
-        `<button onclick="goToPricePage(${page})" ${extra} class="min-w-[36px] h-9 px-2 rounded-lg text-sm font-semibold border transition ${
+        `<button data-action-click="price-page" data-page="${page}" ${extra} class="min-w-[36px] h-9 px-2 rounded-lg text-sm font-semibold border transition ${
             page === PRICE_PAGE
                 ? 'bg-emerald-600 border-emerald-600 text-white'
                 : 'bg-white border-slate-300 text-slate-600 hover:bg-emerald-50 disabled:opacity-40 disabled:hover:bg-white'

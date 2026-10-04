@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const { transformSync } = require('esbuild');
+const { createHash } = require('node:crypto');
 // Publish only explicitly allowed website files, never repository or backend files.
 const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'dist');
@@ -32,4 +33,14 @@ for (const file of files) {
     fs.copyFileSync(path.join(root, file), destination);
   }
 }
+const styleHashes = new Set();
+for (const file of files.filter(file => file.endsWith('.html'))) {
+  const html = fs.readFileSync(path.join(output, file), 'utf8');
+  if (/\son(?:click|change|input|keyup|submit|error|load)\s*=|\sstyle\s*=/i.test(html)) throw new Error('Inline attributes remain in ' + file);
+  for (const match of html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/g)) {
+    styleHashes.add("'sha256-" + createHash('sha256').update(match[1]).digest('base64') + "'");
+  }
+}
+const headersPath = path.join(output, '_headers');
+fs.writeFileSync(headersPath, fs.readFileSync(headersPath, 'utf8').replace("style-src 'self'", "style-src 'self' " + [...styleHashes].join(' ')));
 console.log(`Prepared ${files.length} website files in dist`);
