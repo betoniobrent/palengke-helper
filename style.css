@@ -405,3 +405,30 @@ html[data-theme="dark"] #offlineCopiesDialog { background:#1e293b; color:#f1f5f9
  body.printing-output #printOutput { display:block!important; white-space:pre-wrap; overflow-wrap:anywhere; color:#000; background:#fff; font:11pt/1.5 sans-serif; }
  body.printing-output { background:#fff!important; }
 }
+
+/* Output tools: compact, consistent touch targets in both themes. */
+.output-tools { margin:12px 0 24px; padding:16px; border:1px solid #d4e5de; border-radius:16px; background:#f7fbf9; }
+.output-tools-heading { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px; margin-bottom:12px; }
+.output-tools-heading strong { font-size:16px; color:#164e3d; }
+.output-tools-heading > span { font-size:13px; color:#52675d; }
+.output-tools .output-actions { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; margin:0; }
+.output-tools .output-actions button { display:flex; align-items:center; justify-content:center; gap:8px; padding:12px 8px; border:1px solid #d4e5de; background:#fff; color:#234f40; font-size:13px; line-height:1.4; }
+.output-actions svg { width:20px; height:20px; flex-shrink:0; }
+.output-tools .output-actions [data-operation="offline"] { background:#047857; border-color:#047857; color:#fff; }
+.output-tools button:hover { box-shadow:0 2px 8px #065f461c; border-color:#047857; }
+.output-tools button:focus-visible, #offlineCopiesDialog button:focus-visible, #offlineCopiesDialog summary:focus-visible { outline:3px solid #10b981; outline-offset:3px; }
+#offlineCopiesDialog { padding:24px; box-shadow:0 24px 80px #0005; }
+#offlineCopiesDialog h2 { font-size:22px; font-weight:700; }
+#offlineCopiesDialog > p { color:#64748b; font-size:13px; line-height:1.6; margin:14px 0 20px; }
+#offlineCopiesDialog details { border:1px solid #d4e5de; border-radius:12px; margin:12px 0; padding:14px; }
+#offlineCopiesDialog summary { cursor:pointer; font-weight:700; min-height:32px; }
+#offlineCopiesDialog pre { background:#f1f5f3; border-radius:8px; padding:14px; max-height:45dvh; overflow:auto; margin:12px 0; }
+#offlineCopiesDialog details button { margin:4px 8px 0 0; font-size:13px; }
+#offlineCopiesDialog [data-action-click="delete-offline-copy"] { color:#be123c; background:#fff1f2; border-color:#fecdd3; }
+html[data-theme="dark"] .output-tools { background:#172c2a; border-color:#36524a; }
+html[data-theme="dark"] .output-tools-heading strong { color:#a7f3d0; }
+html[data-theme="dark"] .output-tools-heading > span, html[data-theme="dark"] #offlineCopiesDialog > p { color:#b3c6c0; }
+html[data-theme="dark"] .output-tools button { background:#203b35; color:#d1fae5; border-color:#46665b; }
+html[data-theme="dark"] .output-tools [data-operation="offline"] { background:#047857; color:white; }
+html[data-theme="dark"] #offlineCopiesDialog pre { background:#0f172a; }
+@media(max-width:600px) { .output-tools { padding:12px; } .output-tools .output-actions { grid-template-columns:repeat(3,minmax(0,1fr)); } .output-tools .output-actions button { flex-direction:column; min-height:70px; gap:6px; } .output-tools .output-actions [data-operation="offline"] { grid-column:span 2; flex-direction:row; min-height:48px; } .output-tools .output-actions [data-operation="saved"] { min-height:48px; } #offlineCopiesDialog { padding:16px; } }
