@@ -20,6 +20,27 @@ let aiRequestController = null;
 const BO_SAR_BACKEND_URL = 'https://palengke-helper-gemini.onrender.com';
 
 // Notification System
+let appMessageQueue = Promise.resolve();
+function showAppMessage(message, confirmation = false, value = '') {
+    const task = appMessageQueue.then(() => new Promise(resolve => {
+        const dialog = document.getElementById('appMessageDialog');
+        document.getElementById('appMessageTitle').textContent = confirmation ? 'Please confirm' : 'Palengke Helper+';
+        document.getElementById('appMessageText').textContent = message;
+        document.getElementById('appMessageCancel').hidden = !confirmation;
+        document.getElementById('appMessageAccept').textContent = confirmation ? 'Confirm' : 'Done';
+        const field = document.getElementById('appMessageValue');
+        field.value = value;
+        field.hidden = !value;
+        dialog.returnValue = 'cancel';
+        dialog.addEventListener('close', () => resolve(dialog.returnValue === 'accept'), { once: true });
+        dialog.showModal();
+        if (value) { field.focus(); field.select(); }
+    }));
+    appMessageQueue = task.catch(() => {});
+    return task;
+}
+function confirmInApp(message) { return showAppMessage(message, true); }
+
 function showNotification(message, type = 'info') {
     // Remove existing notification if any
     const existingNotification = document.getElementById('notification');
@@ -30,6 +51,7 @@ function showNotification(message, type = 'info') {
     // Create notification element
     const notification = document.createElement('div');
     notification.id = 'notification';
+    notification.setAttribute('role', type === 'error' ? 'alert' : 'status');
     notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-lg text-white font-medium max-w-md transition-all duration-300 transform translate-x-full`;
     
     // Set color based on type
@@ -611,8 +633,8 @@ async function saveCurrentMealPlan(){
     showNotification('Meal plan saved successfully.', 'success');
 }
 
-function clearCurrentMealPlan(){
-    if (!confirm('Clear the current weekly plan?')) return;
+async function clearCurrentMealPlan(){
+    if (!await confirmInApp('Clear the current weekly plan?')) return;
     initializeMealPlanner();
     document.getElementById('plannerSummaryCost').innerText = '₱0';
     document.getElementById('plannerSummaryWarning').innerText = '';
@@ -703,7 +725,7 @@ function backFromLoadedMealPlan(){
 }
 
 async function deleteMealPlan(id){
-    if (!confirm('Delete this saved meal plan?')) return;
+    if (!await confirmInApp('Delete this saved meal plan?')) return;
     const session = JSON.parse(localStorage.getItem('palengke_session') || '{}');
     try {
         if (session.role === 'member' && session.supabaseUserId && !id.startsWith('meal_plan_')) {
@@ -1396,13 +1418,13 @@ function initializeBudgetHubEngine() {
 
 function addNewMonthlyBudgetHubRecord() {
     const targetDateValue = document.getElementById('newBudgetDate').value;
-    if (!targetDateValue) return alert('Choose a month for your budget.');
+    if (!targetDateValue) return showNotification('Choose a month for your budget.');
 
     const history = JSON.parse(localStorage.getItem('palengke_budgets_v2')) || [];
     
     // Check duplication values
     if (history.some(h => h.monthCode === targetDateValue)) {
-        return alert('A budget for this month already exists. Select it from your saved budgets.');
+        return showNotification('A budget for this month already exists. Select it from your saved budgets.');
     }
 
     const newRecord = {
@@ -1423,8 +1445,8 @@ function addNewMonthlyBudgetHubRecord() {
     openBudgetEntry('income');
 }
 
-function purgeMonthlyBudgetFolder(id) {
-    if (!confirm('Are you certain you want to purge this record block data matrix?')) return;
+async function purgeMonthlyBudgetFolder(id) {
+    if (!await confirmInApp('Delete this budget and all its income and expenses?')) return;
     let history = JSON.parse(localStorage.getItem('palengke_budgets_v2')) || [];
     history = history.filter(h => h.id !== id);
     localStorage.setItem('palengke_budgets_v2', JSON.stringify(history));
@@ -1548,7 +1570,7 @@ function renderLedgerStackElements(containerId, dataset, type) {
 }
 
 function addLedgerItem(type) {
-    if (!currentActiveMonthId) return alert('Create or select a monthly budget first.');
+    if (!currentActiveMonthId) return showNotification('Create or select a monthly budget first.');
 
     let desc, amount, spec, date, category = null;
 
@@ -1566,7 +1588,7 @@ function addLedgerItem(type) {
     }
 
     if (!desc || isNaN(amount) || amount <= 0 || !date) {
-        return alert('Enter a description, a positive amount, and a date.');
+        return showNotification('Enter a description, a positive amount, and a date.');
     }
 
     const history = JSON.parse(localStorage.getItem('palengke_budgets_v2')) || [];
@@ -2357,7 +2379,7 @@ function clearGroceryLocalPrice(index) {
     saveGroceryListToSupabase();
 }
 
-function clearBoughtItems() {
+async function clearBoughtItems() {
     const items = getGroceryData();
     const boughtItems = items.filter(i => i.checked);
     
@@ -2366,7 +2388,7 @@ function clearBoughtItems() {
         return;
     }
     
-    if (!confirm('Remove all ' + boughtItems.length + ' bought items from your grocery list?')) return;
+    if (!await confirmInApp('Remove all ' + boughtItems.length + ' bought items from your grocery list?')) return;
     // Remove bought items from list
     const remainingItems = items.filter(i => !i.checked);
     setGroceryData(remainingItems);
@@ -2375,8 +2397,8 @@ function clearBoughtItems() {
     showNotification(`Cleared ${boughtItems.length} bought items`, 'success');
 }
 
-function clearAllGroceryItems() {
-    if (confirm('Are you sure you want to clear all grocery items?')) {
+async function clearAllGroceryItems() {
+    if (await confirmInApp('Are you sure you want to clear all grocery items?')) {
         setGroceryData([]);
         renderGroceryItems();
         saveGroceryListToSupabase();
@@ -2428,10 +2450,10 @@ function addItem() {
     showNotification('Item added to list', 'success');
 }
 
-function deleteItem(index) {
+async function deleteItem(index) {
     const items = getGroceryData();
     if (!Number.isInteger(index) || !items[index]) return;
-    if (!confirm('Remove ' + items[index].name + ' from your grocery list?')) return;
+    if (!await confirmInApp('Remove ' + items[index].name + ' from your grocery list?')) return;
     items.splice(index, 1);
     setGroceryData(items);
     renderGroceryItems();
@@ -3563,7 +3585,7 @@ function buildGroceryItemsFromMealPlan(pax) {
     return MealCosting.groceries(recipes, ALL_PRICE_ITEMS, pax || getPlannerPax());
 }
 
-function addMealPlanToGroceryList() {
+async function addMealPlanToGroceryList() {
     if (!hasActiveMealPlan()) {
         showNotification('Generate or open a meal plan first', 'error');
         return;
@@ -3579,7 +3601,7 @@ function addMealPlanToGroceryList() {
     const existing = getGroceryData();
     const previousPlanItems = existing.filter(i => i.fromMealPlan);
     if (previousPlanItems.length > 0 &&
-        !confirm(`Replace the ${previousPlanItems.length} item(s) previously added from a meal plan?`)) {
+        !await confirmInApp(`Replace the ${previousPlanItems.length} item(s) previously added from a meal plan?`)) {
         return;
     }
 
@@ -4540,7 +4562,7 @@ async function copyOutputLink(copy) {
         await navigator.clipboard.writeText(link);
         showNotification('Link copied! Anyone with the link can view this saved copy.', 'success');
     } catch (_) {
-        window.prompt('Copy this link. Anyone with it can view this copy:', link);
+        await showAppMessage('Copy this link. Anyone with it can view this copy.', false, link);
     }
 }
 function showOfflineCopies(asTab = false) {
@@ -4554,8 +4576,8 @@ function downloadOfflineCopy(id) {
     const copy = JSON.parse(localStorage.getItem('palengke_offline_copies') || '[]').find(copy => copy.id === id);
     if (copy) downloadOutputFile(copy.id + '.html', offlineCopyHtml(copy), 'text/html;charset=utf-8');
 }
-function deleteOfflineCopy(id) {
-    if (!confirm('Delete this saved offline copy?')) return;
+async function deleteOfflineCopy(id) {
+    if (!await confirmInApp('Delete this saved offline copy?')) return;
     const copies = JSON.parse(localStorage.getItem('palengke_offline_copies') || '[]').filter(copy => copy.id !== id);
     localStorage.setItem('palengke_offline_copies', JSON.stringify(copies)); showOfflineCopies(!document.getElementById('view-copies').classList.contains('hidden'));
 }

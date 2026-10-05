@@ -95,8 +95,8 @@
             showNotification('Data exported successfully!', 'success');
         }
 
-        function clearAllData() {
-            if (confirm('Are you sure you want to clear all local data? This cannot be undone.')) {
+        async function clearAllData() {
+            if (await confirmInApp('Are you sure you want to clear all local data? This cannot be undone.')) {
                 localStorage.removeItem('palengke_budget');
                 localStorage.removeItem('palengke_grocery');
                 localStorage.removeItem('palengke_mealplans');
@@ -106,8 +106,8 @@
             }
         }
 
-        function deleteAccount() {
-            if (confirm('Are you sure you want to delete your account? This will sign you out and clear all local data.')) {
+        async function deleteAccount() {
+            if (await confirmInApp('Are you sure you want to delete your account? This will sign you out and clear all local data.')) {
                 localStorage.removeItem('palengke_session');
                 localStorage.removeItem('palengke_budget');
                 localStorage.removeItem('palengke_grocery');

@@ -32,7 +32,7 @@ function groceryContext() {
     Object.defineProperty(cart, 'innerHTML', { set: () => { cards.length = 0; } });
     let summary;
     const context = loadFunctions({
-        confirm: () => true,
+        confirmInApp: async () => true,
         localStorage: storage({ groceryItems: JSON.stringify([
             { name: 'Rice', price: 50, quantity: 1, unit: 'kg' },
             { name: 'Fish', price: 100, quantity: 1, unit: 'kg' }
@@ -51,12 +51,12 @@ function groceryContext() {
     return { context, cards, search, summary: () => summary };
 }
 
-test('filtered delete removes the displayed item and keeps full-list totals', () => {
+test('filtered delete removes the displayed item and keeps full-list totals', async () => {
     const { context, cards, summary } = groceryContext();
     assert.equal(cards.length, 1);
     assert.equal(summary().length, 2);
     const index = Number(cards[0].innerHTML.match(/data-action-click="delete-grocery" data-index="(\d+)"/)[1]);
-    context.deleteItem(index);
+    await context.deleteItem(index);
     assert.equal(context.getGroceryData()[0].name, 'Rice');
     assert.equal(context.getGroceryData().length, 1);
     assert.equal(cards.length, 0);
@@ -90,7 +90,7 @@ function mealContext({ member = true, error = null, rows = [{ id: 'remote-1' }] 
             palengke_saved_meal_plans: JSON.stringify([{ id: 'remote-1' }, { id: 'meal_plan_1' }])
         }),
         supabaseClient: { from: table => { assert.equal(table, 'user_meal_plans'); return query; } },
-        confirm: () => true,
+        confirmInApp: async () => true,
         console: { error: () => {} },
         renderSavedMealPlans: async () => {},
         showNotification: (message, type) => notices.push(type)
@@ -205,4 +205,4 @@ test('repeat catalog additions increase quantity and preserve distinct units and
  feed[0].price_avg=110;c.addGroceryPriceItem(0);assert.equal(items.length,3);
 });
 
-test('canceling deletion leaves the grocery item untouched',()=>{const {context}=groceryContext();context.confirm=()=>false;context.deleteItem(1);assert.equal(context.getGroceryData().length,2);assert.equal(context.getGroceryData()[1].name,'Fish');});
+test('canceling deletion leaves the grocery item untouched',async()=>{const {context}=groceryContext();context.confirmInApp=async()=>false;await context.deleteItem(1);assert.equal(context.getGroceryData().length,2);assert.equal(context.getGroceryData()[1].name,'Fish');});

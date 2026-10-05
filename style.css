@@ -457,3 +457,10 @@ html[data-theme="dark"] #outputToolsDescription { color:#cbd5e1; }
 html[data-theme="dark"] .output-tools-dialog button { background:#243b36; color:#d1fae5; border-color:#46665b; }
 html[data-theme="dark"] .output-tools-dialog button:hover { background:#315247; }
 @media(max-width:380px) { .output-tools-dialog { padding:18px; } .output-tools-dialog .output-actions button { flex-direction:column; } }
+#appMessageText { margin:16px 0; line-height:1.6; white-space:pre-wrap; }
+#appMessageValue { width:100%; min-height:120px; padding:12px; border:1px solid #94a3b8; border-radius:8px; color:inherit; background:transparent; }
+.app-message-actions { display:flex; justify-content:flex-end; gap:12px; margin-top:20px; }
+.app-message-actions button { padding:12px 20px; min-height:48px; border:1px solid #047857; border-radius:10px; color:#065f46; background:#ecfdf5; font-weight:700; }
+#appMessageAccept { background:#047857; color:#fff; }
+#notification { z-index:100; max-width:calc(100vw - 32px); }
+#appMessageDialog [hidden] { display:none!important; }
