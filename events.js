@@ -50,7 +50,6 @@ const staticUIActions = {
 "h9d5abb6ef6db": function(event) { loginWithEmail() },
 "h471b2b37f91d": function(event) { loginWithGoogle() },
 "h9e3984618ada": function(event) { loginAsGuest() },
-"h51731e466945": function(event) { localStorage.removeItem('palengke_session'); location.reload(); },
 "hda5e086e7c0d": function(event) { showRegister() },
 "h061c00cc0d65": function(event) { showForgotPassword() },
 "h6c7579c938a8": function(event) { registerWithEmail() },
