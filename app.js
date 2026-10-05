@@ -4446,3 +4446,103 @@ function closePwaInstallModal() {
     const modal = document.getElementById('pwaInstallModal');
     if (modal) modal.classList.add('hidden');
 }
+
+// Portable, read-only copies: no network or account credentials included.
+function buildOutputCopy(kind) {
+    const stamp = new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
+    let title, lines = [];
+    if (kind === 'meal') {
+        title = 'Weekly meal plan';
+        const pax = Number(document.getElementById('plannerPax').value) || 1;
+        lines.push('People: ' + pax);
+        for (const day of DAYS_OF_WEEK) {
+            lines.push('\n' + day);
+            for (const type of ['Breakfast', 'Lunch', 'Dinner']) {
+                const recipe = currentMealPlan[day]?.[type];
+                lines.push(type + ': ' + (recipe?.name || 'Not selected'));
+                if (recipe) {
+                    lines.push('Recipe ingredients (base recipe: ' + (recipe.servings || '?') + ' servings):');
+                    lines.push(...(recipe.ingredients || []));
+                    lines.push('Steps:', ...(recipe.instructions || []).map((step, i) => (i + 1) + '. ' + step));
+                    if (typeof MealCosting !== 'undefined') lines.push(MealCosting.format(getPlannerRecipePricing(recipe, pax).quote));
+                }
+            }
+        }
+    } else if (kind === 'budget') {
+        const records = JSON.parse(localStorage.getItem('palengke_budgets_v2') || '[]');
+        const record = records.find(item => item.id === currentActiveMonthId);
+        if (!record) throw new Error('Open a budget first.');
+        title = 'Budget — ' + record.monthCode;
+        lines.push('Period: ' + activeSpecificationFilter);
+        let balance = 0;
+        for (const [label, entries, sign] of [['Income', record.incomeList, 1], ['Expenses', record.expenseList, -1]]) {
+            const selected = entries.filter(e => activeSpecificationFilter === 'all' || e.specCadence === activeSpecificationFilter);
+            lines.push('\n' + label);
+            for (const entry of selected) lines.push(`${entry.dateLogged} | ${entry.description} | PHP ${Number(entry.amount).toFixed(2)} | ${entry.specCadence}`);
+            const total = selected.reduce((sum, e) => sum + Number(e.amount || 0), 0);
+            balance += total * sign;
+            lines.push('Total ' + label.toLowerCase() + ': PHP ' + total.toFixed(2));
+        }
+        lines.push('\nRemaining: PHP ' + balance.toFixed(2));
+    } else if (kind === 'grocery') {
+        title = 'Grocery list';
+        const items = getGroceryData();
+        let total = 0;
+        for (const item of items) {
+            const cost = getItemUnitPrice(item) * Number(item.quantity || 0);
+            if (!item.priceMissing) total += cost;
+            lines.push(`${item.checked ? '[Bought]' : '[ ]'} ${item.name} — ${item.quantity} ${item.unit || ''} — ${item.priceMissing ? 'Price unavailable' : 'PHP ' + cost.toFixed(2)}`);
+            if (item.notes) lines.push('Reference: ' + item.notes);
+        }
+        lines.push('\nPriced subtotal: PHP ' + total.toFixed(2), 'Missing prices are excluded. Reference prices may differ from store prices.');
+    } else throw new Error('Select an output to copy.');
+    return { id: 'copy-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8), title, text: title + '\nPalengke Helper+\nSaved: ' + stamp + ' (Philippine time)\n\n' + lines.join('\n') };
+}
+
+function downloadOutputFile(name, content, type) {
+    const url = URL.createObjectURL(new Blob([content], { type }));
+    const link = document.createElement('a');
+    link.href = url; link.download = name; document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+function offlineCopyHtml(copy) {
+    return '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + escapeHtml(copy.title) + '</title><body><h1>' + escapeHtml(copy.title) + '</h1><p>Offline reference copy. Use your browser menu to print or save as PDF.</p><pre style="white-space:pre-wrap;overflow-wrap:anywhere;font:16px/1.6 system-ui">' + escapeHtml(copy.text) + '</pre></body></html>';
+}
+async function handleOutputCopy(kind, operation) {
+    try {
+        if (operation === 'saved') return showOfflineCopies();
+        const copy = buildOutputCopy(kind);
+        if (operation === 'print') {
+            document.getElementById('printOutput').textContent = copy.text;
+            document.body.classList.add('printing-output');
+            window.addEventListener('afterprint', () => document.body.classList.remove('printing-output'), { once: true });
+            try { window.print(); } catch (error) { document.body.classList.remove('printing-output'); throw error; }
+        } else if (operation === 'share') {
+            if (navigator.share) await navigator.share({ title: copy.title, text: copy.text });
+            else { downloadOutputFile(copy.id + '.txt', copy.text, 'text/plain;charset=utf-8'); showNotification('Text copy downloaded. Attach it to your message to share.', 'info'); }
+        } else if (operation === 'offline') {
+            // Download first so storage limits never prevent a portable copy.
+            downloadOutputFile(copy.id + '.html', offlineCopyHtml(copy), 'text/html;charset=utf-8');
+            const copies = JSON.parse(localStorage.getItem('palengke_offline_copies') || '[]');
+            localStorage.setItem('palengke_offline_copies', JSON.stringify([copy, ...copies].slice(0, 20)));
+            showNotification('Offline file downloaded and saved on this device (latest 20 copies). Open the downloaded file anytime without internet.', 'success');
+        } else downloadOutputFile(copy.id + '.txt', copy.text, 'text/plain;charset=utf-8');
+    } catch (error) {
+        if (error.name !== 'AbortError') showNotification('Could not complete this action: ' + error.message, 'error');
+    }
+}
+function showOfflineCopies() {
+    const copies = JSON.parse(localStorage.getItem('palengke_offline_copies') || '[]');
+    document.getElementById('offlineCopiesList').innerHTML = copies.length ? copies.map(copy => '<details><summary>' + escapeHtml(copy.title) + '</summary><pre>' + escapeHtml(copy.text) + '</pre><button data-action-click="download-offline-copy" data-id="' + escapeHtml(copy.id) + '">Download offline file</button><button data-action-click="delete-offline-copy" data-id="' + escapeHtml(copy.id) + '">Delete copy</button></details>').join('') : '<p>No saved copies yet. Use Save offline on a plan, budget, or grocery list.</p>';
+    const dialog = document.getElementById('offlineCopiesDialog');
+    if (!dialog.open) dialog.showModal();
+}
+function downloadOfflineCopy(id) {
+    const copy = JSON.parse(localStorage.getItem('palengke_offline_copies') || '[]').find(copy => copy.id === id);
+    if (copy) downloadOutputFile(copy.id + '.html', offlineCopyHtml(copy), 'text/html;charset=utf-8');
+}
+function deleteOfflineCopy(id) {
+    if (!confirm('Delete this saved offline copy?')) return;
+    const copies = JSON.parse(localStorage.getItem('palengke_offline_copies') || '[]').filter(copy => copy.id !== id);
+    localStorage.setItem('palengke_offline_copies', JSON.stringify(copies)); showOfflineCopies();
+}

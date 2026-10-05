@@ -390,3 +390,18 @@ html[data-theme="dark"] .budget-period-picker p { color:#cbd5e1; }
 }
 
 .login-quick-actions button { gap:8px; }
+.output-actions { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 20px; }
+.output-actions button, #offlineCopiesDialog button, .offline-copies-link { padding:10px 14px; min-height:44px; border:1px solid #047857; border-radius:10px; background:#ecfdf5; color:#065f46; font-weight:600; }
+.offline-copies-link { width:100%; margin-bottom:16px; }
+#offlineCopiesDialog { width:min(700px,94vw); max-height:90dvh; padding:20px; border:0; border-radius:16px; overflow:auto; }
+#offlineCopiesDialog::backdrop { background:#0009; }
+#offlineCopiesDialog header { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+#offlineCopiesDialog pre { white-space:pre-wrap; overflow-wrap:anywhere; font:14px/1.6 system-ui; }
+#offlineCopiesDialog details { border-top:1px solid #94a3b8; padding:14px 0; }
+html[data-theme="dark"] #offlineCopiesDialog { background:#1e293b; color:#f1f5f9; }
+#printOutput { display:none; }
+@media print {
+ body.printing-output > :not(#printOutput) { display:none!important; }
+ body.printing-output #printOutput { display:block!important; white-space:pre-wrap; overflow-wrap:anywhere; color:#000; background:#fff; font:11pt/1.5 sans-serif; }
+ body.printing-output { background:#fff!important; }
+}

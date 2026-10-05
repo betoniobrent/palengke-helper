@@ -1,5 +1,9 @@
 // Explicit actions migrated from the static HTML. No evaluation of DOM strings.
 const dynamicUIActions = {
+  'output-copy': e => handleOutputCopy(e.dataset.kind, e.dataset.operation),
+  'close-offline-copies': () => document.getElementById('offlineCopiesDialog').close(),
+  'download-offline-copy': e => downloadOfflineCopy(e.dataset.id),
+  'delete-offline-copy': e => deleteOfflineCopy(e.dataset.id),
   'price-search': () => { PRICE_PAGE = 1; renderFilteredPriceRows(); },
   'price-search-clear': () => { document.getElementById('priceSearch').value = ''; PRICE_PAGE = 1; renderFilteredPriceRows(); document.getElementById('priceSearch').focus(); },
   'diet-info': e => updateDietInfo(e.value),
