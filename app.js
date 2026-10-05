@@ -4533,7 +4533,7 @@ async function copyOutputLink(copy) {
     const bytes = new TextEncoder().encode(JSON.stringify({ title: copy.title, text: copy.text }));
     const compressed = new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer());
     const encoded = btoa(Array.from(compressed, byte => String.fromCharCode(byte)).join('')).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
-    const link = location.origin + '/print.html#copy=' + encoded;
+    const link = location.origin + '/shared.html#copy=' + encoded;
     if (link.length > 60000) throw new Error('This copy is too large for a reliable link. Use Save offline and share the downloaded file.');
     try {
         await navigator.clipboard.writeText(link);

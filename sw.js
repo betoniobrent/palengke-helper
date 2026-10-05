@@ -1,4 +1,4 @@
-const CACHE_NAME = 'palengke-helper-v87';
+const CACHE_NAME = 'palengke-helper-v88';
 
 const STATIC_ASSETS = [
   '/',
@@ -6,6 +6,8 @@ const STATIC_ASSETS = [
   '/print.html',
   '/print.css',
   '/print.js',
+  '/shared.html',
+  '/shared-viewer.js',
   '/style.css',
   '/tailwind.css?v=1',
   '/navigation.js?v=1',
@@ -41,6 +43,14 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+  if (url.origin === self.location.origin && ['/print.html', '/print.js', '/shared.html', '/shared-viewer.js'].includes(url.pathname)) {
+    event.respondWith(fetch(event.request).then(response => {
+      if (response.ok) { const copy = response.clone(); event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy))); }
+      return response;
+    }).catch(() => caches.match(event.request, {ignoreSearch:true})));
+    return;
+  }
   event.respondWith(
     caches.match(event.request, {ignoreSearch: true}).then(cached => {
       return cached || fetch(event.request).catch(() => {
