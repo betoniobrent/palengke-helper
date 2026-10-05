@@ -4542,11 +4542,12 @@ async function copyOutputLink(copy) {
         window.prompt('Copy this link. Anyone with it can view this copy:', link);
     }
 }
-function showOfflineCopies() {
+function showOfflineCopies(asTab = false) {
     const copies = JSON.parse(localStorage.getItem('palengke_offline_copies') || '[]');
-    document.getElementById('offlineCopiesList').innerHTML = copies.length ? copies.map(copy => '<details><summary>' + escapeHtml(copy.title) + '</summary><pre>' + escapeHtml(copy.text) + '</pre><button data-action-click="share-offline-copy" data-id="' + escapeHtml(copy.id) + '">Copy link</button><button data-action-click="download-offline-copy" data-id="' + escapeHtml(copy.id) + '">Download offline file</button><button data-action-click="delete-offline-copy" data-id="' + escapeHtml(copy.id) + '">Delete copy</button></details>').join('') : '<p>No saved copies yet. Use Save offline on a plan, budget, or grocery list.</p>';
+    document.getElementById(asTab ? 'savedCopiesTabList' : 'offlineCopiesList').innerHTML = copies.length ? copies.map(copy => '<details><summary>' + escapeHtml(copy.title) + '</summary><pre>' + escapeHtml(copy.text) + '</pre><button data-action-click="share-offline-copy" data-id="' + escapeHtml(copy.id) + '">Copy link</button><button data-action-click="download-offline-copy" data-id="' + escapeHtml(copy.id) + '">Download offline file</button><button data-action-click="delete-offline-copy" data-id="' + escapeHtml(copy.id) + '">Delete copy</button></details>').join('') : '<p>No saved copies yet. Use Save offline on a plan, budget, or grocery list.</p>';
     const dialog = document.getElementById('offlineCopiesDialog');
-    if (!dialog.open) dialog.showModal();
+    if (asTab) { dialog.close(); switchTab('copies'); }
+    else if (!dialog.open) dialog.showModal();
 }
 function downloadOfflineCopy(id) {
     const copy = JSON.parse(localStorage.getItem('palengke_offline_copies') || '[]').find(copy => copy.id === id);
@@ -4555,5 +4556,5 @@ function downloadOfflineCopy(id) {
 function deleteOfflineCopy(id) {
     if (!confirm('Delete this saved offline copy?')) return;
     const copies = JSON.parse(localStorage.getItem('palengke_offline_copies') || '[]').filter(copy => copy.id !== id);
-    localStorage.setItem('palengke_offline_copies', JSON.stringify(copies)); showOfflineCopies();
+    localStorage.setItem('palengke_offline_copies', JSON.stringify(copies)); showOfflineCopies(!document.getElementById('view-copies').classList.contains('hidden'));
 }

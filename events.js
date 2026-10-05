@@ -1,5 +1,6 @@
 // Explicit actions migrated from the static HTML. No evaluation of DOM strings.
 const dynamicUIActions = {
+  'open-copies-tab': () => showOfflineCopies(true),
   'share-offline-copy': async e => {
     try {
       const copy = JSON.parse(localStorage.getItem('palengke_offline_copies') || '[]').find(copy => copy.id === e.dataset.id);

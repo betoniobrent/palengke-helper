@@ -212,12 +212,13 @@
                 </button>
             </div>
             <div class="p-3 border-t border-slate-200">
+                <button type="button" data-action-click="open-copies-tab" data-tab="copies" class="sidebar-item tab-link mb-1"><svg class="w-5 h-5 shrink-0" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h7l2-3h9v17H3z"/></svg><span>Saved copies</span></button>
                 <button type="button" data-theme-toggle class="sidebar-item theme-toggle mb-1">☾ Dark mode</button>
                 <button type="button" data-handler-click="hd061d43a2783" class="sidebar-item mb-1" aria-haspopup="dialog">
                     <svg class="w-5 h-5 shrink-0" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/><path d="M9.5 9a2.5 2.5 0 015 0c0 2-2.5 2-2.5 4m0 3h.01" stroke-width="2" stroke-linecap="round"/></svg>
                     <span>Tutorial</span>
                 </button>
-                <button type="button" data-handler-click="h74ac9886f884" class="sidebar-item mb-1" aria-haspopup="dialog"><svg class="w-5 h-5 shrink-0" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span>How to download</span></button>
+                <button type="button" data-handler-click="h74ac9886f884" class="sidebar-item mb-1" aria-haspopup="dialog"><svg class="w-5 h-5 shrink-0" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span>Install</span></button>
                 <div id='navLoginRegisterDesktop' class='hidden'>
                     <button data-handler-click="h9b1aa004b70f" class='sidebar-item text-emerald-700'>Login / Register</button>
                 </div>
@@ -241,9 +242,10 @@
                 <button class="text-2xl text-slate-600 rounded-lg px-3" aria-label="Open menu" data-handler-click="h6a8556577b38">☰</button>
             </div>
             <div id="mobileMenu" class="hidden mt-3 space-y-1 pb-1 border-t border-slate-200 pt-2">
+                <button type="button" data-action-click="open-copies-tab" data-tab="copies" class="sidebar-item tab-link"><svg class="w-5 h-5 shrink-0" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h7l2-3h9v17H3z"/></svg><span>Saved copies</span></button>
                 <button type="button" data-theme-toggle class="theme-toggle w-full text-left">☾ Dark mode</button>
                 <button type="button" data-handler-click="h1970af45a402" class="block w-full text-left py-2 text-slate-700" aria-haspopup="dialog">Tutorial</button>
-                <button type="button" data-handler-click="h5dff562cb40f" class="block w-full text-left py-2 text-slate-700" aria-haspopup="dialog">How to download</button>
+                <button type="button" data-handler-click="h5dff562cb40f" class="block w-full text-left py-2 text-slate-700" aria-haspopup="dialog">Install</button>
                 <div id='navLoginRegisterMobile' class='hidden'>
                     <button data-handler-click="he2077e5cea97" class='block w-full text-left py-2 font-semibold text-emerald-700'>Login / Register</button>
                 </div>
@@ -274,7 +276,8 @@
         <!-- MAIN DECOUPLED CONTENT TABBING SECTION LAYER -->
         <section class="w-full py-6 px-4 md:px-6 min-h-[50vh] flex-1">
 
-            <!-- TAB 0: HOME VIEW PANEL -->
+            <div id="view-copies" class="tab-content hidden"><h2 class="text-3xl font-bold text-gray-800 mb-3">Saved copies</h2><p class="text-sm text-gray-600 mb-6">Your latest 20 copies saved on this device. Open a copy to read, download, or share it. These are snapshots, not live updates.</p><div id="savedCopiesTabList" class="saved-copies-list"></div></div>
+<!-- TAB 0: HOME VIEW PANEL -->
             <div id="view-home" class="tab-content">
                 <h2 class="text-3xl font-bold mb-6 text-gray-800">Welcome back, Ka-Palengke!</h2>
                 <button type="button" data-handler-click="h71bb4df9b69c" class="tutorial-help-button" aria-haspopup="dialog"><span class="tutorial-help-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5c3-1 5.5-.5 8 1.5 2.5-2 5-2.5 8-1.5V19c-3-1-5.5-.5-8 1.5-2.5-2-5-2.5-8-1.5V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 7v13" stroke="currentColor" stroke-width="1.7"/></svg></span><span>How to use Home</span><svg class="tutorial-help-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>

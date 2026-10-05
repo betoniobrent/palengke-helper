@@ -432,3 +432,10 @@ html[data-theme="dark"] .output-tools button { background:#203b35; color:#d1fae5
 html[data-theme="dark"] .output-tools [data-operation="offline"] { background:#047857; color:white; }
 html[data-theme="dark"] #offlineCopiesDialog pre { background:#0f172a; }
 @media(max-width:600px) { .output-tools { padding:12px; } .output-tools .output-actions { grid-template-columns:repeat(3,minmax(0,1fr)); } .output-tools .output-actions button { flex-direction:column; min-height:70px; gap:6px; } .output-tools .output-actions [data-operation="offline"] { grid-column:span 2; flex-direction:row; min-height:48px; } .output-tools .output-actions [data-operation="saved"] { min-height:48px; } #offlineCopiesDialog { padding:16px; } }
+.saved-copies-list details { padding:18px; margin:12px 0; border:1px solid #cbd5e1; background:#fff; border-radius:14px; }
+.saved-copies-list summary { font-weight:700; cursor:pointer; min-height:32px; }
+.saved-copies-list pre { white-space:pre-wrap; overflow-wrap:anywhere; max-height:55dvh; overflow:auto; padding:16px; margin:12px 0; background:#f1f5f3; border-radius:8px; font:14px/1.6 system-ui; }
+.saved-copies-list button { min-height:44px; padding:10px 14px; margin:4px 8px 4px 0; border:1px solid #047857; border-radius:8px; color:#065f46; background:#ecfdf5; font-weight:600; }
+.saved-copies-list [data-action-click="delete-offline-copy"] { color:#be123c; border-color:#fecdd3; background:#fff1f2; }
+html[data-theme="dark"] .saved-copies-list details { background:#1e293b; color:#f1f5f9; border-color:#475569; }
+html[data-theme="dark"] .saved-copies-list pre { background:#0f172a; }
