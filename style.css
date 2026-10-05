@@ -388,3 +388,5 @@ html[data-theme="dark"] .budget-period-picker p { color:#cbd5e1; }
   html[data-theme="dark"] .grocery-mobile-switch button { background:#1e293b; color:#a7f3d0; border-color:#34d399; }
   html[data-theme="dark"] .grocery-mobile-switch button[aria-pressed="true"] { background:#065f46; color:#fff; }
 }
+
+.login-quick-actions button { gap:8px; }
