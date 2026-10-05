@@ -4513,10 +4513,9 @@ async function handleOutputCopy(kind, operation) {
         if (operation === 'saved') return showOfflineCopies();
         const copy = buildOutputCopy(kind);
         if (operation === 'print') {
-            document.getElementById('printOutput').textContent = copy.text;
-            document.body.classList.add('printing-output');
-            window.addEventListener('afterprint', () => document.body.classList.remove('printing-output'), { once: true });
-            try { window.print(); } catch (error) { document.body.classList.remove('printing-output'); throw error; }
+            sessionStorage.setItem('palengke_print_copy', JSON.stringify(copy));
+            const preview = window.open('/print.html', '_blank');
+            if (!preview) throw new Error('Allow pop-ups to open the print preview, then try again.');
         } else if (operation === 'share') {
             if (navigator.share) await navigator.share({ title: copy.title, text: copy.text });
             else { downloadOutputFile(copy.id + '.txt', copy.text, 'text/plain;charset=utf-8'); showNotification('Text copy downloaded. Attach it to your message to share.', 'info'); }

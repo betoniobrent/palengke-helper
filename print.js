@@ -1,0 +1,23 @@
+'use strict';
+const printButton = document.getElementById('printButton');
+printButton.addEventListener('click', () => window.print());
+document.getElementById('closeButton').addEventListener('click', () => window.close());
+try {
+    const copy = JSON.parse(sessionStorage.getItem('palengke_print_copy') || 'null');
+    if (!copy || typeof copy.text !== 'string') throw new Error('No output selected. Return to the app and choose Print / PDF on your plan or list.');
+    document.getElementById('copyTitle').textContent = copy.title;
+    document.title = 'Palengke Helper+ — ' + copy.title;
+    const lines = copy.text.split('\n');
+    document.getElementById('copyDate').textContent = lines[2] || '';
+    const content = document.getElementById('copyContent');
+    for (const line of lines.slice(4)) {
+        const row = document.createElement('p');
+        row.textContent = line || '\u00a0';
+        if (/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Income|Expenses)$/.test(line)) row.className = 'section-title';
+        if (/^(Total |Remaining:|Priced subtotal:)/.test(line)) row.className = 'total';
+        content.appendChild(row);
+    }
+} catch (error) {
+    document.getElementById('copyContent').textContent = error.message;
+    printButton.disabled = true;
+}

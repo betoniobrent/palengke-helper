@@ -38,3 +38,7 @@
 !/vendor/SUPABASE-LICENSE
 !/events.js
 !/bootstrap.js
+
+!/print.html
+!/print.css
+!/print.js
