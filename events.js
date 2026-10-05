@@ -1,5 +1,11 @@
 // Explicit actions migrated from the static HTML. No evaluation of DOM strings.
 const dynamicUIActions = {
+  'share-offline-copy': async e => {
+    try {
+      const copy = JSON.parse(localStorage.getItem('palengke_offline_copies') || '[]').find(copy => copy.id === e.dataset.id);
+      if (copy) await copyOutputLink(copy);
+    } catch (error) { showNotification(error.message, 'error'); }
+  },
   'output-copy': e => handleOutputCopy(e.dataset.kind, e.dataset.operation),
   'close-offline-copies': () => document.getElementById('offlineCopiesDialog').close(),
   'download-offline-copy': e => downloadOfflineCopy(e.dataset.id),

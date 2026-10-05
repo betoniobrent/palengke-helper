@@ -4517,8 +4517,7 @@ async function handleOutputCopy(kind, operation) {
             const preview = window.open('/print.html', '_blank');
             if (!preview) throw new Error('Allow pop-ups to open the print preview, then try again.');
         } else if (operation === 'share') {
-            if (navigator.share) await navigator.share({ title: copy.title, text: copy.text });
-            else { downloadOutputFile(copy.id + '.txt', copy.text, 'text/plain;charset=utf-8'); showNotification('Text copy downloaded. Attach it to your message to share.', 'info'); }
+            await copyOutputLink(copy);
         } else if (operation === 'offline') {
             // Download first so storage limits never prevent a portable copy.
             downloadOutputFile(copy.id + '.html', offlineCopyHtml(copy), 'text/html;charset=utf-8');
@@ -4530,9 +4529,22 @@ async function handleOutputCopy(kind, operation) {
         if (error.name !== 'AbortError') showNotification('Could not complete this action: ' + error.message, 'error');
     }
 }
+async function copyOutputLink(copy) {
+    const bytes = new TextEncoder().encode(JSON.stringify({ title: copy.title, text: copy.text }));
+    const compressed = new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer());
+    const encoded = btoa(Array.from(compressed, byte => String.fromCharCode(byte)).join('')).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
+    const link = location.origin + '/print.html#copy=' + encoded;
+    if (link.length > 60000) throw new Error('This copy is too large for a reliable link. Use Save offline and share the downloaded file.');
+    try {
+        await navigator.clipboard.writeText(link);
+        showNotification('Link copied! Anyone with the link can view this saved copy.', 'success');
+    } catch (_) {
+        window.prompt('Copy this link. Anyone with it can view this copy:', link);
+    }
+}
 function showOfflineCopies() {
     const copies = JSON.parse(localStorage.getItem('palengke_offline_copies') || '[]');
-    document.getElementById('offlineCopiesList').innerHTML = copies.length ? copies.map(copy => '<details><summary>' + escapeHtml(copy.title) + '</summary><pre>' + escapeHtml(copy.text) + '</pre><button data-action-click="download-offline-copy" data-id="' + escapeHtml(copy.id) + '">Download offline file</button><button data-action-click="delete-offline-copy" data-id="' + escapeHtml(copy.id) + '">Delete copy</button></details>').join('') : '<p>No saved copies yet. Use Save offline on a plan, budget, or grocery list.</p>';
+    document.getElementById('offlineCopiesList').innerHTML = copies.length ? copies.map(copy => '<details><summary>' + escapeHtml(copy.title) + '</summary><pre>' + escapeHtml(copy.text) + '</pre><button data-action-click="share-offline-copy" data-id="' + escapeHtml(copy.id) + '">Copy link</button><button data-action-click="download-offline-copy" data-id="' + escapeHtml(copy.id) + '">Download offline file</button><button data-action-click="delete-offline-copy" data-id="' + escapeHtml(copy.id) + '">Delete copy</button></details>').join('') : '<p>No saved copies yet. Use Save offline on a plan, budget, or grocery list.</p>';
     const dialog = document.getElementById('offlineCopiesDialog');
     if (!dialog.open) dialog.showModal();
 }
