@@ -439,3 +439,21 @@ html[data-theme="dark"] #offlineCopiesDialog pre { background:#0f172a; }
 .saved-copies-list [data-action-click="delete-offline-copy"] { color:#be123c; border-color:#fecdd3; background:#fff1f2; }
 html[data-theme="dark"] .saved-copies-list details { background:#1e293b; color:#f1f5f9; border-color:#475569; }
 html[data-theme="dark"] .saved-copies-list pre { background:#0f172a; }
+.output-tools-trigger { margin:12px 0 20px; }
+.output-tools-dialog { width:min(520px,calc(100vw - 28px)); max-height:calc(100dvh - 32px); padding:24px; border:1px solid #d4e5de; border-radius:20px; background:#fff; color:#164e3d; box-shadow:0 24px 80px #0005; overflow:auto; }
+.output-tools-dialog::backdrop { background:#0f172ab3; backdrop-filter:blur(3px); }
+.output-tools-dialog header { display:flex; justify-content:space-between; align-items:center; gap:16px; }
+.output-tools-dialog h2 { font-size:24px; font-weight:750; margin:4px 0; }
+.output-eyebrow { color:#047857; font-size:11px; letter-spacing:1.2px; font-weight:700; }
+#outputToolsDescription { color:#52675d; font-size:14px; line-height:1.6; margin:14px 0 20px; }
+.output-tools-dialog .output-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); margin:0; gap:10px; }
+.output-tools-dialog .output-actions button, .output-dialog-close { display:flex; align-items:center; justify-content:center; gap:8px; min-height:48px; padding:12px; border-radius:12px; border:1px solid #d4e5de; color:#234f40; background:#f7fbf9; font-size:14px; font-weight:600; }
+.output-tools-dialog .output-actions button:last-child { grid-column:1/-1; }
+.output-tools-dialog button:hover { background:#e1f5eb; border-color:#047857; }
+.output-tools-dialog button:focus-visible { outline:3px solid #10b981; outline-offset:3px; }
+html[data-theme="dark"] .output-tools-dialog { background:#1e293b; border-color:#475569; color:#f1f5f9; }
+html[data-theme="dark"] .output-eyebrow { color:#6ee7b7; }
+html[data-theme="dark"] #outputToolsDescription { color:#cbd5e1; }
+html[data-theme="dark"] .output-tools-dialog button { background:#243b36; color:#d1fae5; border-color:#46665b; }
+html[data-theme="dark"] .output-tools-dialog button:hover { background:#315247; }
+@media(max-width:380px) { .output-tools-dialog { padding:18px; } .output-tools-dialog .output-actions button { flex-direction:column; } }

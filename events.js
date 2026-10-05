@@ -1,5 +1,11 @@
 // Explicit actions migrated from the static HTML. No evaluation of DOM strings.
 const dynamicUIActions = {
+  'open-output-tools': e => {
+    const dialog = document.getElementById('outputToolsDialog');
+    dialog.querySelectorAll('[data-action-click="output-copy"]').forEach(button => { button.dataset.kind = e.dataset.kind; });
+    dialog.showModal();
+  },
+  'close-output-tools': () => document.getElementById('outputToolsDialog').close(),
   'open-copies-tab': () => showOfflineCopies(true),
   'share-offline-copy': async e => {
     try {

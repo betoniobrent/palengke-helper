@@ -4510,6 +4510,7 @@ function offlineCopyHtml(copy) {
 }
 async function handleOutputCopy(kind, operation) {
     try {
+        document.getElementById('outputToolsDialog')?.close();
         if (operation === 'saved') return showOfflineCopies();
         const copy = buildOutputCopy(kind);
         if (operation === 'print') {
