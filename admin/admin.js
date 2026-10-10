@@ -57,6 +57,8 @@ async function loginAdmin() {
 }
 
 async function logoutAdmin() {
+    auditRequest++;
+    document.getElementById('auditTableBody').innerHTML = '';
     await supabaseClient.auth.signOut();
     currentSession = null;
     showLogin();
@@ -69,6 +71,7 @@ function showDashboard() {
     // Default date to today
     // The administrator must enter the date printed on the report.
     loadUsers();
+    loadAuditLogs();
 }
 
 function showLogin() {
@@ -336,6 +339,7 @@ async function publishPrices() {
         statusEl.className = 'text-sm mt-3 text-emerald-600';
         statusEl.classList.remove('hidden');
         publishBtn.textContent = 'Published';
+        loadAuditLogs();
     } catch (err) {
         console.error(err);
         statusEl.textContent = 'Error publishing: ' + err.message;
@@ -384,3 +388,36 @@ supabaseClient.auth.getSession().then(({ data }) => {
         showDashboard();
     }
 });
+
+let auditPage = 0;
+let auditRequest = 0;
+async function loadAuditLogs() {
+    const request = ++auditRequest;
+    const status = document.getElementById('auditStatus');
+    const body = document.getElementById('auditTableBody');
+    if (!status || !currentSession) return;
+    status.textContent = 'Loading audit records…';
+    document.getElementById('auditPrev').disabled = true;
+    document.getElementById('auditNext').disabled = true;
+    try {
+        let query = supabaseClient.from('admin_audit_logs').select('id,occurred_at,actor_id,action,details').order('occurred_at',{ascending:false}).order('id',{ascending:false});
+        const action = document.getElementById('auditAction').value;
+        if (action) query = query.eq('action',action);
+        const {data,error} = await query.range(auditPage*25,auditPage*25+25);
+        if (request !== auditRequest || !currentSession) return;
+        if (error) throw error;
+        const rows = data || [];
+        body.innerHTML = rows.slice(0,25).map(row => `<tr class="border-t"><td class="p-3">${escapeHtml(new Date(row.occurred_at).toLocaleString('en-PH',{timeZone:'Asia/Manila'}))}</td><td class="p-3 font-mono text-xs">${escapeHtml(row.actor_id || 'System / database')}</td><td class="p-3">${escapeHtml(row.action.replaceAll('_',' '))}</td><td class="p-3">${escapeHtml(Object.entries(row.details || {}).map(([key,value]) => key.replaceAll('_',' ') + ': ' + value).join(' · '))}</td></tr>`).join('');
+        status.textContent = rows.length ? 'Page ' + (auditPage+1) : 'No audit records yet.';
+        document.getElementById('auditPrev').disabled = auditPage === 0;
+        document.getElementById('auditNext').disabled = rows.length <= 25;
+    } catch (error) {
+        if (request !== auditRequest) return;
+        body.innerHTML = '';
+        status.textContent = 'Audit log unavailable. The database migration must be applied and your account must have admin access. ' + error.message;
+    }
+}
+document.getElementById('refreshAuditBtn')?.addEventListener('click',()=>{auditPage=0;loadAuditLogs();});
+document.getElementById('auditAction')?.addEventListener('change',()=>{auditPage=0;loadAuditLogs();});
+document.getElementById('auditPrev')?.addEventListener('click',()=>{auditPage=Math.max(0,auditPage-1);loadAuditLogs();});
+document.getElementById('auditNext')?.addEventListener('click',()=>{auditPage++;loadAuditLogs();});
