@@ -1405,11 +1405,11 @@ function initializeBudgetHubEngine() {
             <div>
                 <div class="flex justify-between items-start mb-2">
                     <h4 class="font-bold text-gray-800 text-base">${monthLabel}</h4>
-                    <span class="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full ${currentActiveMonthId === item.id ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-500'}">
+                    <span class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full ${currentActiveMonthId === item.id ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-500'}">
                         ${currentActiveMonthId === item.id ? 'Active' : 'Closed'}
                     </span>
                 </div>
-                <div class="space-y-1 my-3 font-mono text-xs text-gray-600">
+                <div class="space-y-1 my-3 tabular-nums text-xs text-gray-600">
                     <div class="flex justify-between"><span>Income Base:</span><span class="text-emerald-600 font-bold">₱${computedIncome.toFixed(2)}</span></div>
                     <div class="flex justify-between"><span>Logged Spent:</span><span class="text-rose-500 font-bold">-₱${computedExpense.toFixed(2)}</span></div>
                 </div>
@@ -1417,7 +1417,7 @@ function initializeBudgetHubEngine() {
             <div class="border-t pt-3 flex items-center justify-between mt-2">
                 <div>
                     <span class="text-[9px] font-bold text-gray-400 uppercase block">Running Margin</span>
-                    <span class="text-sm font-bold font-mono ${computedMargin >= 0 ? 'text-gray-800' : 'text-rose-600'}">₱${computedMargin.toFixed(2)}</span>
+                    <span class="text-sm font-bold tabular-nums ${computedMargin >= 0 ? 'text-gray-800' : 'text-rose-600'}">₱${computedMargin.toFixed(2)}</span>
                 </div>
                 <button data-action-click="delete-budget" data-id="${escapeHtml(String(item.id))}" class="text-xs text-gray-400 hover:text-rose-600 font-medium p-1 transition">✕ Clear</button>
             </div>
@@ -1569,11 +1569,11 @@ function renderLedgerStackElements(containerId, dataset, type) {
                 <div class="flex gap-1.5 flex-wrap items-center text-[10px] text-gray-400 font-semibold">
                     <span class="bg-gray-200 px-1.5 py-0.5 rounded text-gray-600 whitespace-nowrap">${item.specCadence}</span>
                     ${item.category ? `<span class="bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded whitespace-nowrap">${item.category}</span>` : ''}
-                    <span class="font-mono text-gray-400">${item.dateLogged}</span>
+                    <span class="tabular-nums text-gray-400">${item.dateLogged}</span>
                 </div>
             </div>
             <div class="flex items-center gap-3 text-right">
-                <span class="font-mono font-bold text-sm block ${type === 'income' ? 'text-emerald-700' : 'text-rose-600'}">
+                <span class="tabular-nums font-bold text-sm block ${type === 'income' ? 'text-emerald-700' : 'text-rose-600'}">
                     ${type === 'income' ? '+' : '-'}₱${parseFloat(item.amount).toFixed(2)}
                 </span>
                 <button data-action-click="delete-ledger" data-id="${escapeHtml(String(item.itemId))}" data-ledger-type="${escapeHtml(type)}" class="text-gray-300 hover:text-rose-600 text-sm font-bold p-1 transition focus:outline-none">✕</button>
@@ -1708,7 +1708,7 @@ function renderDynamicCategoryAnalyticsEngine(expenseDataset) {
                     <span class="w-2 h-2 rounded-full inline-block shrink-0" data-chart-dot></span>
                     ${cat}
                 </span>
-                <span class="font-mono text-gray-800">${ratioPercentage.toFixed(1)}% <span class="text-gray-400 font-normal text-[10px]">(₱${catSum.toFixed(0)})</span></span>
+                <span class="tabular-nums text-gray-800">${ratioPercentage.toFixed(1)}% <span class="text-gray-400 font-normal text-[10px]">(₱${catSum.toFixed(0)})</span></span>
             </div>
             <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
                 <div class="h-full rounded-full transition-all duration-500" data-chart-bar></div>
@@ -2038,20 +2038,20 @@ function generateFilipinoMealPlan() {
         dayCard.classList.toggle('mobile-day-hidden', DAYS_OF_WEEK.indexOf(day) !== mobileMealDay);
         dayCard.innerHTML = `
             <div class="bg-emerald-50 p-3 rounded-lg text-center md:border-r border-emerald-100/50">
-                <span class="text-xs font-black text-emerald-800 uppercase block tracking-wider">${day}</span>
-                <span class="text-xs font-mono font-bold text-emerald-600 block mt-1">Est: ₱${dayCost.toFixed(0)}</span>
+                <span class="text-xs font-bold text-emerald-800 uppercase block tracking-wider">${day}</span>
+                <span class="text-xs tabular-nums font-bold text-emerald-600 block mt-1">Est: ₱${dayCost.toFixed(0)}</span>
             </div>
             <div class="md:col-span-3 grid sm:grid-cols-3 gap-3 text-xs text-gray-700">
                 <div class="bg-gray-50/70 p-2 rounded border border-gray-100">
-                    <span class="text-[10px] font-black uppercase tracking-tight text-amber-700 block mb-0.5">Aga-Han (Breakfast)</span>
+                    <span class="text-[10px] font-bold uppercase tracking-tight text-amber-700 block mb-0.5">Aga-Han (Breakfast)</span>
                     <p class="font-medium text-gray-800">${bMeal.name}</p>
                 </div>
                 <div class="bg-gray-50/70 p-2 rounded border border-gray-100">
-                    <span class="text-[10px] font-black uppercase tracking-tight text-emerald-700 block mb-0.5">Tanghalian (Lunch)</span>
+                    <span class="text-[10px] font-bold uppercase tracking-tight text-emerald-700 block mb-0.5">Tanghalian (Lunch)</span>
                     <p class="font-medium text-gray-800">${lMeal.name}</p>
                 </div>
                 <div class="bg-gray-50/70 p-2 rounded border border-gray-100">
-                    <span class="text-[10px] font-black uppercase tracking-tight text-indigo-700 block mb-0.5">Hapunan (Dinner)</span>
+                    <span class="text-[10px] font-bold uppercase tracking-tight text-indigo-700 block mb-0.5">Hapunan (Dinner)</span>
                     <p class="font-medium text-gray-800">${dMeal.name}</p>
                 </div>
             </div>
@@ -3905,7 +3905,7 @@ function renderFilteredPriceRows() {
     tbody.innerHTML = pageItems.map(item => `
         <tr class="hover:bg-gray-50 transition">
             <td class="p-3 font-medium">${guessPriceEmoji(item)} ${escapeHtml(item.name)}</td>
-            <td class="p-3 text-right font-mono font-bold text-gray-800">${escapeHtml(formatPriceValue(item))}</td>
+            <td class="p-3 text-right tabular-nums font-bold text-gray-800">${escapeHtml(formatPriceValue(item))}</td>
             <td class="p-3 text-right text-xs text-gray-500">${escapeHtml([item.source_agency === 'DTI' ? 'DTI SRP' : item.source_agency === 'DA' ? 'DA market price' : 'Supplemental reference', item.region, item.reportDate, item.notes].filter(Boolean).join(' · '))}</td>
         </tr>
     `).join('');

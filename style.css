@@ -225,7 +225,7 @@ nav .tab-link.active {
 .tutorial-body { padding:22px 28px; }
 .tutorial-language-row { margin-bottom:24px; color:#52675d; font-size:12px; }
 .tutorial-language-row select { border:1px solid #c9dacf; border-radius:10px; padding:9px 12px; background:white; color:#18372c; font-size:13px; min-height:40px; }
-#tutorialTitle { font-size:26px; line-height:1.25; font-weight:750; letter-spacing:-.025em; margin:0 0 10px; }
+#tutorialTitle { font-size:26px; line-height:1.25; font-weight:700; letter-spacing:-.025em; margin:0 0 10px; }
 #tutorialText { color:#52675d; line-height:1.6; font-size:15px; margin-bottom:20px; }
 .tutorial-tip-cards { list-style:none; padding:0; margin:0; counter-reset:guide-tip; display:grid; gap:10px; }
 .tutorial-tip-cards li { position:relative; counter-increment:guide-tip; padding:15px 16px 15px 54px; border:1px solid #e0e9df; border-radius:14px; background:white; color:#344f42; font-size:14px; line-height:1.6; }
@@ -534,4 +534,16 @@ h1, h2, h3, h4 { letter-spacing:-.025em; line-height:1.25; }
  .home-hero-tags { gap:6px; margin-top:20px; }
  .home-hero-tags span { font-size:11px; padding:4px 8px; }
  .home-hero-break { display:none; }
+}
+
+/* Consistent type hierarchy across workspace cards, forms, and dialogs. */
+body { font-size:16px; font-weight:400; }
+:where(button, input, select, textarea) { letter-spacing:normal; }
+body button { font-weight:600; line-height:1.4; }
+:is(#appMainContent, dialog) h3 { font-size:20px; font-weight:700; line-height:1.35; }
+:is(#appMainContent, dialog) h4 { font-size:16px; font-weight:600; line-height:1.4; }
+:is(#appMainContent, dialog) label { font-weight:600; }
+.tabular-nums { font-variant-numeric:tabular-nums; }
+@media(max-width:767px) {
+ :is(#appMainContent, dialog) h3 { font-size:18px; }
 }
