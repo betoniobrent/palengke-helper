@@ -486,10 +486,11 @@ html[data-theme="dark"] .tab-heading-description { color:#cbd5e1; }
 .budget-saved-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px; }
 .budget-saved-heading h3 { margin:0; }
 .budget-saved-heading .budget-desktop-add { min-height:44px; align-self:center; }
-/* Hover-capable desktop navigation expands over the content without shifting it. */
+/* Keep the workspace beside the sidebar in both expanded and collapsed states. */
 @media(min-width:768px) and (hover:hover) and (pointer:fine) {
  #desktopSidebar { width:72px; transition:width .18s ease,box-shadow .18s ease; }
- #appMainContent { margin-left:72px; }
+ #appMainContent { margin-left:72px; min-width:0; transition:margin-left .18s ease; }
+ #desktopSidebar:is(:hover,:has(:focus-visible),:has(#accountDropdown:not(.hidden))) ~ #appMainContent { margin-left:240px; }
  #desktopSidebar:is(:hover,:has(:focus-visible),:has(#accountDropdown:not(.hidden))) { width:240px; box-shadow:8px 0 28px #0f172a18; }
  #desktopSidebar .sidebar-item { white-space:nowrap; min-height:44px; }
  #desktopSidebar > div:first-child { white-space:nowrap; overflow:hidden; min-height:65px; }
@@ -503,4 +504,4 @@ html[data-theme="dark"] .tab-heading-description { color:#cbd5e1; }
  #desktopSidebar:not(:hover):not(:has(:focus-visible)):not(:has(#accountDropdown:not(.hidden))) #navAccountDesktop > button::before { content:'⚙'; font-size:23px; }
  #desktopSidebar:not(:hover):not(:has(:focus-visible)):not(:has(#accountDropdown:not(.hidden))) #navAccountDesktop > button > svg { display:none; }
 }
-@media(prefers-reduced-motion:reduce) { #desktopSidebar { transition:none; } }
+@media(prefers-reduced-motion:reduce) { #desktopSidebar, #appMainContent { transition:none; } }
