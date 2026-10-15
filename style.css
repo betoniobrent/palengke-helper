@@ -464,10 +464,18 @@ html[data-theme="dark"] .output-tools-dialog button:hover { background:#315247; 
 #appMessageAccept { background:#047857; color:#fff; }
 #notification { z-index:100; max-width:calc(100vw - 32px); }
 #appMessageDialog [hidden] { display:none!important; }
-/* Keep each tab's guide alongside its title, including narrow screens. */
-.tab-heading-row { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; margin-bottom:16px; }
-.tab-heading-row > h2 { margin:0; min-width:0; }
-.tab-heading-row > .tutorial-help-button { margin:0; flex-shrink:0; }
+
+/* Shared header system for Home, Budget, Meals, Prices, AI and Grocery. */
+.tab-heading-row { display:flex; align-items:center; justify-content:space-between; gap:16px; width:100%; margin:0 0 16px; }
+.tab-heading-row > .tab-heading-title { margin:0; min-width:0; font-family:inherit; font-size:30px; font-weight:700; line-height:1.25; letter-spacing:-.025em; color:#1e293b; overflow-wrap:break-word; }
+.tab-heading-row > .tutorial-help-button { margin:0; flex-shrink:0; min-height:44px; padding:8px 12px; gap:8px; font-size:13px; font-weight:600; }
+.tab-heading-row .tutorial-help-icon { width:26px; height:26px; }
 #view-budget > .flex > div:first-child { flex:1; min-width:0; }
-.ai-chat-header .tab-heading-row { margin:0; flex:1; }
-@media(max-width:600px) { .tab-heading-row { gap:8px; } .tab-heading-row > h2 { font-size:22px; line-height:1.25; } .tab-heading-row > .tutorial-help-button { padding:7px 9px; gap:6px; margin:0; } .tab-heading-row .tutorial-help-arrow { display:none; } .tab-heading-row .tutorial-help-icon { width:24px; height:24px; } }
+.ai-chat-header { display:block; }
+.ai-chat-header .tab-heading-row { margin-bottom:12px; }
+.tab-heading-description { color:#64748b; font-size:14px; line-height:1.5; margin:0; }
+.ai-header-actions { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:12px; }
+html[data-theme="dark"] .tab-heading-title { color:#f1f5f9; }
+html[data-theme="dark"] .tab-heading-description { color:#cbd5e1; }
+@media(min-width:768px) and (max-width:1100px) { .tab-heading-row > .tab-heading-title { font-size:26px; } }
+@media(max-width:767px) { .tab-heading-row { gap:10px; margin-bottom:16px; } .tab-heading-row > .tab-heading-title { font-size:22px; } .tab-heading-row > .tutorial-help-button { margin:0; padding:8px; gap:6px; } .tab-heading-row .tutorial-help-arrow { display:none; } .ai-chat-header .tab-heading-row { flex-wrap:nowrap; gap:10px; } }
