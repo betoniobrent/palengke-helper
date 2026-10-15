@@ -1327,6 +1327,9 @@ function toggleForm(formId) {
     if (formId === 'newMonthBudgetForm') prepareBudgetMonth();
     const f = document.getElementById(formId);
     if (f) f.classList.toggle('hidden');
+    if (formId === 'newMonthBudgetForm' && f) {
+        document.querySelector?.('[data-budget-option="new"]')?.setAttribute('aria-expanded', String(!f.classList.contains('hidden')));
+    }
 }
 
 function currentBudgetMonth(now = new Date()) {
@@ -1339,16 +1342,7 @@ function prepareBudgetMonth() {
     if (!input.value || input.value < input.min) input.value = input.min;
 }
 
-function setBudgetSection(type, expanded = true) {
-    document.querySelectorAll('[data-budget-section]').forEach(button => {
-        const active = button.dataset.budgetSection === type && expanded;
-        button.setAttribute('aria-expanded', String(active));
-        document.getElementById(button.getAttribute('aria-controls')).classList.toggle('budget-section-open', active);
-    });
-}
-
 function openBudgetEntry(type) {
-    if (currentActiveMonthId) setBudgetSection(type);
     let formId = type === 'expense' ? 'expenseForm' : 'incomeForm';
     if (!currentActiveMonthId) {
         formId = 'newMonthBudgetForm';

@@ -563,7 +563,10 @@ body button { font-weight:600; line-height:1.4; }
 }
 
 @media(max-width:767px) {
- .budget-section-buttons { margin-bottom:14px; }
- #activeLedgerWorkspaceSection .budget-section-panel { display:none; min-height:0; padding:20px; }
- #activeLedgerWorkspaceSection .budget-section-panel.budget-section-open { display:flex; }
+ .budget-landing-buttons { margin-bottom:18px; }
+ #view-budget:not(.budget-show-saved) :is(#monthlyBudgetsHubGrid,[data-budget-archive]) { display:none; }
+ #view-budget:has(#activeLedgerWorkspaceSection:not(.hidden)) .budget-landing-buttons { display:none; }
+ #view-budget:has(#activeLedgerWorkspaceSection.hidden) .budget-mobile-actions { display:none; }
+ #view-budget:has(#newMonthBudgetForm.hidden) [data-budget-option="new"] { background:#f0fdf7; color:#065f46; border-color:#a7d9c9; }
+ html[data-theme="dark"] #view-budget:has(#newMonthBudgetForm.hidden) [data-budget-option="new"] { background:#123d35; color:#a7f3d0; border-color:#326658; }
 }

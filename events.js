@@ -1,6 +1,13 @@
 // Explicit actions migrated from the static HTML. No evaluation of DOM strings.
 const dynamicUIActions = {
-  'budget-section': button => setBudgetSection(button.dataset.budgetSection, button.getAttribute('aria-expanded') !== 'true'),
+  'budget-landing': button => {
+    const open = button.getAttribute('aria-expanded') !== 'true';
+    const isNew = button.dataset.budgetOption === 'new';
+    document.querySelectorAll('[data-budget-option]').forEach(item => item.setAttribute('aria-expanded', String(item === button && open)));
+    document.getElementById('view-budget').classList.toggle('budget-show-saved', !isNew && open);
+    document.getElementById('newMonthBudgetForm').classList.toggle('hidden', !isNew || !open);
+    if (isNew && open) prepareBudgetMonth();
+  },
   'meal-mode': button => {
     const expanded = button.getAttribute('aria-expanded') !== 'true';
     document.querySelectorAll('[data-meal-mode]').forEach(choice => {

@@ -406,7 +406,11 @@
             <div id="view-budget" class="tab-content hidden"><div class="budget-mobile-actions" aria-label="Budget actions"><button type="button" data-action-click="budget-add" data-kind="income">+ Add budget</button><button type="button" data-action-click="budget-add" data-kind="expense">+ Add expense</button></div>
                 <header class="budget-tab-header mb-6"><div class="tab-heading-row"><h2 class="tab-heading-title">Budget Tracker</h2><div class="budget-heading-actions"><button type="button" data-handler-click="hcc25564b1062" class="tutorial-help-button" aria-haspopup="dialog"><span class="tutorial-help-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5c3-1 5.5-.5 8 1.5 2.5-2 5-2.5 8-1.5V19c-3-1-5.5-.5-8 1.5-2.5-2-5-2.5-8-1.5V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 7v13" stroke="currentColor" stroke-width="1.7"/></svg></span><span>Tutorial</span><svg class="tutorial-help-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div><p class="text-sm text-gray-500">Track income and expenses across weekly, kinsena, or monthly timelines.</p></header>
 
-                <!-- ADD NEW MONTHLY BUDGET ACTION FORM PANEL -->
+                <div class="meal-mode-buttons budget-landing-buttons" aria-label="Budget options">
+<button type="button" data-action-click="budget-landing" data-budget-option="new" aria-expanded="false" aria-controls="newMonthBudgetForm"><span aria-hidden="true">＋</span>New budget</button>
+<button type="button" data-action-click="budget-landing" data-budget-option="saved" aria-expanded="false" aria-controls="monthlyBudgetsHubGrid"><span aria-hidden="true">▤</span>Saved budgets</button>
+</div>
+<!-- ADD NEW MONTHLY BUDGET ACTION FORM PANEL -->
                 <div id="newMonthBudgetForm" class="hidden bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-xl shadow-md border border-emerald-200 mb-6 max-w-xl">
                     <h3 class="text-base font-bold text-emerald-900 mb-3">Start a budget</h3>
                     <div class="grid grid-cols-2 gap-3 mb-4">
@@ -511,10 +515,9 @@
                     </div>
 
                     <!-- SIDE-BY-SIDE LEDGERS WORKSPACE -->
-<div class="meal-mode-buttons budget-section-buttons" aria-label="Budget sections"><button type="button" data-action-click="budget-section" data-budget-section="income" aria-expanded="false" aria-controls="budgetIncomePanel"><span aria-hidden="true">₱</span>Budget &amp; income</button><button type="button" data-action-click="budget-section" data-budget-section="expense" aria-expanded="false" aria-controls="budgetExpensePanel"><span aria-hidden="true">−</span>Expenses</button></div>
                     <div class="grid md:grid-cols-2 gap-6">
                         <!-- INCOME / ALLOWANCE LEDGER COLUMN -->
-                        <div id="budgetIncomePanel" class="budget-section-panel bg-gradient-to-br from-emerald-50 to-green-50 p-6 rounded-xl shadow-md border border-emerald-200 flex flex-col justify-between min-h-[400px]">
+                        <div class="bg-gradient-to-br from-emerald-50 to-green-50 p-6 rounded-xl shadow-md border border-emerald-200 flex flex-col justify-between min-h-[400px]">
                             <div>
                                 <div class="flex justify-between items-center border-b border-emerald-200 pb-3 mb-4">
                                     <h3 class="text-lg font-bold text-emerald-900 flex items-center gap-2">
@@ -567,7 +570,7 @@
                         </div>
 
                         <!-- EXPENSES LEDGER COLUMN -->
-                        <div id="budgetExpensePanel" class="budget-section-panel bg-gradient-to-br from-rose-50 to-pink-50 p-6 rounded-xl shadow-md border border-rose-200 flex flex-col justify-between min-h-[400px]">
+                        <div class="bg-gradient-to-br from-rose-50 to-pink-50 p-6 rounded-xl shadow-md border border-rose-200 flex flex-col justify-between min-h-[400px]">
                             <div>
                                 <div class="flex justify-between items-center border-b border-rose-200 pb-3 mb-4">
                                     <h3 class="text-lg font-bold text-rose-900 flex items-center gap-2">
