@@ -1324,16 +1324,26 @@ function toggleMenu() {
 }
 
 function toggleForm(formId) {
+    if (formId === 'newMonthBudgetForm') prepareBudgetMonth();
     const f = document.getElementById(formId);
     if (f) f.classList.toggle('hidden');
+}
+
+function currentBudgetMonth(now = new Date()) {
+    const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit' }).formatToParts(now);
+    return parts.find(p => p.type === 'year').value + '-' + parts.find(p => p.type === 'month').value;
+}
+function prepareBudgetMonth() {
+    const input = document.getElementById('newBudgetDate');
+    input.min = currentBudgetMonth();
+    if (!input.value || input.value < input.min) input.value = input.min;
 }
 
 function openBudgetEntry(type) {
     let formId = type === 'expense' ? 'expenseForm' : 'incomeForm';
     if (!currentActiveMonthId) {
         formId = 'newMonthBudgetForm';
-        const now = new Date();
-        document.getElementById('newBudgetDate').value = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+        prepareBudgetMonth();
         if (type === 'expense') showNotification('Create or select a budget first, then add your expense.', 'info');
     }
     const form = document.getElementById(formId);
@@ -1419,6 +1429,10 @@ function initializeBudgetHubEngine() {
 function addNewMonthlyBudgetHubRecord() {
     const targetDateValue = document.getElementById('newBudgetDate').value;
     if (!targetDateValue) return showNotification('Choose a month for your budget.');
+    if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(targetDateValue) || targetDateValue < currentBudgetMonth()) {
+        prepareBudgetMonth();
+        return showNotification('Choose this month or a future month for a new budget.', 'error');
+    }
 
     const history = JSON.parse(localStorage.getItem('palengke_budgets_v2')) || [];
     
