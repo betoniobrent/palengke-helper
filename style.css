@@ -483,3 +483,6 @@ html[data-theme="dark"] .tab-heading-description { color:#cbd5e1; }
 .budget-heading-actions .tutorial-help-button, .budget-heading-actions .budget-desktop-add { margin:0; min-height:44px; align-self:center; white-space:nowrap; }
 @media(min-width:768px) and (max-width:1000px) { .budget-tab-header .tab-heading-row { flex-wrap:wrap; } .budget-heading-actions { margin-left:auto; } }
 @media(max-width:767px) { .budget-heading-actions { gap:0; } .budget-heading-actions .tutorial-help-button { margin:0; padding:8px; gap:6px; } }
+.budget-saved-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px; }
+.budget-saved-heading h3 { margin:0; }
+.budget-saved-heading .budget-desktop-add { min-height:44px; align-self:center; }

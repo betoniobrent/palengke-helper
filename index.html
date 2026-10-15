@@ -396,9 +396,7 @@
 
             <!-- TAB 1: BUDGET TRACKER HUB VIEW PANEL -->
             <div id="view-budget" class="tab-content hidden"><div class="budget-mobile-actions" aria-label="Budget actions"><button type="button" data-action-click="budget-add" data-kind="income">+ Add budget</button><button type="button" data-action-click="budget-add" data-kind="expense">+ Add expense</button></div>
-                <header class="budget-tab-header mb-6"><div class="tab-heading-row"><h2 class="tab-heading-title">Budget Tracker</h2><div class="budget-heading-actions"><button type="button" data-handler-click="hcc25564b1062" class="tutorial-help-button" aria-haspopup="dialog"><span class="tutorial-help-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5c3-1 5.5-.5 8 1.5 2.5-2 5-2.5 8-1.5V19c-3-1-5.5-.5-8 1.5-2.5-2-5-2.5-8-1.5V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 7v13" stroke="currentColor" stroke-width="1.7"/></svg></span><span>Tutorial</span><svg class="tutorial-help-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button data-handler-click="h7f0df4f6d8e3" class="budget-desktop-add bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5 self-start sm:self-auto">
-                        + Add New Budget
-                    </button></div></div><p class="text-sm text-gray-500">Track income and expenses across weekly, kinsena, or monthly timelines.</p></header>
+                <header class="budget-tab-header mb-6"><div class="tab-heading-row"><h2 class="tab-heading-title">Budget Tracker</h2><div class="budget-heading-actions"><button type="button" data-handler-click="hcc25564b1062" class="tutorial-help-button" aria-haspopup="dialog"><span class="tutorial-help-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5c3-1 5.5-.5 8 1.5 2.5-2 5-2.5 8-1.5V19c-3-1-5.5-.5-8 1.5-2.5-2-5-2.5-8-1.5V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 7v13" stroke="currentColor" stroke-width="1.7"/></svg></span><span>Tutorial</span><svg class="tutorial-help-arrow" aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div><p class="text-sm text-gray-500">Track income and expenses across weekly, kinsena, or monthly timelines.</p></header>
 
                 <!-- ADD NEW MONTHLY BUDGET ACTION FORM PANEL -->
                 <div id="newMonthBudgetForm" class="hidden bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-xl shadow-md border border-emerald-200 mb-6 max-w-xl">
@@ -418,7 +416,9 @@
                 </div>
 
                 <!-- HISTORICAL ARCHIVE STREAM GRID CONTAINER -->
-                <h3 class="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-3" data-budget-archive>Your saved budgets</h3>
+                <div class="budget-saved-heading" data-budget-archive><h3 class="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-3">Your saved budgets</h3><button data-handler-click="h7f0df4f6d8e3" class="budget-desktop-add bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-bold px-4 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5 self-start sm:self-auto">
+                        + Add New Budget
+                    </button></div>
                 <div id="monthlyBudgetsHubGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                     <!-- Dynamic historical cards append here -->
                 </div>
