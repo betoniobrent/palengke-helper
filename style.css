@@ -486,3 +486,21 @@ html[data-theme="dark"] .tab-heading-description { color:#cbd5e1; }
 .budget-saved-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:16px; }
 .budget-saved-heading h3 { margin:0; }
 .budget-saved-heading .budget-desktop-add { min-height:44px; align-self:center; }
+/* Hover-capable desktop navigation expands over the content without shifting it. */
+@media(min-width:768px) and (hover:hover) and (pointer:fine) {
+ #desktopSidebar { width:72px; transition:width .18s ease,box-shadow .18s ease; }
+ #appMainContent { margin-left:72px; }
+ #desktopSidebar:is(:hover,:has(:focus-visible),:has(#accountDropdown:not(.hidden))) { width:240px; box-shadow:8px 0 28px #0f172a18; }
+ #desktopSidebar .sidebar-item { white-space:nowrap; min-height:44px; }
+ #desktopSidebar > div:first-child { white-space:nowrap; overflow:hidden; min-height:65px; }
+ #desktopSidebar:not(:hover):not(:has(:focus-visible)):not(:has(#accountDropdown:not(.hidden))) .sidebar-item { font-size:0!important; gap:0; justify-content:center; padding:0; }
+ #desktopSidebar:not(:hover):not(:has(:focus-visible)):not(:has(#accountDropdown:not(.hidden))) .sidebar-item > span,
+ #desktopSidebar:not(:hover):not(:has(:focus-visible)):not(:has(#accountDropdown:not(.hidden))) > div:first-child > span:last-child { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+ #desktopSidebar:not(:hover):not(:has(:focus-visible)):not(:has(#accountDropdown:not(.hidden))) .sidebar-group-title { font-size:0; padding:0; }
+ #desktopSidebar:not(:hover):not(:has(:focus-visible)):not(:has(#accountDropdown:not(.hidden))) [data-theme-toggle]::before { content:'☾'; font-size:22px; }
+ html[data-theme="dark"] #desktopSidebar:not(:hover):not(:has(:focus-visible)):not(:has(#accountDropdown:not(.hidden))) [data-theme-toggle]::before { content:'☀'; }
+ #desktopSidebar:not(:hover):not(:has(:focus-visible)):not(:has(#accountDropdown:not(.hidden))) #navLoginRegisterDesktop button::before { content:'↪'; font-size:24px; }
+ #desktopSidebar:not(:hover):not(:has(:focus-visible)):not(:has(#accountDropdown:not(.hidden))) #navAccountDesktop > button::before { content:'⚙'; font-size:23px; }
+ #desktopSidebar:not(:hover):not(:has(:focus-visible)):not(:has(#accountDropdown:not(.hidden))) #navAccountDesktop > button > svg { display:none; }
+}
+@media(prefers-reduced-motion:reduce) { #desktopSidebar { transition:none; } }

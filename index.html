@@ -179,51 +179,51 @@
     <!-- MAIN DASHBOARD CONTENT INTERFACE CONTAINER -->
     <div id="appPage" class="hidden">
         <!-- DESKTOP SIDEBAR -->
-        <aside class="hidden md:flex fixed inset-y-0 left-0 z-40 w-[240px] flex-col border-r border-slate-300 bg-white">
+        <aside id="desktopSidebar" aria-label="Main navigation" class="hidden md:flex fixed inset-y-0 left-0 z-40 w-[240px] flex-col border-r border-slate-300 bg-white">
             <div class="flex items-center gap-2 p-4 border-b border-slate-200 cursor-pointer" data-handler-click="h53987178ee59">
                 <span class="text-2xl">🥬</span>
                 <span class="text-lg font-semibold text-slate-900">Palengke Helper+</span>
             </div>
             <div class="flex flex-col gap-y-1 p-3 overflow-y-auto flex-1">
                 <p class="sidebar-group-title px-3 mb-1">Menu</p>
-                <button data-tab="home" data-handler-click="h53987178ee59" class="tab-link sidebar-item">
+                <button title="Home" data-tab="home" data-handler-click="h53987178ee59" class="tab-link sidebar-item">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-8 9 8M5 10v10h14V10"/></svg>
                     <span>Home</span>
                 </button>
-                <button data-tab="budget" data-handler-click="hf14a4159b832" class="tab-link sidebar-item">
+                <button title="Budget" data-tab="budget" data-handler-click="hf14a4159b832" class="tab-link sidebar-item">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18v10H3zM7 12h.01M17 12h.01M12 9.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"/></svg>
                     <span>Budget</span>
                 </button>
-                <button data-tab="meal" data-handler-click="haeeb1051058d" class="tab-link sidebar-item">
+                <button title="Meal Planner" data-tab="meal" data-handler-click="haeeb1051058d" class="tab-link sidebar-item">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3v8M5 3v8a3 3 0 006 0V3M16 3c-2 2-2 6-2 8h4v10M8 14v7"/></svg>
                     <span>Meal Planner</span>
                 </button>
-                <button data-tab="prices" data-handler-click="h2dba71df4ea4" class="tab-link sidebar-item">
+                <button title="Prices" data-tab="prices" data-handler-click="h2dba71df4ea4" class="tab-link sidebar-item">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19h16M6 16V10M11 16V6M16 16v-3"/></svg>
                     <span>Prices</span>
                 </button>
-                <button data-tab="suggestions" data-handler-click="h77f383c26ed0" class="tab-link sidebar-item">
+                <button title="Palengke AI" data-tab="suggestions" data-handler-click="h77f383c26ed0" class="tab-link sidebar-item">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2M8 7h8a3 3 0 013 3v6a3 3 0 01-3 3H8a3 3 0 01-3-3v-6a3 3 0 013-3zM9 13h.01M15 13h.01"/></svg>
                     <span>Palengke AI</span>
                 </button>
-                <button data-tab="grocery" data-handler-click="he821f2a99eb9" class="tab-link sidebar-item">
+                <button title="Grocery" data-tab="grocery" data-handler-click="he821f2a99eb9" class="tab-link sidebar-item">
                     <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h2l2.5 11h11L21 7H6M9 20a1 1 0 100-2 1 1 0 000 2zM17 20a1 1 0 100-2 1 1 0 000 2z"/></svg>
                     <span>Grocery</span>
                 </button>
             </div>
             <div class="p-3 border-t border-slate-200">
-                <button type="button" data-action-click="open-copies-tab" data-tab="copies" class="sidebar-item tab-link mb-1"><svg class="w-5 h-5 shrink-0" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h7l2-3h9v17H3z"/></svg><span>Saved copies</span></button>
-                <button type="button" data-theme-toggle class="sidebar-item theme-toggle mb-1">☾ Dark mode</button>
-                <button type="button" data-handler-click="hd061d43a2783" class="sidebar-item mb-1" aria-haspopup="dialog">
+                <button title="Saved copies" type="button" data-action-click="open-copies-tab" data-tab="copies" class="sidebar-item tab-link mb-1"><svg class="w-5 h-5 shrink-0" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h7l2-3h9v17H3z"/></svg><span>Saved copies</span></button>
+                <button title="☾ Dark mode" type="button" data-theme-toggle class="sidebar-item theme-toggle mb-1">☾ Dark mode</button>
+                <button title="Tutorial" type="button" data-handler-click="hd061d43a2783" class="sidebar-item mb-1" aria-haspopup="dialog">
                     <svg class="w-5 h-5 shrink-0" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"/><path d="M9.5 9a2.5 2.5 0 015 0c0 2-2.5 2-2.5 4m0 3h.01" stroke-width="2" stroke-linecap="round"/></svg>
                     <span>Tutorial</span>
                 </button>
-                <button type="button" data-handler-click="h74ac9886f884" class="sidebar-item mb-1" aria-haspopup="dialog"><svg class="w-5 h-5 shrink-0" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span>Install</span></button>
+                <button title="Install" type="button" data-handler-click="h74ac9886f884" class="sidebar-item mb-1" aria-haspopup="dialog"><svg class="w-5 h-5 shrink-0" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span>Install</span></button>
                 <div id='navLoginRegisterDesktop' class='hidden'>
-                    <button data-handler-click="h9b1aa004b70f" class='sidebar-item text-emerald-700'>Login / Register</button>
+                    <button title="Login / Register" data-handler-click="h9b1aa004b70f" class='sidebar-item text-emerald-700'>Login / Register</button>
                 </div>
                 <div id='navAccountDesktop' class='hidden relative'>
-                    <button data-handler-click="h37933584a7f0" class="sidebar-item justify-between">
+                    <button title="Account" data-handler-click="h37933584a7f0" class="sidebar-item justify-between">
                         <span>Account</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
                     </button>
