@@ -479,3 +479,7 @@ html[data-theme="dark"] .tab-heading-title { color:#f1f5f9; }
 html[data-theme="dark"] .tab-heading-description { color:#cbd5e1; }
 @media(min-width:768px) and (max-width:1100px) { .tab-heading-row > .tab-heading-title { font-size:26px; } }
 @media(max-width:767px) { .tab-heading-row { gap:10px; margin-bottom:16px; } .tab-heading-row > .tab-heading-title { font-size:22px; } .tab-heading-row > .tutorial-help-button { margin:0; padding:8px; gap:6px; } .tab-heading-row .tutorial-help-arrow { display:none; } .ai-chat-header .tab-heading-row { flex-wrap:nowrap; gap:10px; } }
+.budget-heading-actions { display:flex; align-items:center; justify-content:flex-end; gap:10px; flex-shrink:0; }
+.budget-heading-actions .tutorial-help-button, .budget-heading-actions .budget-desktop-add { margin:0; min-height:44px; align-self:center; white-space:nowrap; }
+@media(min-width:768px) and (max-width:1000px) { .budget-tab-header .tab-heading-row { flex-wrap:wrap; } .budget-heading-actions { margin-left:auto; } }
+@media(max-width:767px) { .budget-heading-actions { gap:0; } .budget-heading-actions .tutorial-help-button { margin:0; padding:8px; gap:6px; } }
