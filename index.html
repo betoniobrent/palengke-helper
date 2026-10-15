@@ -511,9 +511,10 @@
                     </div>
 
                     <!-- SIDE-BY-SIDE LEDGERS WORKSPACE -->
+<div class="meal-mode-buttons budget-section-buttons" aria-label="Budget sections"><button type="button" data-action-click="budget-section" data-budget-section="income" aria-expanded="false" aria-controls="budgetIncomePanel"><span aria-hidden="true">₱</span>Budget &amp; income</button><button type="button" data-action-click="budget-section" data-budget-section="expense" aria-expanded="false" aria-controls="budgetExpensePanel"><span aria-hidden="true">−</span>Expenses</button></div>
                     <div class="grid md:grid-cols-2 gap-6">
                         <!-- INCOME / ALLOWANCE LEDGER COLUMN -->
-                        <div class="bg-gradient-to-br from-emerald-50 to-green-50 p-6 rounded-xl shadow-md border border-emerald-200 flex flex-col justify-between min-h-[400px]">
+                        <div id="budgetIncomePanel" class="budget-section-panel bg-gradient-to-br from-emerald-50 to-green-50 p-6 rounded-xl shadow-md border border-emerald-200 flex flex-col justify-between min-h-[400px]">
                             <div>
                                 <div class="flex justify-between items-center border-b border-emerald-200 pb-3 mb-4">
                                     <h3 class="text-lg font-bold text-emerald-900 flex items-center gap-2">
@@ -566,7 +567,7 @@
                         </div>
 
                         <!-- EXPENSES LEDGER COLUMN -->
-                        <div class="bg-gradient-to-br from-rose-50 to-pink-50 p-6 rounded-xl shadow-md border border-rose-200 flex flex-col justify-between min-h-[400px]">
+                        <div id="budgetExpensePanel" class="budget-section-panel bg-gradient-to-br from-rose-50 to-pink-50 p-6 rounded-xl shadow-md border border-rose-200 flex flex-col justify-between min-h-[400px]">
                             <div>
                                 <div class="flex justify-between items-center border-b border-rose-200 pb-3 mb-4">
                                     <h3 class="text-lg font-bold text-rose-900 flex items-center gap-2">

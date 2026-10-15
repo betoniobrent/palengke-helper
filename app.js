@@ -1339,7 +1339,16 @@ function prepareBudgetMonth() {
     if (!input.value || input.value < input.min) input.value = input.min;
 }
 
+function setBudgetSection(type, expanded = true) {
+    document.querySelectorAll('[data-budget-section]').forEach(button => {
+        const active = button.dataset.budgetSection === type && expanded;
+        button.setAttribute('aria-expanded', String(active));
+        document.getElementById(button.getAttribute('aria-controls')).classList.toggle('budget-section-open', active);
+    });
+}
+
 function openBudgetEntry(type) {
+    if (currentActiveMonthId) setBudgetSection(type);
     let formId = type === 'expense' ? 'expenseForm' : 'incomeForm';
     if (!currentActiveMonthId) {
         formId = 'newMonthBudgetForm';

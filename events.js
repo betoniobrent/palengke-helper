@@ -1,5 +1,6 @@
 // Explicit actions migrated from the static HTML. No evaluation of DOM strings.
 const dynamicUIActions = {
+  'budget-section': button => setBudgetSection(button.dataset.budgetSection, button.getAttribute('aria-expanded') !== 'true'),
   'meal-mode': button => {
     const expanded = button.getAttribute('aria-expanded') !== 'true';
     document.querySelectorAll('[data-meal-mode]').forEach(choice => {

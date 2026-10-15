@@ -561,3 +561,9 @@ body button { font-weight:600; line-height:1.4; }
  html[data-theme="dark"] .meal-mode-buttons button { background:#123d35; color:#a7f3d0; border-color:#326658; }
  html[data-theme="dark"] .meal-mode-buttons button[aria-expanded="true"] { background:#047857; color:#fff; border-color:#6ee7b7; }
 }
+
+@media(max-width:767px) {
+ .budget-section-buttons { margin-bottom:14px; }
+ #activeLedgerWorkspaceSection .budget-section-panel { display:none; min-height:0; padding:20px; }
+ #activeLedgerWorkspaceSection .budget-section-panel.budget-section-open { display:flex; }
+}
