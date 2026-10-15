@@ -514,6 +514,7 @@ button, input, select, textarea { font-family:inherit; }
 h1, h2, h3, h4 { letter-spacing:-.025em; line-height:1.25; }
 .sidebar-item, .tab-link { font-weight:600; }
 #homeHero { position:relative; isolation:isolate; overflow:hidden; display:flex; align-items:center; justify-content:space-between; gap:32px; margin:24px 24px 0; padding:clamp(28px,4vw,56px); border:1px solid #ffffff1f; border-radius:24px; color:#fff; background:radial-gradient(ellipse at 100% 0%,#34d39926,transparent 60%),linear-gradient(115deg,#064e3b,#047857); box-shadow:0 12px 32px #064e3b14; }
+#homeHero.hidden { display:none; }
 .home-hero-copy { position:relative; z-index:1; max-width:760px; }
 .home-hero-eyebrow { display:block; color:#a7f3d0; font-size:11px; font-weight:700; letter-spacing:.16em; margin-bottom:18px; }
 #homeHero h2 { padding:0; margin:0; font-size:clamp(30px,3.5vw,52px); line-height:1.1; font-weight:700; letter-spacing:-.04em; color:#fff; text-wrap:balance; }
