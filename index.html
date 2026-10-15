@@ -267,9 +267,17 @@
         <div role="main" aria-label="Palengke Helper+ workspace" id="appMainContent" class="md:ml-[240px] min-h-screen flex flex-col">
 
         <!-- APP HERO ATTRIBUTION DISPLAY PANEL -->
-        <section id="homeHero" class="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white py-12 text-center mt-6 mx-4 md:mx-6 rounded-lg shadow-sm">
-            <h2 class="text-4xl md:text-5xl font-bold px-4">Plan Your Budget. Feed Your Family Better.</h2>
-            <p class="mt-4 text-base md:text-lg px-4 opacity-90">A smart budgeting and meal planning web app for Filipino families.</p>
+        <section id="homeHero" aria-labelledby="homeHeroTitle">
+            <div class="home-hero-copy">
+                <span class="home-hero-eyebrow">YOUR EVERYDAY PALENGKE COMPANION</span>
+                <h2 id="homeHeroTitle">Plan your budget.<br><span>Feed your family better.</span></h2>
+                <p>A little planning. More room for what matters.<br class="home-hero-break"> Budget, shop, and plan meals for your family in one place.</p>
+                <div class="home-hero-tags" aria-label="App features"><span>Smarter budgets</span><span>Everyday meals</span><span>Less guesswork</span></div>
+            </div>
+            <div class="home-hero-art" aria-hidden="true">
+                <svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="88" stroke="currentColor" stroke-opacity=".16"/><circle cx="100" cy="100" r="69" stroke="currentColor" stroke-opacity=".12"/><path d="M55 85h95l-11 58H66L55 85Z" fill="currentColor" fill-opacity=".12" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="m77 86 23-38 24 38M83 103v22m18-22v22m18-22v22" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M144 51v16m-8-8h16M47 134v10m-5-5h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <span>Plan well. Eat well.</span>
+            </div>
         </section>
 
 

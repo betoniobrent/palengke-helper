@@ -505,3 +505,32 @@ html[data-theme="dark"] .tab-heading-description { color:#cbd5e1; }
  #desktopSidebar:not(:hover):not(:has(:focus-visible)):not(:has(#accountDropdown:not(.hidden))) #navAccountDesktop > button > svg { display:none; }
 }
 @media(prefers-reduced-motion:reduce) { #desktopSidebar, #appMainContent { transition:none; } }
+
+/* Shared typography: native fonts keep the first paint fast and work offline. */
+:root { --font-app: "Segoe UI Variable", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; }
+html, body { font-family:var(--font-app); -webkit-font-smoothing:antialiased; }
+body { line-height:1.6; }
+button, input, select, textarea { font-family:inherit; }
+h1, h2, h3, h4 { letter-spacing:-.025em; line-height:1.25; }
+.sidebar-item, .tab-link { font-weight:600; }
+#homeHero { position:relative; isolation:isolate; overflow:hidden; display:flex; align-items:center; justify-content:space-between; gap:32px; margin:24px 24px 0; padding:clamp(28px,4vw,56px); border:1px solid #ffffff1f; border-radius:24px; color:#fff; background:radial-gradient(ellipse at 100% 0%,#34d39926,transparent 60%),linear-gradient(115deg,#064e3b,#047857); box-shadow:0 12px 32px #064e3b14; }
+.home-hero-copy { position:relative; z-index:1; max-width:760px; }
+.home-hero-eyebrow { display:block; color:#a7f3d0; font-size:11px; font-weight:700; letter-spacing:.16em; margin-bottom:18px; }
+#homeHero h2 { padding:0; margin:0; font-size:clamp(30px,3.5vw,52px); line-height:1.1; font-weight:700; letter-spacing:-.04em; color:#fff; text-wrap:balance; }
+#homeHero h2 span { color:#a7f3d0; }
+#homeHero p { padding:0; margin:20px 0 0; max-width:560px; color:#ecfdf5; font-size:16px; line-height:1.7; }
+.home-hero-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:24px; }
+.home-hero-tags span { padding:5px 11px; border:1px solid #a7f3d040; border-radius:999px; color:#ecfdf5; background:#ffffff08; font-size:12px; font-weight:500; }
+.home-hero-art { flex:0 0 clamp(150px,19vw,240px); color:#a7f3d0; text-align:center; transform:rotate(-6deg); }
+.home-hero-art svg { width:100%; height:auto; }
+.home-hero-art span { display:block; font-size:13px; letter-spacing:.04em; }
+@media (max-width:767px) {
+ #homeHero { margin:16px 16px 0; padding:28px 22px; border-radius:20px; }
+ #homeHero h2 { font-size:clamp(29px,7vw,40px); }
+ #homeHero p { font-size:14px; margin-top:16px; }
+ .home-hero-eyebrow { font-size:10px; letter-spacing:.12em; margin-bottom:16px; }
+ .home-hero-art { display:none; }
+ .home-hero-tags { gap:6px; margin-top:20px; }
+ .home-hero-tags span { font-size:11px; padding:4px 8px; }
+ .home-hero-break { display:none; }
+}
