@@ -464,3 +464,10 @@ html[data-theme="dark"] .output-tools-dialog button:hover { background:#315247; 
 #appMessageAccept { background:#047857; color:#fff; }
 #notification { z-index:100; max-width:calc(100vw - 32px); }
 #appMessageDialog [hidden] { display:none!important; }
+/* Keep each tab's guide alongside its title, including narrow screens. */
+.tab-heading-row { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; margin-bottom:16px; }
+.tab-heading-row > h2 { margin:0; min-width:0; }
+.tab-heading-row > .tutorial-help-button { margin:0; flex-shrink:0; }
+#view-budget > .flex > div:first-child { flex:1; min-width:0; }
+.ai-chat-header .tab-heading-row { margin:0; flex:1; }
+@media(max-width:600px) { .tab-heading-row { gap:8px; } .tab-heading-row > h2 { font-size:22px; line-height:1.25; } .tab-heading-row > .tutorial-help-button { padding:7px 9px; gap:6px; margin:0; } .tab-heading-row .tutorial-help-arrow { display:none; } .tab-heading-row .tutorial-help-icon { width:24px; height:24px; } }
