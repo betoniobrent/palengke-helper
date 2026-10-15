@@ -645,10 +645,14 @@
 <!-- ============================= -->
 
 <div id="mealPlannerIntro" class="grid md:grid-cols-2 gap-6 mb-6">
+    <div class="meal-mode-buttons" aria-label="Choose how to plan">
+        <button type="button" data-action-click="meal-mode" data-meal-mode="auto" aria-expanded="false" aria-controls="mealAutoOptions"><span aria-hidden="true">✦</span> Generate Automatically</button>
+        <button type="button" data-action-click="meal-mode" data-meal-mode="manual" aria-expanded="false" aria-controls="mealManualOptions"><span aria-hidden="true">＋</span> Create Your Own</button>
+    </div>
 
     <!-- AUTO -->
 
-    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 shadow-md border border-emerald-200">
+    <div id="mealAutoOptions" class="meal-mode-panel bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 shadow-md border border-emerald-200">
 
         <h3 class="text-xl font-semibold text-emerald-900 mb-4">
 
@@ -748,7 +752,7 @@
 
     <!-- MANUAL -->
 
-    <div class="bg-gradient-to-br from-teal-50 to-green-50 rounded-2xl p-6 shadow-md border border-teal-200">
+    <div id="mealManualOptions" class="meal-mode-panel bg-gradient-to-br from-teal-50 to-green-50 rounded-2xl p-6 shadow-md border border-teal-200">
 
         <h3 class="text-xl font-semibold text-teal-900 mb-4">
 

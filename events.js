@@ -1,5 +1,13 @@
 // Explicit actions migrated from the static HTML. No evaluation of DOM strings.
 const dynamicUIActions = {
+  'meal-mode': button => {
+    const expanded = button.getAttribute('aria-expanded') !== 'true';
+    document.querySelectorAll('[data-meal-mode]').forEach(choice => {
+      const active = choice === button && expanded;
+      choice.setAttribute('aria-expanded', String(active));
+      document.getElementById(choice.getAttribute('aria-controls')).classList.toggle('meal-mode-open', active);
+    });
+  },
   'open-output-tools': e => {
     const dialog = document.getElementById('outputToolsDialog');
     dialog.querySelectorAll('[data-action-click="output-copy"]').forEach(button => { button.dataset.kind = e.dataset.kind; });
@@ -148,3 +156,4 @@ document.addEventListener('palengke:ready', () => {
     });
   }
 });
+
